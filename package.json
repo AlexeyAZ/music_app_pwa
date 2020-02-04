@@ -30,7 +30,8 @@
     "start": "rescripts start",
     "build": "rescripts build",
     "test": "rescripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -60,5 +61,17 @@
     "workbox-core": "^5.0.0",
     "workbox-precaching": "^5.0.0",
     "workbox-webpack-plugin": "^5.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,less}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
