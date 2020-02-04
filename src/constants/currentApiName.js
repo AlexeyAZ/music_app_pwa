@@ -1,0 +1,3 @@
+const CURRENT_API_NAME = 'CURRENT_API_NAME'
+
+export default CURRENT_API_NAME

@@ -1,0 +1,11 @@
+const API_BASE_URL_NAPSTER = 'https://api.napster.com'
+const API_AUTHORIZE_URL_NAPSTER = 'https://api.napster.com'
+const API_BASE_VERSION_NAPSTER = 'v2.2'
+const API_CLIENT_ID_NAPSTER = 'NDllNDUzNmYtODBmNS00NjcwLWIxYjItNDVkNjkxNzg4OGQ4'
+
+export default {
+  API_BASE_URL_NAPSTER,
+  API_AUTHORIZE_URL_NAPSTER,
+  API_BASE_VERSION_NAPSTER,
+  API_CLIENT_ID_NAPSTER,
+}
