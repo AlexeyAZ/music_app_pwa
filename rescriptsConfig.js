@@ -1,4 +1,4 @@
-const { removeWebpackPlugin, appendWebpackPlugin, getPaths, editWebpackPlugin, replaceWebpackPlugin } = require('@rescripts/utilities')
+const { editWebpackPlugin, replaceWebpackPlugin } = require('@rescripts/utilities')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 const path = require('path')
 
@@ -9,20 +9,16 @@ module.exports = [
       presets: ['react-app'],
       plugins: [
         [
-          'babel-plugin-styled-components',
+          'styled-components',
           {
-            displayName: true
-          }
-        ]
-      ]
+            displayName: true,
+          },
+        ],
+      ],
     },
   ],
   config => {
-    console.log(config)
-    return config
-  },
-  config => {
-    return({
+    return {
       ...config,
       resolve: {
         ...config.resolve,
@@ -42,31 +38,37 @@ module.exports = [
           routes: path.resolve(__dirname, 'src/routes/'),
           store: path.resolve(__dirname, 'src/store/'),
           hocs: path.resolve(__dirname, 'src/hocs/'),
-        }
-      }
-    })
+        },
+      },
+    }
   },
   config => {
-    const newConfig = config.mode === 'production' ? editWebpackPlugin(
-      p => {
-        p['process.env.NODE_ENV'] = JSON.stringify('production')
-        return p
-      },
-      'DefinePlugin',
-      config,
-    ) : config
+    const newConfig =
+      config.mode === 'production'
+        ? editWebpackPlugin(
+            p => {
+              p['process.env.NODE_ENV'] = JSON.stringify('production')
+              return p
+            },
+            'DefinePlugin',
+            config
+          )
+        : config
 
     return newConfig
   },
   config => {
-    const newConfig = config.mode === 'production' ? replaceWebpackPlugin(
-      new WorkboxWebpackPlugin.InjectManifest({
-        swSrc: './src/serviceWorker/workboxConfig.js',
-        swDest: 'service-worker.js',
-      }),
-      'GenerateSW',
-      config,
-    ) : config
+    const newConfig =
+      config.mode === 'production'
+        ? replaceWebpackPlugin(
+            new WorkboxWebpackPlugin.InjectManifest({
+              swSrc: './src/serviceWorker/workboxConfig.js',
+              swDest: 'service-worker.js',
+            }),
+            'GenerateSW',
+            config
+          )
+        : config
 
     return newConfig
   },

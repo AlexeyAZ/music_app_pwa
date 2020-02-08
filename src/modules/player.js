@@ -1,23 +1,26 @@
 import { createAction, createReducer } from 'helpers'
 
 const playerInitialState = {
-  loaded: false,
+  instance: null,
 }
 
-export const updatePlayerStatus = createAction('UPDATE_PLAYER_STATUS')
+export const setPlayerInstance = createAction('SET_PLAYER_INSTANCE')
 
 const playerModule = {
-  playbackInstance: createReducer(updatePlayerStatus, {
-    initialState: playerInitialState,
-    customTypes: {
-      [updatePlayerStatus.start]: (state, payload) => {
-        return {
-          ...state,
-          loaded: payload.loaded,
-        }
+  player: createReducer(
+    {},
+    {
+      initialState: playerInitialState,
+      customTypes: {
+        [setPlayerInstance.start]: (state, payload) => {
+          return {
+            ...state,
+            instance: payload,
+          }
+        },
       },
-    },
-  }),
+    }
+  ),
 }
 
 export default playerModule

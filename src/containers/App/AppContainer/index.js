@@ -10,16 +10,15 @@ import * as AuthUserModule from 'modules/auth'
 import * as ModalModule from 'modules/modal'
 
 import { withPlayer } from 'hocs'
-import { AUTH, AVAILABLE_API } from 'constants'
-import { localStore } from 'config'
-import { axiosInstance, getCurrentApi } from 'helpers'
+import { axiosInstance } from 'helpers'
 
-const PAGE_AFTER_LOGIN = '/tracks'
-const REDIRECT_URI = 'http://localhost:3000'
-
-const { authUrl, clientId, apiName } = getCurrentApi()
+const PAGE_AFTER_LOGIN = '/library/playlists'
 
 class AppContainer extends Component {
+  state = {
+    loading: true,
+  }
+
   async componentDidMount() {
     const { initPlayer, history } = this.props
     const authActionSuccess = await this.getAuthAction()
@@ -29,78 +28,57 @@ class AppContainer extends Component {
       return
     }
 
-    if (apiName === AVAILABLE_API.NAPSTER) {
-      window.open(
-        `${authUrl}/oauth/authorize?client_id=${clientId}&redirect_uri=${REDIRECT_URI}&response_type=code`,
-        '_self'
-      )
-    }
-    if (apiName === AVAILABLE_API.SPOTIFY) {
-      const scopes = 'user-read-private user-read-email'
-      window.open(
-        `${authUrl}/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-          REDIRECT_URI
-        )}&response_type=code&scope=${encodeURIComponent(scopes)}`,
-        '_self'
-      )
-    }
+    this.setState({ loading: false })
+    history.push('/login')
   }
 
   getAuthAction = async () => {
-    const { authUser, authOptions: { access_token, refresh_token, expiration_date }, setAuthOptions, refreshToken, location: { search } } = this.props
-    // const access_token = localStore.getItem(AUTH.ACCESS_TOKEN_NAME)
-    // const refresh_token = localStore.getItem(AUTH.REFRESH_TOKEN_NAME)
-    // const expiration_date = localStore.getItem(AUTH.EXPIRATION_DATE_NAME)
+    const {
+      authUser,
+      authOptions: { refresh_token },
+      refreshToken,
+      location: { search },
+    } = this.props
+
     if (search.includes('code')) {
       const code = search.split('code=')[1]
       const authResponse = await authUser({ params: { code } })
       await this.saveTokensToStorage(authResponse)
       return 'Logged'
     }
-    if (Number(expiration_date) && +moment(Number(expiration_date)) < +moment()) {
+
+    if (refresh_token) {
       const refreshTokenResponse = await refreshToken({ params: { refresh_token } })
       await this.saveTokensToStorage(refreshTokenResponse)
-      return 'Refresh token'
-    }
-    if (access_token && refresh_token && expiration_date) {
-      await setAuthOptions({ access_token, refresh_token, expiration_date })
-      await this.setAuthorizationHeader(access_token)
-      return 'Already logged'
+      return 'Token refreshed'
     }
     return false
   }
 
   setAuthorizationHeader = async token => {
-    const { setAuthOptions } = this.props
     axiosInstance.defaults.headers.common.authorization = `Bearer ${token}`
-    await setAuthOptions({ loading: false })
+    this.setState({ loading: false })
   }
 
   saveTokensToStorage = async response => {
-    console.log('saveTokensToStorage')
+    console.log('AppContainer: saveTokensToStorage')
     const { setAuthOptions } = this.props
     const access_token = get(response, 'data.access_token')
     const refresh_token = get(response, 'data.refresh_token')
     const expires_in = get(response, 'data.expires_in')
     const expiration_date = String(+moment().add(expires_in, 's'))
-    // localStore.setItem(AUTH.ACCESS_TOKEN_NAME, access_token)
-    // localStore.setItem(AUTH.REFRESH_TOKEN_NAME, refresh_token)
-    // localStore.setItem(AUTH.EXPIRATION_DATE_NAME, expiration_date)
     await setAuthOptions({ access_token, refresh_token, expiration_date })
     await this.setAuthorizationHeader(access_token)
     return true
   }
 
   render() {
-    const { children, authOptions: { loading } } = this.props
+    const { loading } = this.state
+    const { children } = this.props
     if (loading) {
       return <div />
     }
-    return (
-      <div>
-        {children}
-      </div>
-    )
+    return <div>{children}</div>
   }
 }
 
@@ -129,7 +107,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withRouter,
-  withPlayer,
+  withPlayer
 )(AppContainer)

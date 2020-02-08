@@ -7,7 +7,6 @@ import get from 'lodash/get'
 
 import { Button } from 'components'
 
-import * as PlaybackModule from 'modules/playback'
 import * as GenresModule from 'modules/genres'
 import * as ModalModule from 'modules/modal'
 
@@ -24,8 +23,7 @@ class Genres extends Component {
     if (apiName === 'NAPSTER') {
       getAllGenres()
     } else {
-      axiosInstance.get('/me')
-        .then(res => console.log(res))
+      axiosInstance.get('/me').then(res => console.log(res))
     }
   }
 
@@ -43,11 +41,7 @@ class Genres extends Component {
     return (
       <div>
         {allGenresData.map(genre => {
-          return (
-            <div key={genre.id}>
-              {genre.name}
-            </div>
-          )
+          return <div key={genre.id}>{genre.name}</div>
         })}
         <Button onClick={this.playTrack}>Play</Button>
         <Button onClick={this.stopTrack}>Stop</Button>
@@ -70,9 +64,13 @@ const mapStateToProps = ({ authOptions, playbackStatus, allGenres }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updatePlaybackStatus: bindActionCreators(PlaybackModule.updatePlaybackStatus, dispatch),
   getAllGenres: bindActionCreators(GenresModule.getAllGenres, dispatch),
   openModal: bindActionCreators(ModalModule.openModal, dispatch),
 })
 
-export default compose(connect(mapStateToProps, mapDispatchToProps))(Genres)
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(Genres)

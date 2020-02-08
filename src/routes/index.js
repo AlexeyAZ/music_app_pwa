@@ -1,43 +1,65 @@
-import React from 'react'
-// import {
-//   Login,
-//   Main,
-// } from 'containers'
-import { Redirect } from 'components'
-
 import Main from '../pages/Main'
 import Login from '../pages/Login'
 import Genres from '../pages/Genres'
 import Tracks from '../pages/Tracks'
-
-// eslint-disable-next-line no-unused-vars
-const DummyPage = () => <div>Dummy</div>
+import Artists from '../pages/Tracks/Artists'
+import Playlists from '../pages/Tracks/Playlists'
+import Library from '../pages/Library'
+import Profile from '../pages/Profile'
 
 const routes = [
   {
     path: '/',
+    title: 'Main',
     component: Main,
-    // render: () => <Redirect to="/login"/>,
     exact: true,
-    private: false,
   },
   {
     path: '/login',
+    title: 'Authorization',
     component: Login,
-    exact: false,
-    private: false,
   },
   {
-    path: '/Genres',
+    path: '/genres',
+    title: 'Genres',
     component: Genres,
-    exact: false,
-    private: false,
   },
   {
     path: '/tracks',
+    title: 'Tracks',
     component: Tracks,
-    exact: false,
-    private: false,
+    routes: [
+      {
+        path: '/tracks/playlists',
+        title: 'Playlists',
+        component: Playlists,
+      },
+      {
+        path: '/tracks/artists',
+        title: 'Artists',
+        component: Artists,
+      },
+      {
+        path: '/tracks/albums',
+        title: 'Albums',
+        component: Artists,
+      },
+      {
+        path: '/tracks/tracks',
+        title: 'Tracks',
+        component: Artists,
+      },
+    ],
+  },
+  {
+    path: '/library',
+    title: 'Library',
+    component: Library,
+  },
+  {
+    path: '/profile',
+    title: 'Profile',
+    component: Profile,
   },
 ]
 

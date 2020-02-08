@@ -5,14 +5,7 @@ import { variant } from '@xstyled/system'
 
 const buttonVariants = variant({
   default: 'primary',
-  variants: {
-    primary: css`
-      color: primary;
-    `,
-    secondary: css`
-      color: green;
-    `
-  }
+  key: 'buttons',
 })
 
 const Button = styled.button`
@@ -25,8 +18,6 @@ const Button = styled.button`
   border-radius: 3px;
 `
 
-Button.propTypes = {
-  
-}
+Button.propTypes = {}
 
 export default Button

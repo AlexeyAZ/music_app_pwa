@@ -13,7 +13,7 @@ const logger = createLogger({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['authOptions']
+  whitelist: ['authOptions'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
