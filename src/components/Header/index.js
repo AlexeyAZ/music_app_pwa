@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import noop from 'lodash/noop'
 
-import Box from '../Box'
+import styles from './styles.module.scss'
 
 class Header extends Component {
   renderBackButton = () => {
@@ -28,13 +28,13 @@ class Header extends Component {
   render() {
     const { title, renderRightContent } = this.props
     return (
-      <Box display="flex" height={50} justifyContent="space-between" boxShadow="blockShadow">
-        <Box>{this.renderLeftContent()}</Box>
-        <Box>
+      <div className={styles.wrap}>
+        <div>{this.renderLeftContent()}</div>
+        <div>
           <p>{title}</p>
-        </Box>
-        <Box>{renderRightContent()}</Box>
-      </Box>
+        </div>
+        <div>{renderRightContent()}</div>
+      </div>
     )
   }
 }

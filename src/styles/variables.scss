@@ -1,0 +1,33 @@
+$base: 4px;
+
+$fonts-sizes: (
+  xxs: 8px,
+  xs: 12px,
+  s: 16px,
+  m: 20px,
+  l: 24px,
+  xl: 28px,
+  xxl: 32px
+);
+
+$icon-sizes: (
+  xxs: 20px,
+  xs: 30px,
+  s: 40px,
+  m: 50px,
+  l: 60px,
+  xl: 70px,
+  xxl: 80px
+);
+
+$colors: (
+  primary: fuchsia,
+  secondary: cyan,
+  success: lime,
+  warning: gold,
+  danger: red,
+  disabled: lightgray,
+  inactive: gray,
+  black: black,
+  white: white
+);

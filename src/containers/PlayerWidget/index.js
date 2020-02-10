@@ -1,28 +1,51 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-import { Box } from 'components'
+import { Text } from 'components'
 
 import PlayButton from '../PlayButton'
 import SkipNextButton from '../SkipNextButton'
 import SkipPreviousButton from '../SkipPreviousButton'
 import PlayerSeekBar from '../PlayerSeekBar'
+import ShuffleButton from '../ShuffleButton'
+import RepeatButton from '../RepeatButton'
 
-const PlayerWidget = props => {
+import styles from './styles.module.scss'
+
+const PlayerWidget = ({ playbackInfo }) => {
   return (
-    <Box>
-      <Box>
-        <SkipPreviousButton />
-        <PlayButton />
-        <SkipNextButton />
-      </Box>
-      <Box>
+    <div>
+      <div className={styles.wrap}>
+        <div className={styles.controls}>
+          <SkipPreviousButton />
+          <PlayButton />
+          <SkipNextButton />
+        </div>
+        <div className={styles.meta}>
+          <Text className={styles.metaText}>{playbackInfo.name}</Text>
+          <Text className={styles.metaText} size="xs">
+            {playbackInfo.artistName}
+          </Text>
+        </div>
+        <div className={styles.extraControls}>
+          <ShuffleButton />
+          <RepeatButton />
+        </div>
+      </div>
+      <div>
         <PlayerSeekBar />
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }
 
-PlayerWidget.propTypes = {}
+PlayerWidget.propTypes = {
+  playbackInfo: PropTypes.object.isRequired,
+}
 
-export default PlayerWidget
+const mapStateToProps = ({ playbackInfo }) => ({
+  playbackInfo,
+})
+
+export default connect(mapStateToProps)(PlayerWidget)

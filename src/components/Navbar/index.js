@@ -2,17 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import Box from '../Box'
+import styles from './styles.module.scss'
 
 const Navbar = ({ data }) => {
   return (
-    <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(20px, 1fr))">
+    <div className={styles.wrap}>
       {data.map(({ href, label }) => (
-        <Box key={href}>
+        <div key={href}>
           <Link to={href}>{label}</Link>
-        </Box>
+        </div>
       ))}
-    </Box>
+    </div>
   )
 }
 

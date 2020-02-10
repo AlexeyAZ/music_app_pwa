@@ -1,14 +1,23 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import { withPlayer } from 'hocs'
+
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
 class SkipPreviousButton extends Component {
+  handleButtonClick = () => {
+    const { previousTrack } = this.props
+    previousTrack()
+  }
+
   render() {
-    return <ThemedPlayerButton iconName="SkipPrevious" />
+    return <ThemedPlayerButton onClick={this.handleButtonClick} iconName="SkipPrevious" />
   }
 }
 
-SkipPreviousButton.propTypes = {}
+SkipPreviousButton.propTypes = {
+  previousTrack: PropTypes.func.isRequired,
+}
 
-export default SkipPreviousButton
+export default withPlayer(SkipPreviousButton)

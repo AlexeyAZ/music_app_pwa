@@ -1,0 +1,13 @@
+@import 'variables.scss';
+
+.text {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+@each $name, $size in $fonts-sizes {
+  .text-#{$name} {
+    composes: text;
+    font-size: var(--font-size-#{$name});
+  }
+}

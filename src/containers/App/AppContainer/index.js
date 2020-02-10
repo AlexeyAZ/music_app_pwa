@@ -24,7 +24,7 @@ class AppContainer extends Component {
     const authActionSuccess = await this.getAuthAction()
     if (authActionSuccess) {
       initPlayer()
-      history.replace(PAGE_AFTER_LOGIN)
+      // history.replace(PAGE_AFTER_LOGIN) TODO
       return
     }
 

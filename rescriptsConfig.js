@@ -3,20 +3,6 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 const path = require('path')
 
 module.exports = [
-  [
-    'use-babel-config',
-    {
-      presets: ['react-app'],
-      plugins: [
-        [
-          'styled-components',
-          {
-            displayName: true,
-          },
-        ],
-      ],
-    },
-  ],
   config => {
     return {
       ...config,

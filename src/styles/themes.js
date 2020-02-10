@@ -1,26 +1,15 @@
-import { css } from '@xstyled/styled-components'
-
-const themes = {
-  primary: {
-    buttons: {
-      primary: css`
-        color: red;
-      `,
-      secondary: css`
-        color: blue;
-      `,
-    },
-  },
-  secondary: {
-    buttons: {
-      primary: css`
-        color: green;
-      `,
-      secondary: css`
-        color: yellow;
-      `,
-    },
-  },
+const lightTheme = {
+  '--color-solid': 'black',
+  '--color-surface': 'white',
+  '--color-primary': 'teal',
 }
+
+const darkTheme = {
+  '--color-solid': 'white',
+  '--color-surface': 'black',
+  '--color-primary': 'purple',
+}
+
+const themes = { ...lightTheme, ...darkTheme }
 
 export default themes

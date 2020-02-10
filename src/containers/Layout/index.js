@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
+import cn from 'classnames'
+import { withRouter } from 'react-router'
 
-import { Navbar, Box } from 'components'
+import routes from 'routes'
+
+import { Navbar, HorizontalNavbar } from 'components'
 
 import HeaderContainer from './HeaderContainer'
 import PlayerWidget from '../PlayerWidget'
 
-const LayoutWrap = styled(Box)``
-const LayoutContainer = styled(Box)``
+import styles from './styles.module.scss'
 
 const navbarData = [
   { href: '/library/playlists', label: 'Library' },
@@ -18,45 +21,80 @@ const navbarData = [
   { href: '/profile', label: 'Profile' },
 ]
 
-// TODO comment
-// eslint-disable-next-line react/prefer-stateless-function
+const libraryNavbarData = routes
+  .find(route => route.path === '/library')
+  .routes.map(route => ({ ...route, key: route.title.toLowerCase() }))
+
 class Layout extends Component {
+  handleNavbarItemClick = key => {
+    const { history } = this.props
+    const { path } = libraryNavbarData.find(item => item.key === key)
+    history.push(path)
+  }
+
+  isShowHorizontalNavbar = () => {
+    const { location } = this.props
+    if (location.pathname.includes('/library')) {
+      return true
+    }
+    return false
+  }
+
   render() {
     const {
       children,
-      playbackStatus: { trackId },
+      location,
+      playbackInfo: { id: trackId },
     } = this.props
+    const navbarValue = location.pathname.split('/')[2]
+    const isShowHorizontalNavbar = this.isShowHorizontalNavbar()
     return (
-      <LayoutWrap pt={50} pb={trackId ? 150 : 50}>
-        <LayoutContainer bg="white" position="fixed" top="0" left="0" height={50} width="100%">
+      <div
+        className={cn(
+          {
+            [styles.wrapWithHorizontalNavbar]: isShowHorizontalNavbar,
+            [styles.wrapWithWidget]: trackId,
+          },
+          styles.wrap
+        )}
+      >
+        <div className={styles.headerWrap}>
           <HeaderContainer />
-        </LayoutContainer>
-        <LayoutWrap>{children}</LayoutWrap>
-        <LayoutContainer bg="white" position="fixed" bottom="0" left="0" width="100%">
-          {trackId && (
-            <Box height={100}>
-              <PlayerWidget />
-            </Box>
-          )}
-          <Box height={50}>
-            <Navbar data={navbarData} />
-          </Box>
-        </LayoutContainer>
-      </LayoutWrap>
+        </div>
+        {isShowHorizontalNavbar && (
+          <div className={styles.horizontalNavbarWrap}>
+            <HorizontalNavbar
+              value={navbarValue}
+              data={libraryNavbarData}
+              onItemClick={this.handleNavbarItemClick}
+            />
+          </div>
+        )}
+        <div>{children}</div>
+        <div className={styles.footerWrap}>
+          {trackId && <PlayerWidget />}
+          <Navbar data={navbarData} />
+        </div>
+      </div>
     )
   }
 }
 
 Layout.propTypes = {
-  playbackStatus: PropTypes.object.isRequired,
   children: PropTypes.any,
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  playbackInfo: PropTypes.object.isRequired,
 }
 Layout.defaultProps = {
   children: null,
 }
 
-const mapStateToProps = ({ playbackStatus }) => ({
-  playbackStatus,
+const mapStateToProps = ({ playbackInfo }) => ({
+  playbackInfo,
 })
 
-export default connect(mapStateToProps)(Layout)
+export default compose(
+  connect(mapStateToProps),
+  withRouter
+)(Layout)

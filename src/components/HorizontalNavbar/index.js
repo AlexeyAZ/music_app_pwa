@@ -1,37 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import cn from 'classnames'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
-import { system } from 'styled-system'
 
-import Box from '../Box'
-
-const NavbarContainer = styled(Box)`
-  ${system({
-    navbarHeight: {
-      property: 'height',
-      scale: 'navbarHeight',
-    },
-  })}
-`
-NavbarContainer.defaultProps = {
-  navbarHeight: 0,
-  overflow: 'auto',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-}
-
-const NavbarItem = styled(Box)`
-  &:last-child {
-    margin-right: 0;
-  }
-`
-NavbarItem.defaultProps = {
-  mr: 3,
-}
+import styles from './styles.module.scss'
 
 class HorizontalNavbar extends Component {
   constructor(props) {
@@ -53,31 +26,36 @@ class HorizontalNavbar extends Component {
 
   render() {
     const { activeKey } = this.state
-    const { data, value } = this.props
+    const { data, value, className } = this.props
     const currentKey = value || activeKey
     return (
-      <Box overflow="hidden" boxShadow="blockShadow">
-        <NavbarContainer>
+      <div className={cn(styles.wrap, className)}>
+        <div className={styles.container}>
           {data.map(({ key, title }) => (
-            <NavbarItem key={key} onClick={() => this.handleItemClick(key)}>
-              <Box as="b" color={currentKey === key ? 'red' : 'black'}>
-                {title}
-              </Box>
-            </NavbarItem>
+            <button
+              type="button"
+              className={styles.listItem}
+              key={key}
+              onClick={() => this.handleItemClick(key)}
+            >
+              <b className={currentKey === key ? styles.listItemText : ''}>{title}</b>
+            </button>
           ))}
-        </NavbarContainer>
-      </Box>
+        </div>
+      </div>
     )
   }
 }
 
 HorizontalNavbar.propTypes = {
+  className: PropTypes.string,
   value: PropTypes.string,
   data: PropTypes.array.isRequired,
   onItemClick: PropTypes.func,
   defaultKey: PropTypes.string,
 }
 HorizontalNavbar.defaultProps = {
+  className: '',
   value: null,
   onItemClick: noop,
   defaultKey: null,

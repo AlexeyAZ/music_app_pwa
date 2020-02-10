@@ -1,0 +1,21 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  height: var(--player-widget-height);
+  border-top: 1px solid black;
+}
+.controls {
+  display: flex;
+  margin-right: 20px;
+}
+.meta {
+  overflow: hidden;
+}
+.metaText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.extraControls {
+  margin-left: auto;
+}

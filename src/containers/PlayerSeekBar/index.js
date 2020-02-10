@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators, compose } from 'redux'
+import { compose } from 'redux'
 import isNil from 'lodash/isNil'
 
 import { SeekBar } from 'components'
 import { withPlayer } from 'hocs'
 
-import * as PlaybackPositionModule from 'modules/playbackPosition'
-
 class PlayerSeekBar extends Component {
   getDurationAsPercent = () => {
     const {
       playbackPosition: { position },
-      playbackStatus: { duration },
+      playbackInfo: { playbackSeconds: duration },
     } = this.props
     if (!isNil(duration) && !isNil(position)) {
       return position / duration
@@ -23,7 +21,7 @@ class PlayerSeekBar extends Component {
 
   onBarClick = ({ position }) => {
     const {
-      playbackStatus: { trackId, duration },
+      playbackInfo: { id: trackId, playbackSeconds: duration },
       seekTrack,
     } = this.props
     const newPosition = duration * position
@@ -36,29 +34,17 @@ class PlayerSeekBar extends Component {
 }
 
 PlayerSeekBar.propTypes = {
-  playbackStatus: PropTypes.object.isRequired,
+  playbackInfo: PropTypes.object.isRequired,
   playbackPosition: PropTypes.object.isRequired,
   seekTrack: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ playbackPosition, playbackStatus }) => ({
+const mapStateToProps = ({ playbackPosition, playbackInfo }) => ({
   playbackPosition,
-  playbackStatus,
-})
-
-const mapDispatchToProps = dispatch => ({
-  // setPlayerInstance: bindActionCreators(PlayerModule.setPlayerInstance, dispatch),
-  // updatePlaybackStatus: bindActionCreators(PlaybackStatusModule.updatePlaybackStatus, dispatch),
-  updatePlaybackPosition: bindActionCreators(
-    PlaybackPositionModule.updatePlaybackPosition,
-    dispatch
-  ),
+  playbackInfo,
 })
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps),
   withPlayer
 )(PlayerSeekBar)

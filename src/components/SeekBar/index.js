@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import noop from 'lodash/noop'
 
-import Box from '../Box'
+import styles from './styles.module.scss'
 
 class SeekBar extends Component {
   handleBarClick = e => {
@@ -19,17 +19,10 @@ class SeekBar extends Component {
   render() {
     const { value } = this.props
     return (
-      <Box position="relative" bg="gray" height={50}>
-        <Box bg="red" height="100%" style={{ width: `${(value * 100).toFixed(1)}%` }} />
-        <Box
-          position="absolute"
-          top="0"
-          right="0"
-          bottom="0"
-          left="0"
-          onClick={this.handleBarClick}
-        />
-      </Box>
+      <div className={styles.wrap}>
+        <div className={styles.track} style={{ width: `${(value * 100).toFixed(1)}%` }} />
+        <div className={styles.cover} onClick={this.handleBarClick} />
+      </div>
     )
   }
 }

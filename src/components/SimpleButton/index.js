@@ -1,22 +1,20 @@
-import styled from 'styled-components'
+import React from 'react'
+import PropTypes from 'prop-types'
+import cn from 'classnames'
 
-import Box from '../Box'
+import styles from './styles.module.scss'
 
-const SimpleButton = styled(Box)`
-  transition: 0.3s ease;
-  outline: none;
-  &:active {
-    opacity: 0.6;
-  }
-`
-
+const SimpleButton = ({ type, className, ...rest }) => {
+  // eslint-disable-next-line react/button-has-type
+  return <button type={type} className={cn(styles.button, className)} {...rest} />
+}
+SimpleButton.propTypes = {
+  className: PropTypes.string,
+  type: PropTypes.string,
+}
 SimpleButton.defaultProps = {
-  as: 'button',
+  className: '',
   type: 'button',
-  backgroundColor: 'transparent',
-  backgroundImage: 'none',
-  border: 'none',
-  px: 0,
 }
 
 export default SimpleButton

@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 import modalModule from './modal'
 import authModule from './auth'
@@ -12,11 +14,21 @@ import tracksModule from './tracks'
 import playerModule from './player'
 import themesModule from './themes'
 import iconThemesModule from './iconThemes'
+import playbackListModule from './playbackList'
+import playbackInfoModule from './playbackInfo'
+
+const { playbackStatus, ...otherPlaybackStatusModule } = playbackStatusModule
+const playbackStatusPersistConfig = {
+  key: 'playbackStatus',
+  storage,
+  whitelist: ['isShuffle'],
+}
 
 const rootReducer = combineReducers({
   ...modalModule,
   ...authModule,
-  ...playbackStatusModule,
+  playbackStatus: persistReducer(playbackStatusPersistConfig, playbackStatus),
+  ...otherPlaybackStatusModule,
   ...playbackPositionModule,
   ...genresModule,
   ...artistsModule,
@@ -26,6 +38,8 @@ const rootReducer = combineReducers({
   ...playerModule,
   ...themesModule,
   ...iconThemesModule,
+  ...playbackListModule,
+  ...playbackInfoModule,
 })
 
 export default rootReducer

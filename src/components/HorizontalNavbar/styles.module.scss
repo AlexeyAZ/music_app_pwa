@@ -1,0 +1,21 @@
+.wrap {
+  border-bottom: 1px solid black;
+  overflow: hidden;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: auto;
+  height: var(--player-horizontal-navbar-height);
+  width: 100%;
+}
+.listItem {
+  margin-right: 10px;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+.listItemTextActive {
+  color: red;
+}

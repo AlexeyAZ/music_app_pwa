@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import isNil from 'lodash/isNil'
+import get from 'lodash/get'
 
 import { withPlayer } from 'hocs'
 
@@ -10,15 +11,17 @@ import ThemedPlayerButton from '../ThemedPlayerButton'
 
 class PlayButton extends Component {
   handleButtonClick = () => {
-    const { id, advPlayTrack } = this.props
-    return advPlayTrack(id)
+    const { track, advPlayTrackAsync } = this.props
+    return advPlayTrackAsync(track)
   }
 
   getIconName = () => {
     const {
-      id,
-      playbackStatus: { isPlaying, isTrackLoaded, trackId },
+      track,
+      playbackStatus: { isPlaying, isTrackLoaded },
+      playbackInfo: { id: trackId },
     } = this.props
+    const id = get(track, 'id')
     if (!id) {
       if (isPlaying) return 'Pause'
       if (!isNil(isTrackLoaded) && !isTrackLoaded) return 'Spinner'
@@ -32,21 +35,32 @@ class PlayButton extends Component {
   }
 
   render() {
-    return <ThemedPlayerButton onClick={this.handleButtonClick} iconName={this.getIconName()} />
+    const { className } = this.props
+    return (
+      <ThemedPlayerButton
+        className={className}
+        onClick={this.handleButtonClick}
+        iconName={this.getIconName()}
+      />
+    )
   }
 }
 
 PlayButton.propTypes = {
+  className: PropTypes.string,
+  track: PropTypes.object,
   playbackStatus: PropTypes.object.isRequired,
-  id: PropTypes.string,
-  advPlayTrack: PropTypes.func.isRequired,
+  playbackInfo: PropTypes.object.isRequired,
+  advPlayTrackAsync: PropTypes.func.isRequired,
 }
 PlayButton.defaultProps = {
-  id: null,
+  className: '',
+  track: null,
 }
 
-const mapStateToProps = ({ playbackStatus }) => ({
+const mapStateToProps = ({ playbackStatus, playbackInfo }) => ({
   playbackStatus,
+  playbackInfo,
 })
 
 export default compose(

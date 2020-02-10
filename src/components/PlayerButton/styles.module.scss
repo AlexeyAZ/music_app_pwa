@@ -1,0 +1,19 @@
+@import 'variables.scss';
+
+@each $name, $size in $icon-sizes {
+  .button-#{$name} {
+    height: var(--icon-size-#{$name});
+    width: var(--icon-size-#{$name});
+  }
+  .icon-#{$name} {
+    display: block;
+    height: calc(var(--icon-size-#{$name}) - 10px);
+    width: calc(var(--icon-size-#{$name}) - 10px);
+  }
+}
+
+@each $name, $color in $colors {
+  .color-#{$name} {
+    color: var(--color-#{$name});
+  }
+}

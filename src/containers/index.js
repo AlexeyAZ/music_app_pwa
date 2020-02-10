@@ -7,6 +7,9 @@ import PlayerWidget from './PlayerWidget'
 import PlayButton from './PlayButton'
 import SkipNextButton from './SkipNextButton'
 import SkipPreviousButton from './SkipPreviousButton'
+import TrackRow from './TrackRow'
+import ShuffleButton from './ShuffleButton'
+import RepeatButton from './RepeatButton'
 
 export {
   Routing,
@@ -18,4 +21,7 @@ export {
   PlayButton,
   SkipNextButton,
   SkipPreviousButton,
+  TrackRow,
+  ShuffleButton,
+  RepeatButton,
 }

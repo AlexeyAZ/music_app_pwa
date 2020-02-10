@@ -2,9 +2,10 @@ import Main from '../pages/Main'
 import Login from '../pages/Login'
 import Genres from '../pages/Genres'
 import Tracks from '../pages/Tracks'
-import Artists from '../pages/Tracks/Artists'
-import Playlists from '../pages/Tracks/Playlists'
 import Library from '../pages/Library'
+import Artists from '../pages/Library/Artists'
+import Playlists from '../pages/Library/Playlists'
+import Trending from '../pages/Trending'
 import Profile from '../pages/Profile'
 
 const routes = [
@@ -28,33 +29,38 @@ const routes = [
     path: '/tracks',
     title: 'Tracks',
     component: Tracks,
+  },
+  {
+    path: '/library',
+    title: 'Library',
+    component: Library,
     routes: [
       {
-        path: '/tracks/playlists',
+        path: '/library/playlists',
         title: 'Playlists',
         component: Playlists,
       },
       {
-        path: '/tracks/artists',
+        path: '/library/artists',
         title: 'Artists',
         component: Artists,
       },
       {
-        path: '/tracks/albums',
+        path: '/library/albums',
         title: 'Albums',
         component: Artists,
       },
       {
-        path: '/tracks/tracks',
+        path: '/library/tracks',
         title: 'Tracks',
         component: Artists,
       },
     ],
   },
   {
-    path: '/library',
-    title: 'Library',
-    component: Library,
+    path: '/trending',
+    title: 'Trending',
+    component: Trending,
   },
   {
     path: '/profile',

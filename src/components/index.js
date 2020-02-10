@@ -1,15 +1,16 @@
 import Button from './Button'
 import Redirect from './Redirect'
 import { GlobalThemeContext, GlobalThemeProvider, GlobalThemeConsumer } from './GlobalThemeContext'
-import Box from './Box'
 import Navbar from './Navbar'
 import HorizontalNavbar from './HorizontalNavbar'
 import Link from './Link'
 import Header from './Header'
 import SimpleButton from './SimpleButton'
-import SimplePlayerButton from './SimplePlayerButton'
+import PlayerButton from './PlayerButton'
 import Icon from './Icon'
 import SeekBar from './SeekBar'
+
+import { Text } from './Typography'
 
 export {
   Button,
@@ -17,13 +18,13 @@ export {
   GlobalThemeContext,
   GlobalThemeProvider,
   GlobalThemeConsumer,
-  Box,
   Navbar,
   HorizontalNavbar,
   Link,
   Header,
   SimpleButton,
-  SimplePlayerButton,
+  PlayerButton,
   Icon,
   SeekBar,
+  Text,
 }

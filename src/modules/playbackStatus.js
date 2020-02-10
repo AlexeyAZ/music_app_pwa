@@ -2,9 +2,10 @@ import { createAction, createReducer } from 'helpers'
 
 const playbackStatusInitialState = {
   isPlaying: false,
-  trackId: null,
   isTrackLoaded: null,
-  duration: null,
+  isTrackEnded: null,
+  isShuffle: false,
+  isRepeat: 'none', // 'none', 'all', 'one'
 }
 
 export const updatePlaybackStatus = createAction('UPDATE_PLAYBACK_STATUS')

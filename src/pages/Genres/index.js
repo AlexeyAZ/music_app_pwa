@@ -5,8 +5,6 @@ import { bindActionCreators, compose } from 'redux'
 import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 
-import { Button } from 'components'
-
 import * as GenresModule from 'modules/genres'
 import * as ModalModule from 'modules/modal'
 
@@ -43,8 +41,6 @@ class Genres extends Component {
         {allGenresData.map(genre => {
           return <div key={genre.id}>{genre.name}</div>
         })}
-        <Button onClick={this.playTrack}>Play</Button>
-        <Button onClick={this.stopTrack}>Stop</Button>
         <Link to="/main">To main</Link>
       </div>
     )
@@ -52,14 +48,12 @@ class Genres extends Component {
 }
 
 Genres.propTypes = {
-  authOptions: PropTypes.object.isRequired,
   allGenres: PropTypes.object.isRequired,
   getAllGenres: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ authOptions, playbackStatus, allGenres }) => ({
+const mapStateToProps = ({ authOptions, allGenres }) => ({
   authOptions,
-  playbackStatus,
   allGenres,
 })
 
