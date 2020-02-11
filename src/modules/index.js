@@ -21,7 +21,7 @@ const { playbackStatus, ...otherPlaybackStatusModule } = playbackStatusModule
 const playbackStatusPersistConfig = {
   key: 'playbackStatus',
   storage,
-  whitelist: ['isShuffle'],
+  whitelist: ['isShuffle', 'repeat'],
 }
 
 const rootReducer = combineReducers({

@@ -10,6 +10,8 @@ import {
   FiRepeat,
 } from 'react-icons/fi'
 
+import { MdRepeatOne } from 'react-icons/md'
+
 const featherTheme = {
   Play: FiPlay,
   Pause: FiPause,
@@ -20,6 +22,7 @@ const featherTheme = {
   Spinner: FiLoader,
   Shuffle: FiShuffle,
   Repeat: FiRepeat,
+  RepeatOne: MdRepeatOne,
 }
 
 export default featherTheme

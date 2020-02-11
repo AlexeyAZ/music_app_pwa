@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators, compose } from 'redux'
+import { bindActionCreators } from 'redux'
 import { store as notificationStore } from 'react-notifications-component'
 import get from 'lodash/get'
 import random from 'lodash/random'
 import differenceBy from 'lodash/differenceBy'
+
+import {
+  REPEAT_BUTTON_STATUS_ONE,
+  REPEAT_BUTTON_STATUS_ALL,
+  REPEAT_BUTTON_STATUS_NONE,
+} from 'constants'
 
 import { napsterConfig } from 'config'
 
@@ -33,10 +39,45 @@ const withPlayer = WrappedComponent => {
       })
     }
 
+    initPlayerMethods = () => {
+      // player.player.on('play', e => {
+      //   console.log(e)
+      // })
+      // player.player.on('pause', e => {
+      //   console.log(e)
+      // })
+      // player.player.on('loadedmetadata', e => {
+      //   console.log(e)
+      // })
+      // player.player.on('ended', e => {
+      //   console.log(e)
+      // })
+      // player.player.on('timeupdate', e => {
+      //   console.log(e)
+      // })
+      // player.player.on('error', e => {
+      //   console.log(e)
+      // })
+    }
+
+    initMediaSessionHandlers = () => {
+      navigator.mediaSession.setActionHandler('play', () => {
+        this.advPlayTrackAsync()
+      })
+      navigator.mediaSession.setActionHandler('pause', () => {
+        this.pauseTrackAsync()
+      })
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        this.previousTrack()
+      })
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        this.nextTrackAsync()
+      })
+    }
+
     initPlayer = async () => {
       const {
         authOptions,
-        playbackStatus: { isShuffle },
         setPlayerInstance,
         updatePlaybackPosition,
         updatePlaybackStatus,
@@ -61,6 +102,7 @@ const withPlayer = WrappedComponent => {
         }
         updatePlaybackPosition({ position: player.currentTime() })
       })
+      // eslint-disable-next-line no-unused-vars
       player.callbackHandler('trackLoaded', meta => {
         console.log(`WithPlayerHOC -> trackLoaded`)
         updatePlaybackStatus({
@@ -92,47 +134,10 @@ const withPlayer = WrappedComponent => {
         console.log(`WithPlayerHOC -> reporting ->`, е)
       })
 
-      // player.player.on('play', e => {
-      //   console.log(e)
-      // })
-      // player.player.on('pause', e => {
-      //   console.log(e)
-      // })
-      // player.player.on('loadedmetadata', e => {
-      //   console.log(e)
-      // })
-      // player.player.on('ended', e => {
-      //   console.log(e)
-      // })
-      // player.player.on('timeupdate', e => {
-      //   console.log(e)
-      // })
-      // player.player.on('error', e => {
-      //   console.log(e)
-      // })
       await setPlayerInstance(player)
-      console.log('withPlayer:', player)
+      console.log('withPlayer -> initPlayer:', player)
 
-      navigator.mediaSession.setActionHandler('play', () => {
-        this.advPlayTrackAsync()
-      })
-
-      navigator.mediaSession.setActionHandler('pause', () => {
-        this.pauseTrackAsync()
-      })
-
-      navigator.mediaSession.setActionHandler('previoustrack', () => {
-        this.previousTrack()
-      })
-
-      navigator.mediaSession.setActionHandler('nexttrack', () => {
-        this.nextTrackAsync()
-      })
-    }
-
-    parseError = error => {
-      const code = get(error, 'error.code')
-      const rawCode = `{${code.split('{')[1].split('}')[0]}}`
+      this.initMediaSessionHandlers()
     }
 
     getPlayerTrackId = trackId => {
@@ -147,39 +152,49 @@ const withPlayer = WrappedComponent => {
       return { context: 'UNKNOWN' }
     }
 
-    getRandomTrackIndex = () => {
+    getRandomTrackIndex = tracks => {
       const {
-        playbackList: { tracks },
+        playbackList: { tracks: playbackTracks },
       } = this.props
-      return random(0, tracks.length - 1)
+      if (tracks) {
+        return random(0, tracks.length - 1)
+      }
+      return random(0, playbackTracks.length - 1)
     }
 
-    playTrack = trackId => {
+    playTrackAsync = async track => {
       const {
         player: { instance },
+        updatePlaybackStatus,
+        updatePlaybackInfo,
       } = this.props
+      const trackId = get(track, 'id')
+
+      await updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false, isTrackEnded: false })
+      await updatePlaybackInfo(track)
+
       instance.play(this.getPlayerTrackId(trackId), this.getPlayerContext())
     }
 
     advPlayTrackAsync = async track => {
       const {
-        playbackStatus: { isPlaying, isTrackEnded },
+        playbackList: { listened },
+        playbackStatus: { isPlaying, isTrackEnded, isShuffle, repeat },
+        playbackInfo,
         playbackInfo: { id: playbackTrackId },
-        updatePlaybackStatus,
-        updatePlaybackInfo,
-        addToListened,
+        clearListened,
       } = this.props
 
       const trackId = get(track, 'id')
 
       if (isPlaying) {
-        if (!trackId || playbackTrackId === trackId) {
+        if (!trackId || trackId === playbackTrackId) {
           return this.pauseTrackAsync()
         }
-        await updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false, isTrackEnded: false })
-        await updatePlaybackInfo({ ...track })
-        await addToListened(track)
-        await this.playTrack(trackId)
+        if (isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0) {
+          await clearListened()
+        }
+        await this.playTrackAsync(track)
       }
       if (trackId === playbackTrackId && !isTrackEnded) {
         return this.resumeTrack(trackId)
@@ -187,11 +202,12 @@ const withPlayer = WrappedComponent => {
       if (!trackId && playbackTrackId && !isTrackEnded) {
         return this.resumeTrack(playbackTrackId)
       }
+
+      if (isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0) {
+        await clearListened()
+      }
       // if !trackId && !playbackTrackId && !isPlaying
-      await updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false, isTrackEnded: false })
-      await updatePlaybackInfo({ ...track })
-      await addToListened(track)
-      return this.playTrack(trackId || playbackTrackId)
+      return this.playTrackAsync(track || playbackInfo)
     }
 
     pauseTrackAsync = async () => {
@@ -199,8 +215,8 @@ const withPlayer = WrappedComponent => {
         player: { instance },
         updatePlaybackStatus,
       } = this.props
-      instance.pause()
       await updatePlaybackStatus({ isPlaying: false })
+      instance.pause()
     }
 
     seekTrack = (trackId, time) => {
@@ -217,89 +233,64 @@ const withPlayer = WrappedComponent => {
       instance.resume(trackId, this.getPlayerContext())
     }
 
-    nextTrackAsync = async () => {
-      const {
-        playbackStatus: { isShuffle },
-        playbackList: { tracks },
-        updatePlaybackStatus,
-        updatePlaybackPosition,
-      } = this.props
-      const nextTrackIndex = isShuffle ? this.getRandomTrackIndex() : this.getNextTrackIndex()
-      const nextTrackId = tracks[nextTrackIndex]
-      await updatePlaybackStatus({ isPlaying: false, isTrackEnded: true })
-      await updatePlaybackPosition({ position: 0 })
-      this.advPlayTrackAsync(nextTrackId)
-    }
-
     previousTrack = () => {
       const {
         playbackList: { tracks },
-        playbackStatus: { isShuffle, isRepeat },
       } = this.props
       const previousTrackIndex = this.getPreviousTrackIndex()
       const previousTrackId = tracks[previousTrackIndex]
       this.advPlayTrackAsync(previousTrackId)
     }
 
-    getNextTrackId = async () => {
+    nextTrackAsync = async () => {
       const {
         playbackList: { tracks, listened },
+        playbackInfo,
         playbackInfo: { id: playbackId },
-        playbackStatus: { isShuffle, isRepeat },
+        playbackStatus: { isShuffle, repeat },
         updatePlaybackStatus,
         updatePlaybackPosition,
+        addToListened,
       } = this.props
 
-      if (!isRepeat && !isShuffle) {
-        const tracksCount = tracks.length
-        const currentTrackIndex = tracks.findIndex(track => track.id === playbackId)
-        const nextTrackIndex = currentTrackIndex + 1
-        await updatePlaybackStatus({ isPlaying: false, isTrackEnded: true })
-        await updatePlaybackPosition({ position: 0 })
-        if (tracksCount !== nextTrackIndex) {
-          this.advPlayTrackAsync(tracks[nextTrackIndex])
-        }
+      await updatePlaybackStatus({ isPlaying: false, isTrackEnded: true })
+      await updatePlaybackPosition({ position: 0 })
+
+      if (repeat === REPEAT_BUTTON_STATUS_ONE) {
+        return this.advPlayTrackAsync(playbackInfo)
       }
-
-      if (isRepeat) {
-        if (isShuffle) {
-          const nextTrackId = this.getRandomTrackIndex()
-          return this.advPlayTrackAsync(tracks[nextTrackId])
-        }
-      }
-    }
-
-    getNextTrackIndex = () => {
-      const {
-        playbackList: { tracks, listened },
-        playbackInfo: { id: playbackId },
-        playbackStatus: { isShuffle, isRepeat },
-      } = this.props
-
-      // let tracks = []
-      // if (!isRepeat) {
-      //   tracks = differenceBy(rawTracks, listened, 'id')
-      // }
-
-      // if (!isShuffle) {
-      //   const tracksCount = tracks.length
-      //   const currentTrackIndex = tracks.findIndex(track => track.id === playbackId)
-      //   if (tracksCount === currentTrackIndex + 1) {
-      //     return 0
-      //   }
-      //   return currentTrackIndex + 1
-      // }
-      // if (isShuffle) {
-      //   const randomIndex = random(0, tracks.length - 1)
-      //   return randomIndex
-      // }
 
       const tracksCount = tracks.length
       const currentTrackIndex = tracks.findIndex(track => track.id === playbackId)
-      if (tracksCount === currentTrackIndex + 1) {
-        return 0
+
+      if (repeat === REPEAT_BUTTON_STATUS_ALL) {
+        if (isShuffle) {
+          const nextTrackIndex = this.getRandomTrackIndex()
+          return this.advPlayTrackAsync(tracks[nextTrackIndex])
+        }
+        const nextTrackIndex = currentTrackIndex + 1
+        if (tracksCount !== nextTrackIndex) {
+          return this.advPlayTrackAsync(tracks[nextTrackIndex])
+        }
+        return this.advPlayTrackAsync(tracks[0])
       }
-      return currentTrackIndex + 1
+
+      if (repeat === REPEAT_BUTTON_STATUS_NONE) {
+        if (isShuffle) {
+          const allTracks = differenceBy(tracks, listened, [playbackInfo], 'id')
+          await addToListened(playbackInfo)
+          if (allTracks.length !== 0) {
+            const nextTrackIndex = this.getRandomTrackIndex(allTracks)
+            return this.playTrackAsync(allTracks[nextTrackIndex])
+          }
+          return null
+        }
+        const nextTrackIndex = currentTrackIndex + 1
+        if (tracksCount !== nextTrackIndex) {
+          return this.advPlayTrackAsync(tracks[nextTrackIndex])
+        }
+      }
+      return null
     }
 
     getPreviousTrackIndex = () => {
@@ -326,7 +317,7 @@ const withPlayer = WrappedComponent => {
       const { children, ...rest } = this.props
       return (
         <WrappedComponent
-          playTrack={this.playTrack}
+          playTrack={this.playTrackAsync}
           advPlayTrackAsync={this.advPlayTrackAsync}
           pauseTrackAsync={this.pauseTrackAsync}
           previousTrack={this.previousTrack}
@@ -353,6 +344,7 @@ const withPlayer = WrappedComponent => {
     updatePlaybackStatus: PropTypes.func.isRequired,
     updatePlaybackInfo: PropTypes.func.isRequired,
     addToListened: PropTypes.func.isRequired,
+    clearListened: PropTypes.func.isRequired,
     updatePlaybackPosition: PropTypes.func.isRequired,
   }
   WithPlayerHOC.defaultProps = {
@@ -378,17 +370,16 @@ const withPlayer = WrappedComponent => {
     updatePlaybackStatus: bindActionCreators(PlaybackStatusModule.updatePlaybackStatus, dispatch),
     updatePlaybackInfo: bindActionCreators(PlaybackInfoModule.updatePlaybackInfo, dispatch),
     addToListened: bindActionCreators(PlaybackListModule.addToListened, dispatch),
+    clearListened: bindActionCreators(PlaybackListModule.clearListened, dispatch),
     updatePlaybackPosition: bindActionCreators(
       PlaybackPositionModule.updatePlaybackPosition,
       dispatch
     ),
   })
 
-  return compose(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps
   )(WithPlayerHOC)
 }
 

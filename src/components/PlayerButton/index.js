@@ -22,7 +22,10 @@ const PlayerButton = ({
     <SimpleButton disabled={disabled} onClick={onClick} className={className}>
       {iconName ? (
         <Icon
-          className={cn(styles[`icon-${iconSize}`], styles[`color-${iconColor}`])}
+          className={cn(
+            styles[`icon-${iconSize}`],
+            disabled ? styles[`color-disabled`] : styles[`color-${iconColor}`]
+          )}
           iconTheme={iconTheme}
           iconName={iconName}
         />
