@@ -14,30 +14,33 @@ import RepeatButton from '../RepeatButton'
 import styles from './styles.module.scss'
 
 const PlayerWidget = ({ playbackInfo }) => {
-  return (
-    <div>
-      <div className={styles.wrap}>
-        <div className={styles.controls}>
-          <SkipPreviousButton />
-          <PlayButton />
-          <SkipNextButton />
-        </div>
-        <div className={styles.meta}>
-          <Text className={styles.metaText}>{playbackInfo.name}</Text>
-          <Text className={styles.metaText} size="xs">
-            {playbackInfo.artistName}
-          </Text>
-        </div>
-        <div className={styles.extraControls}>
-          <ShuffleButton />
-          <RepeatButton />
-        </div>
-      </div>
+  if (playbackInfo.id) {
+    return (
       <div>
-        <PlayerSeekBar />
+        <div className={styles.wrap}>
+          <div className={styles.controls}>
+            <SkipPreviousButton />
+            <PlayButton />
+            <SkipNextButton />
+          </div>
+          <div className={styles.meta}>
+            <Text className={styles.metaText}>{playbackInfo.name}</Text>
+            <Text className={styles.metaText} size="xs">
+              {playbackInfo.artistName}
+            </Text>
+          </div>
+          <div className={styles.extraControls}>
+            <ShuffleButton />
+            <RepeatButton />
+          </div>
+        </div>
+        <div>
+          <PlayerSeekBar />
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+  return null
 }
 
 PlayerWidget.propTypes = {

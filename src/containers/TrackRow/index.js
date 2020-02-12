@@ -36,20 +36,4 @@ TrackRow.defaultProps = {
   artistName: '',
 }
 
-const mapStateToProps = ({ playbackPosition }) => ({
-  playbackPosition,
-})
-
-const mapDispatchToProps = dispatch => ({
-  updatePlaybackPosition: bindActionCreators(
-    PlaybackPositionModule.updatePlaybackPosition,
-    dispatch
-  ),
-})
-
-export default compose(
-  connect(
-    null,
-    mapDispatchToProps
-  )
-)(TrackRow)
+export default TrackRow

@@ -19,6 +19,7 @@ const playbackListModule = {
           return {
             ...state,
             tracks: payload,
+            listened: [],
           }
         },
         [addToListened.start]: (state, payload) => {

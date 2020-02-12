@@ -7,9 +7,7 @@ import get from 'lodash/get'
 import moment from 'moment'
 
 import * as AuthUserModule from 'modules/auth'
-import * as ModalModule from 'modules/modal'
 
-import { withPlayer } from 'hocs'
 import { axiosInstance } from 'helpers'
 
 const PAGE_AFTER_LOGIN = '/library/playlists'
@@ -20,10 +18,9 @@ class AppContainer extends Component {
   }
 
   async componentDidMount() {
-    const { initPlayer, history } = this.props
+    const { history } = this.props
     const authActionSuccess = await this.getAuthAction()
     if (authActionSuccess) {
-      initPlayer()
       // history.replace(PAGE_AFTER_LOGIN) TODO
       return
     }
@@ -73,6 +70,7 @@ class AppContainer extends Component {
   }
 
   render() {
+    console.log('render AppContainer')
     const { loading } = this.state
     const { children } = this.props
     if (loading) {
@@ -90,20 +88,17 @@ AppContainer.propTypes = {
   authUser: PropTypes.func.isRequired,
   setAuthOptions: PropTypes.func.isRequired,
   refreshToken: PropTypes.func.isRequired,
-  initPlayer: PropTypes.func.isRequired,
 }
 AppContainer.defaultProps = {
   children: null,
 }
 
-const mapStateToProps = ({ auth, authOptions }) => ({ auth, authOptions })
+const mapStateToProps = ({ authOptions }) => ({ authOptions })
 
 const mapDispatchToProps = dispatch => ({
   authUser: bindActionCreators(AuthUserModule.authUser, dispatch),
   setAuthOptions: bindActionCreators(AuthUserModule.setAuthOptions, dispatch),
   refreshToken: bindActionCreators(AuthUserModule.refreshToken, dispatch),
-  openModal: bindActionCreators(ModalModule.openModal, dispatch),
-  closeModal: bindActionCreators(ModalModule.closeModal, dispatch),
 })
 
 export default compose(
@@ -111,6 +106,5 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  withRouter,
-  withPlayer
+  withRouter
 )(AppContainer)

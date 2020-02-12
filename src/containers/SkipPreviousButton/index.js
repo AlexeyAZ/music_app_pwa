@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { withPlayer } from 'hocs'
+import { playerControls } from 'helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
+const { previousTrackAsync } = playerControls
+
 class SkipPreviousButton extends Component {
   handleButtonClick = () => {
-    const { previousTrack } = this.props
-    previousTrack()
+    previousTrackAsync()
   }
 
   render() {
@@ -16,8 +17,4 @@ class SkipPreviousButton extends Component {
   }
 }
 
-SkipPreviousButton.propTypes = {
-  previousTrack: PropTypes.func.isRequired,
-}
-
-export default withPlayer(SkipPreviousButton)
+export default SkipPreviousButton

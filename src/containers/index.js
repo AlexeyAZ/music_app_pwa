@@ -10,6 +10,7 @@ import SkipPreviousButton from './SkipPreviousButton'
 import TrackRow from './TrackRow'
 import ShuffleButton from './ShuffleButton'
 import RepeatButton from './RepeatButton'
+import PlayerInstance from './PlayerInstance'
 
 export {
   Routing,
@@ -24,4 +25,5 @@ export {
   TrackRow,
   ShuffleButton,
   RepeatButton,
+  PlayerInstance,
 }

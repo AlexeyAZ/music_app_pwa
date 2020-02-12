@@ -1,5 +1,5 @@
 .button {
-  transition: 0.3s ease;
+  transition: 0.3s linear;
   background-color: transparent;
   background-image: none;
   border: none;
@@ -7,6 +7,6 @@
   padding-left: 0;
   padding-right: 0;
   &:active {
-    opacity: 0.6;
+    opacity: 0.1;
   }
 }

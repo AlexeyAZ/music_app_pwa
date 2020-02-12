@@ -13,8 +13,15 @@ import routes from '../../routes'
 import Layout from '../Layout'
 
 import AppContainer from './AppContainer'
+import PlayerInstance from '../PlayerInstance'
 
 import 'react-notifications-component/dist/theme.css'
+
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line global-require
+  const whyDidYouUpdate = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js')
+  whyDidYouUpdate(React)
+}
 
 class App extends Component {
   componentDidMount() {}
@@ -25,6 +32,7 @@ class App extends Component {
         <PersistGate loading={null} persistor={persistor}>
           <Router history={history}>
             <AppContainer>
+              <PlayerInstance />
               <ReactNotification />
               <Layout>{renderRoutes(routes)}</Layout>
             </AppContainer>

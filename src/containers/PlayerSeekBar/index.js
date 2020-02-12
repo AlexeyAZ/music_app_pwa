@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { compose } from 'redux'
 import isNil from 'lodash/isNil'
 
 import { SeekBar } from 'components'
-import { withPlayer } from 'hocs'
+import { playerControls } from 'helpers'
+
+const { seekTrack } = playerControls
 
 class PlayerSeekBar extends Component {
   getDurationAsPercent = () => {
@@ -22,7 +23,6 @@ class PlayerSeekBar extends Component {
   onBarClick = ({ position }) => {
     const {
       playbackInfo: { id: trackId, playbackSeconds: duration },
-      seekTrack,
     } = this.props
     const newPosition = duration * position
     seekTrack(trackId, newPosition)
@@ -36,7 +36,6 @@ class PlayerSeekBar extends Component {
 PlayerSeekBar.propTypes = {
   playbackInfo: PropTypes.object.isRequired,
   playbackPosition: PropTypes.object.isRequired,
-  seekTrack: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({ playbackPosition, playbackInfo }) => ({
@@ -44,7 +43,4 @@ const mapStateToProps = ({ playbackPosition, playbackInfo }) => ({
   playbackInfo,
 })
 
-export default compose(
-  connect(mapStateToProps),
-  withPlayer
-)(PlayerSeekBar)
+export default connect(mapStateToProps)(PlayerSeekBar)

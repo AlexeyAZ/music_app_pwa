@@ -14,6 +14,7 @@ import {
 } from 'constants'
 
 import { napsterConfig } from 'config'
+import { playerControls } from 'helpers'
 
 import * as PlayerModule from 'modules/player'
 import * as PlaybackStatusModule from 'modules/playbackStatus'
@@ -24,9 +25,14 @@ import * as PlaybackListModule from 'modules/playbackList'
 import { store } from '../store'
 
 const { DrmStreamingPlayer } = window
+const { playTrackAsync } = playerControls
 
 const withPlayer = WrappedComponent => {
   class WithPlayerHOC extends Component {
+    // shouldComponentUpdate(nextProps) {
+    //   return false
+    // }
+
     createNotification = message => {
       notificationStore.addNotification({
         title: 'Error',
@@ -39,7 +45,7 @@ const withPlayer = WrappedComponent => {
       })
     }
 
-    initPlayerMethods = () => {
+    initPlayerMethods = player => {
       // player.player.on('play', e => {
       //   console.log(e)
       // })
@@ -47,10 +53,10 @@ const withPlayer = WrappedComponent => {
       //   console.log(e)
       // })
       // player.player.on('loadedmetadata', e => {
-      //   console.log(e)
+      //   console.log('loadedmetadata')
       // })
       // player.player.on('ended', e => {
-      //   console.log(e)
+      //   console.log('ended')
       // })
       // player.player.on('timeupdate', e => {
       //   console.log(e)
@@ -94,24 +100,21 @@ const withPlayer = WrappedComponent => {
         volume: 1,
       })
 
-      player.callbackHandler('trackProgress', () => {
+      player.callbackHandler('trackProgress', async () => {
         const storeState = store.getState()
         const isPlaying = get(storeState, 'playbackStatus.isPlaying')
         if (!isPlaying) {
-          updatePlaybackStatus({ isPlaying: true })
+          await updatePlaybackStatus({ isPlaying: true, isTrackLoaded: true })
         }
         updatePlaybackPosition({ position: player.currentTime() })
       })
-      // eslint-disable-next-line no-unused-vars
-      player.callbackHandler('trackLoaded', meta => {
+      player.callbackHandler('trackLoaded', (/* meta */) => {
         console.log(`WithPlayerHOC -> trackLoaded`)
-        updatePlaybackStatus({
-          isPlaying: true,
-          isTrackLoaded: true,
-        })
       })
       player.callbackHandler('trackEnded', async () => {
         console.log('WithPlayerHOC -> trackEnded')
+        await updatePlaybackStatus({ isPlaying: false, isTrackEnded: true })
+        await updatePlaybackPosition({ position: 0 })
         this.nextTrackAsync()
       })
 
@@ -135,9 +138,10 @@ const withPlayer = WrappedComponent => {
       })
 
       await setPlayerInstance(player)
-      console.log('withPlayer -> initPlayer:', player)
 
       this.initMediaSessionHandlers()
+      this.initPlayerMethods(player)
+      console.log('withPlayer -> initPlayer:', player)
     }
 
     getPlayerTrackId = trackId => {
@@ -170,7 +174,7 @@ const withPlayer = WrappedComponent => {
       } = this.props
       const trackId = get(track, 'id')
 
-      await updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false, isTrackEnded: false })
+      await updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false })
       await updatePlaybackInfo(track)
 
       instance.play(this.getPlayerTrackId(trackId), this.getPlayerContext())
@@ -179,35 +183,38 @@ const withPlayer = WrappedComponent => {
     advPlayTrackAsync = async track => {
       const {
         playbackList: { listened },
-        playbackStatus: { isPlaying, isTrackEnded, isShuffle, repeat },
+        playbackStatus: { isPlaying, isShuffle, repeat, isTrackEnded },
         playbackInfo,
         playbackInfo: { id: playbackTrackId },
         clearListened,
       } = this.props
 
       const trackId = get(track, 'id')
+      const isCurrent = trackId === playbackTrackId
+      const isNeedClearListened =
+        isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0
 
       if (isPlaying) {
-        if (!trackId || trackId === playbackTrackId) {
+        if (!trackId || isCurrent) {
           return this.pauseTrackAsync()
         }
-        if (isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0) {
+        if (isNeedClearListened) {
           await clearListened()
         }
-        await this.playTrackAsync(track)
+        await playTrackAsync(track)
       }
-      if (trackId === playbackTrackId && !isTrackEnded) {
+      if (isCurrent && !isTrackEnded) {
         return this.resumeTrack(trackId)
       }
       if (!trackId && playbackTrackId && !isTrackEnded) {
         return this.resumeTrack(playbackTrackId)
       }
 
-      if (isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0) {
+      if (isNeedClearListened) {
         await clearListened()
       }
       // if !trackId && !playbackTrackId && !isPlaying
-      return this.playTrackAsync(track || playbackInfo)
+      return playTrackAsync(track || playbackInfo)
     }
 
     pauseTrackAsync = async () => {
@@ -248,16 +255,11 @@ const withPlayer = WrappedComponent => {
         playbackInfo,
         playbackInfo: { id: playbackId },
         playbackStatus: { isShuffle, repeat },
-        updatePlaybackStatus,
-        updatePlaybackPosition,
         addToListened,
       } = this.props
 
-      await updatePlaybackStatus({ isPlaying: false, isTrackEnded: true })
-      await updatePlaybackPosition({ position: 0 })
-
       if (repeat === REPEAT_BUTTON_STATUS_ONE) {
-        return this.advPlayTrackAsync(playbackInfo)
+        return playTrackAsync(playbackInfo)
       }
 
       const tracksCount = tracks.length
@@ -266,13 +268,13 @@ const withPlayer = WrappedComponent => {
       if (repeat === REPEAT_BUTTON_STATUS_ALL) {
         if (isShuffle) {
           const nextTrackIndex = this.getRandomTrackIndex()
-          return this.advPlayTrackAsync(tracks[nextTrackIndex])
+          return playTrackAsync(tracks[nextTrackIndex])
         }
         const nextTrackIndex = currentTrackIndex + 1
         if (tracksCount !== nextTrackIndex) {
-          return this.advPlayTrackAsync(tracks[nextTrackIndex])
+          return playTrackAsync(tracks[nextTrackIndex])
         }
-        return this.advPlayTrackAsync(tracks[0])
+        return playTrackAsync(tracks[0])
       }
 
       if (repeat === REPEAT_BUTTON_STATUS_NONE) {
@@ -281,13 +283,13 @@ const withPlayer = WrappedComponent => {
           await addToListened(playbackInfo)
           if (allTracks.length !== 0) {
             const nextTrackIndex = this.getRandomTrackIndex(allTracks)
-            return this.playTrackAsync(allTracks[nextTrackIndex])
+            return playTrackAsync(allTracks[nextTrackIndex])
           }
           return null
         }
         const nextTrackIndex = currentTrackIndex + 1
         if (tracksCount !== nextTrackIndex) {
-          return this.advPlayTrackAsync(tracks[nextTrackIndex])
+          return playTrackAsync(tracks[nextTrackIndex])
         }
       }
       return null
@@ -326,7 +328,6 @@ const withPlayer = WrappedComponent => {
           initPlayer={this.initPlayer}
           {...rest}
         >
-          <video-js id="napster-streaming-player" playsinline style={{ display: 'none' }} />
           {children}
         </WrappedComponent>
       )

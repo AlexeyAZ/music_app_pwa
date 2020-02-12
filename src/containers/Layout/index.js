@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
 import cn from 'classnames'
 import { withRouter } from 'react-router'
 
@@ -41,11 +39,8 @@ class Layout extends Component {
   }
 
   render() {
-    const {
-      children,
-      location,
-      playbackInfo: { id: trackId },
-    } = this.props
+    console.log('render Layout')
+    const { children, location } = this.props
     const navbarValue = location.pathname.split('/')[2]
     const isShowHorizontalNavbar = this.isShowHorizontalNavbar()
     return (
@@ -53,14 +48,14 @@ class Layout extends Component {
         className={cn(
           {
             [styles.wrapWithHorizontalNavbar]: isShowHorizontalNavbar,
-            [styles.wrapWithWidget]: trackId,
+            // [styles.wrapWithWidget]: trackId,
           },
           styles.wrap
         )}
       >
-        <div className={styles.headerWrap}>
+        <header className={styles.headerWrap}>
           <HeaderContainer />
-        </div>
+        </header>
         {isShowHorizontalNavbar && (
           <div className={styles.horizontalNavbarWrap}>
             <HorizontalNavbar
@@ -70,11 +65,11 @@ class Layout extends Component {
             />
           </div>
         )}
-        <div>{children}</div>
-        <div className={styles.footerWrap}>
-          {trackId && <PlayerWidget />}
+        <main>{children}</main>
+        <footer className={styles.footerWrap}>
+          <PlayerWidget />
           <Navbar data={navbarData} />
-        </div>
+        </footer>
       </div>
     )
   }
@@ -84,17 +79,9 @@ Layout.propTypes = {
   children: PropTypes.any,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  playbackInfo: PropTypes.object.isRequired,
 }
 Layout.defaultProps = {
   children: null,
 }
 
-const mapStateToProps = ({ playbackInfo }) => ({
-  playbackInfo,
-})
-
-export default compose(
-  connect(mapStateToProps),
-  withRouter
-)(Layout)
+export default withRouter(Layout)

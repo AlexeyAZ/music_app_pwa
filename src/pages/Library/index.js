@@ -50,10 +50,9 @@ Library.propTypes = {
   getTopTracks: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ topTracks, player, authOptions }) => ({
+const mapStateToProps = ({ topTracks, player }) => ({
   topTracks,
   player,
-  authOptions,
 })
 
 const mapDispatchToProps = dispatch => ({

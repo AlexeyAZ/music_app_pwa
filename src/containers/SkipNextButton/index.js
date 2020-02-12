@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { compose } from 'redux'
 import differenceBy from 'lodash/differenceBy'
 
-import { withPlayer } from 'hocs'
-
 import { REPEAT_BUTTON_STATUS_NONE } from 'constants'
+import { playerControls } from 'helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
+const { nextTrackAsync } = playerControls
+
 class SkipNextButton extends Component {
   handleButtonClick = () => {
-    const { nextTrackAsync } = this.props
     nextTrackAsync()
   }
 
@@ -20,11 +19,12 @@ class SkipNextButton extends Component {
     const {
       playbackList: { tracks, listened },
       playbackStatus: { isShuffle, repeat },
+      playbackInfo,
       playbackInfo: { id: playbackId },
     } = this.props
 
     if (repeat === REPEAT_BUTTON_STATUS_NONE) {
-      if (isShuffle && differenceBy(tracks, listened, 'id').length === 0) {
+      if (isShuffle && differenceBy(tracks, listened, [playbackInfo], 'id').length === 0) {
         return true
       }
       const tracksCount = tracks.length
@@ -52,7 +52,6 @@ SkipNextButton.propTypes = {
   playbackList: PropTypes.object.isRequired,
   playbackStatus: PropTypes.object.isRequired,
   playbackInfo: PropTypes.object.isRequired,
-  nextTrackAsync: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({ playbackList, playbackStatus, playbackInfo }) => ({
@@ -61,7 +60,4 @@ const mapStateToProps = ({ playbackList, playbackStatus, playbackInfo }) => ({
   playbackInfo,
 })
 
-export default compose(
-  connect(mapStateToProps),
-  withPlayer
-)(SkipNextButton)
+export default connect(mapStateToProps)(SkipNextButton)
