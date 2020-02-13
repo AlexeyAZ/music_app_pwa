@@ -4,6 +4,7 @@
   height: var(--player-seekbar-height);
 }
 .track {
+  transition: 0.75s linear;
   background-color: var(--color-primary);
   height: 100%;
 }

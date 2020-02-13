@@ -5,6 +5,7 @@ import Tracks from '../pages/Tracks'
 import Library from '../pages/Library'
 import Artists from '../pages/Library/Artists'
 import Playlists from '../pages/Library/Playlists'
+import Favorites from '../pages/Library/Favorites'
 import Trending from '../pages/Trending'
 import Profile from '../pages/Profile'
 
@@ -35,6 +36,11 @@ const routes = [
     title: 'Library',
     component: Library,
     routes: [
+      {
+        path: '/library/favorites',
+        title: 'Favorites',
+        component: Favorites,
+      },
       {
         path: '/library/playlists',
         title: 'Playlists',

@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import routes from 'routes'
 
-import { Header } from 'components'
+import { Header, Text } from 'components'
 
 class HeaderContainer extends Component {
   getHeaderTitle = () => {
@@ -30,11 +30,19 @@ class HeaderContainer extends Component {
     return !location.pathname.includes('/tracks/')
   }
 
+  renderRightContent = () => {
+    return (
+      <Text size="xs">
+        <b>Napster ®</b>
+      </Text>
+    )
+  }
+
   render() {
     if (this.showHeader())
       return (
         <Header
-          renderLeftContent={this.renderLeftContent}
+          renderRightContent={this.renderRightContent}
           hideBackButton={this.hideBackButton()}
           title={this.getHeaderTitle()}
         />

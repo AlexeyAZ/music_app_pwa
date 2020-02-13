@@ -4,15 +4,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as PlaybackStatusModule from 'modules/playbackStatus'
+import * as PlaybackListModule from 'modules/playbackList'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
 class ShuffleButton extends Component {
-  handleButtonClick = () => {
+  handleButtonClick = async () => {
     const {
       playbackStatus: { isShuffle },
       updatePlaybackStatus,
+      clearListened,
     } = this.props
+    await clearListened()
     updatePlaybackStatus({ isShuffle: !isShuffle })
   }
 
@@ -33,6 +36,7 @@ class ShuffleButton extends Component {
 ShuffleButton.propTypes = {
   playbackStatus: PropTypes.object.isRequired,
   updatePlaybackStatus: PropTypes.func.isRequired,
+  clearListened: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({ playbackStatus }) => ({
@@ -41,6 +45,7 @@ const mapStateToProps = ({ playbackStatus }) => ({
 
 const mapDispatchToProps = dispatch => ({
   updatePlaybackStatus: bindActionCreators(PlaybackStatusModule.updatePlaybackStatus, dispatch),
+  clearListened: bindActionCreators(PlaybackListModule.clearListened, dispatch),
 })
 
 export default connect(

@@ -1,6 +1,7 @@
 .wrap {
   border-bottom: 1px solid black;
   display: flex;
-  height: var(--player-header-height);
+  align-items: center;
   justify-content: space-between;
+  height: var(--player-header-height);
 }

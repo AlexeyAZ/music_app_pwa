@@ -1,4 +1,3 @@
-import { Routing } from './Routing'
 import App from './App'
 import Layout from './Layout'
 import ThemeChooser from './ThemeChooser'
@@ -11,9 +10,9 @@ import TrackRow from './TrackRow'
 import ShuffleButton from './ShuffleButton'
 import RepeatButton from './RepeatButton'
 import PlayerInstance from './PlayerInstance'
+import FavoriteButton from './FavoriteButton'
 
 export {
-  Routing,
   App,
   Layout,
   ThemeChooser,
@@ -26,4 +25,5 @@ export {
   ShuffleButton,
   RepeatButton,
   PlayerInstance,
+  FavoriteButton,
 }

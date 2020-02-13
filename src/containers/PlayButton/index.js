@@ -13,14 +13,15 @@ const { playControlAsync } = playerControls
 class PlayButton extends Component {
   shouldComponentUpdate(nextProps) {
     const {
-      playbackStatus: { isPlaying, isTrackLoaded },
-      playbackInfo: { id: trackId },
+      playbackStatus: {
+        track: { id: trackId },
+      },
       track,
     } = this.props
     const {
-      playbackStatus: { isPlayingNext, isTrackLoadedNext },
-      playbackInfo: { id: trackIdNext },
-      track: trackNext,
+      playbackStatus: {
+        track: { id: trackIdNext },
+      },
     } = nextProps
 
     return get(track, 'id') === trackId || get(track, 'id') === trackIdNext || !track
@@ -34,8 +35,11 @@ class PlayButton extends Component {
   getIconName = () => {
     const {
       track,
-      playbackStatus: { isPlaying, isTrackLoaded },
-      playbackInfo: { id: trackId },
+      playbackStatus: {
+        isPlaying,
+        isTrackLoaded,
+        track: { id: trackId },
+      },
     } = this.props
     const id = get(track, 'id')
     if (!id) {
@@ -51,8 +55,7 @@ class PlayButton extends Component {
   }
 
   render() {
-    const { track, className } = this.props
-    console.log(`render PlayButton`, track)
+    const { className } = this.props
     return (
       <ThemedPlayerButton
         className={className}
@@ -67,16 +70,14 @@ PlayButton.propTypes = {
   className: PropTypes.string,
   track: PropTypes.object,
   playbackStatus: PropTypes.object.isRequired,
-  playbackInfo: PropTypes.object.isRequired,
 }
 PlayButton.defaultProps = {
   className: '',
   track: null,
 }
 
-const mapStateToProps = ({ playbackStatus, playbackInfo }) => ({
+const mapStateToProps = ({ playbackStatus }) => ({
   playbackStatus,
-  playbackInfo,
 })
 
 export default connect(mapStateToProps)(PlayButton)

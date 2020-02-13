@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import moment from 'moment'
 
 import { napsterConfig } from 'config'
 import { store } from 'store'
@@ -65,6 +66,8 @@ const initPlayer = async () => {
     authOptions: { access_token },
   } = store.getState()
 
+  let date = moment()
+
   const player = new DrmStreamingPlayer({
     id: 'napster-streaming-player',
     apikey: napsterConfig.clientId,
@@ -83,7 +86,12 @@ const initPlayer = async () => {
     if (!isPlaying) {
       await store.dispatch(updatePlaybackStatus({ isPlaying: true, isTrackLoaded: true }))
     }
-    store.dispatch(updatePlaybackPosition({ position: player.currentTime() }))
+    const newDate = moment()
+    console.log(newDate.diff(date, 'milliseconds'))
+    if (newDate.diff(date, 'milliseconds') >= 750) {
+      date = newDate
+      store.dispatch(updatePlaybackPosition({ position: player.currentTime() }))
+    }
   })
   player.callbackHandler('trackLoaded', (/* meta */) => {
     console.log(`initPlayer -> trackLoaded`)

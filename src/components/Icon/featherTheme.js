@@ -8,6 +8,7 @@ import {
   FiLoader,
   FiShuffle,
   FiRepeat,
+  FiHeart,
 } from 'react-icons/fi'
 
 import { MdRepeatOne } from 'react-icons/md'
@@ -23,6 +24,7 @@ const featherTheme = {
   Shuffle: FiShuffle,
   Repeat: FiRepeat,
   RepeatOne: MdRepeatOne,
+  Favorite: FiHeart,
 }
 
 export default featherTheme

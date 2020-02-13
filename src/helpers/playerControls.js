@@ -12,12 +12,12 @@ import {
 } from 'constants'
 
 import * as PlaybackStatusModule from 'modules/playbackStatus'
-import * as PlaybackInfoModule from 'modules/playbackInfo'
 import * as PlaybackListModule from 'modules/playbackList'
+import * as PlaybackPositionModule from 'modules/playbackPosition'
 
 const { updatePlaybackStatus } = PlaybackStatusModule
-const { updatePlaybackInfo } = PlaybackInfoModule
-const { clearListened } = PlaybackListModule
+const { addToListened, clearListened, setPlaybackList } = PlaybackListModule
+const { updatePlaybackPosition } = PlaybackPositionModule
 
 const getPlayerTrackId = trackId => {
   return trackId.replace('tra', 'Tra')
@@ -34,6 +34,9 @@ const getRealTrackId = trackId => {
 
 const getRandomTrackIndex = tracks => {
   const {
+    playbackStatus: {
+      track: { id: playbackId },
+    },
     playbackList: { tracks: playbackTracks },
   } = store.getState()
   if (tracks) {
@@ -42,10 +45,17 @@ const getRandomTrackIndex = tracks => {
   return random(0, playbackTracks.length - 1)
 }
 
+const getRandomTrack = tracks => {
+  const randomIndex = random(0, tracks.length - 1)
+  return tracks[randomIndex]
+}
+
 const getPreviousTrackIndex = () => {
   const {
+    playbackStatus: {
+      track: { id: playbackId },
+    },
     playbackList: { tracks },
-    playbackInfo: { id: playbackId },
   } = store.getState()
   const tracksCount = tracks.length
   const currentTrackIndex = tracks.findIndex(track => track.id === playbackId)
@@ -59,7 +69,7 @@ const resumeTrack = trackId => {
   const {
     player: { instance },
   } = store.getState()
-  instance.resume(trackId, this.getPlayerContext())
+  instance.resume(trackId, getPlayerContext())
 }
 
 const seekTrack = (trackId, time) => {
@@ -75,8 +85,7 @@ const playTrackAsync = async track => {
   } = store.getState()
   const trackId = get(track, 'id')
 
-  await store.dispatch(updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false }))
-  await store.dispatch(updatePlaybackInfo(track))
+  await store.dispatch(updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false, track }))
 
   instance.play(getPlayerTrackId(trackId), getPlayerContext())
 }
@@ -91,16 +100,25 @@ const pauseTrackAsync = async () => {
 
 const playControlAsync = async track => {
   const {
-    playbackList: { listened },
-    playbackStatus: { isPlaying, isShuffle, repeat, isTrackEnded },
-    playbackInfo,
-    playbackInfo: { id: playbackTrackId },
+    playbackList: { listened, tempTracks },
+    playbackStatus: {
+      isPlaying,
+      isShuffle,
+      repeat,
+      isTrackEnded,
+      track: playbackTrack,
+      track: { id: playbackTrackId },
+    },
   } = store.getState()
 
   const trackId = get(track, 'id')
   const isCurrent = trackId === playbackTrackId
   const isNeedClearListened =
     isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0
+
+  if (tempTracks.length > 0) {
+    await store.dispatch(setPlaybackList({ tracks: tempTracks, tempTracks: [] }))
+  }
 
   if (isPlaying) {
     if (!trackId || isCurrent) {
@@ -121,8 +139,9 @@ const playControlAsync = async track => {
   if (isNeedClearListened) {
     await store.dispatch(clearListened())
   }
+
   // if !trackId && !playbackTrackId && !isPlaying
-  return playTrackAsync(track || playbackInfo)
+  return playTrackAsync(track || playbackTrack)
 }
 
 const previousTrackAsync = () => {
@@ -137,14 +156,18 @@ const previousTrackAsync = () => {
 const nextTrackAsync = async () => {
   const {
     playbackList: { tracks, listened },
-    playbackInfo,
-    playbackInfo: { id: playbackId },
-    playbackStatus: { isShuffle, repeat },
-    addToListened,
+    playbackStatus: {
+      isShuffle,
+      repeat,
+      track: playbackTrack,
+      track: { id: playbackId },
+    },
   } = store.getState()
 
+  await store.dispatch(updatePlaybackPosition({ position: 0 }))
+
   if (repeat === REPEAT_BUTTON_STATUS_ONE) {
-    return playTrackAsync(playbackInfo)
+    return playTrackAsync(playbackTrack)
   }
 
   const tracksCount = tracks.length
@@ -152,8 +175,9 @@ const nextTrackAsync = async () => {
 
   if (repeat === REPEAT_BUTTON_STATUS_ALL) {
     if (isShuffle) {
-      const nextTrackIndex = getRandomTrackIndex()
-      return playTrackAsync(tracks[nextTrackIndex])
+      const allTracks = differenceBy(tracks, [playbackTrack], 'id')
+      const nextTrack = getRandomTrack(allTracks)
+      return playTrackAsync(nextTrack)
     }
     const nextTrackIndex = currentTrackIndex + 1
     if (tracksCount !== nextTrackIndex) {
@@ -164,11 +188,11 @@ const nextTrackAsync = async () => {
 
   if (repeat === REPEAT_BUTTON_STATUS_NONE) {
     if (isShuffle) {
-      const allTracks = differenceBy(tracks, listened, [playbackInfo], 'id')
-      await store.dispatch(addToListened(playbackInfo))
+      const allTracks = differenceBy(tracks, listened, [playbackTrack], 'id')
+      await store.dispatch(addToListened(playbackTrack))
       if (allTracks.length !== 0) {
-        const nextTrackIndex = getRandomTrackIndex(allTracks)
-        return playTrackAsync(allTracks[nextTrackIndex])
+        const nextTrack = getRandomTrack(allTracks)
+        return playTrackAsync(nextTrack)
       }
       return null
     }

@@ -1,7 +1,7 @@
 import { createAction, createReducer } from 'helpers'
 
 const playbackPositionInitialState = {
-  position: null,
+  position: 0,
 }
 
 export const updatePlaybackPosition = createAction('UPDATE_PLAYBACK_POSITION')

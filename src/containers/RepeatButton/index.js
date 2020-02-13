@@ -10,15 +10,14 @@ import {
 } from 'constants'
 
 import * as PlaybackStatusModule from 'modules/playbackStatus'
+import * as PlaybackListModule from 'modules/playbackList'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
 class RepeatButton extends Component {
-  handleButtonClick = () => {
-    const {
-      playbackStatus: { repeat },
-      updatePlaybackStatus,
-    } = this.props
+  handleButtonClick = async () => {
+    const { repeat, updatePlaybackStatus, clearListened } = this.props
+    await clearListened()
     if (repeat === REPEAT_BUTTON_STATUS_ALL) {
       updatePlaybackStatus({ repeat: REPEAT_BUTTON_STATUS_ONE })
     }
@@ -31,9 +30,7 @@ class RepeatButton extends Component {
   }
 
   getButtonIcon = () => {
-    const {
-      playbackStatus: { repeat },
-    } = this.props
+    const { repeat } = this.props
     if (repeat === REPEAT_BUTTON_STATUS_ONE) {
       return 'RepeatOne'
     }
@@ -41,9 +38,7 @@ class RepeatButton extends Component {
   }
 
   getButtonColor = () => {
-    const {
-      playbackStatus: { repeat },
-    } = this.props
+    const { repeat } = this.props
     if (repeat === REPEAT_BUTTON_STATUS_NONE) {
       return 'inactive'
     }
@@ -51,6 +46,7 @@ class RepeatButton extends Component {
   }
 
   render() {
+    console.log('render RepeatButton')
     return (
       <ThemedPlayerButton
         onClick={this.handleButtonClick}
@@ -62,16 +58,18 @@ class RepeatButton extends Component {
 }
 
 RepeatButton.propTypes = {
-  playbackStatus: PropTypes.object.isRequired,
+  repeat: PropTypes.string.isRequired,
   updatePlaybackStatus: PropTypes.func.isRequired,
+  clearListened: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ playbackStatus }) => ({
-  playbackStatus,
+const mapStateToProps = ({ playbackStatus: { repeat } }) => ({
+  repeat,
 })
 
 const mapDispatchToProps = dispatch => ({
   updatePlaybackStatus: bindActionCreators(PlaybackStatusModule.updatePlaybackStatus, dispatch),
+  clearListened: bindActionCreators(PlaybackListModule.clearListened, dispatch),
 })
 
 export default connect(

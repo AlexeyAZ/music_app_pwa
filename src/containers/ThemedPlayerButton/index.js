@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { PlayerButton } from 'components'
 
 const ThemedPlayerButton = ({ iconThemes: { activeTheme }, ...rest }) => {
+  // eslint-disable-next-line react/jsx-props-no-spreading
   return <PlayerButton iconTheme={activeTheme} {...rest} />
 }
 

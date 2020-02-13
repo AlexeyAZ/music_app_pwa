@@ -18,17 +18,20 @@ class SkipNextButton extends Component {
   isButtonDisabled = () => {
     const {
       playbackList: { tracks, listened },
-      playbackStatus: { isShuffle, repeat },
-      playbackInfo,
-      playbackInfo: { id: playbackId },
+      playbackStatus: {
+        isShuffle,
+        repeat,
+        track,
+        track: { id: playbackId },
+      },
     } = this.props
 
     if (repeat === REPEAT_BUTTON_STATUS_NONE) {
-      if (isShuffle && differenceBy(tracks, listened, [playbackInfo], 'id').length === 0) {
+      if (isShuffle && differenceBy(tracks, listened, [track], 'id').length === 0) {
         return true
       }
       const tracksCount = tracks.length
-      const currentTrackIndex = tracks.findIndex(track => track.id === playbackId)
+      const currentTrackIndex = tracks.findIndex(currentTrack => currentTrack.id === playbackId)
       const nextTrackIndex = currentTrackIndex + 1
       if (!isShuffle && tracksCount === nextTrackIndex) {
         return true
@@ -51,13 +54,11 @@ class SkipNextButton extends Component {
 SkipNextButton.propTypes = {
   playbackList: PropTypes.object.isRequired,
   playbackStatus: PropTypes.object.isRequired,
-  playbackInfo: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = ({ playbackList, playbackStatus, playbackInfo }) => ({
+const mapStateToProps = ({ playbackList, playbackStatus }) => ({
   playbackList,
   playbackStatus,
-  playbackInfo,
 })
 
 export default connect(mapStateToProps)(SkipNextButton)

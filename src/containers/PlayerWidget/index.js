@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import { Text } from 'components'
 
+import * as PlaybackStatusModule from 'modules/playbackStatus'
+
 import PlayButton from '../PlayButton'
 import SkipNextButton from '../SkipNextButton'
 import SkipPreviousButton from '../SkipPreviousButton'
@@ -13,8 +15,11 @@ import RepeatButton from '../RepeatButton'
 
 import styles from './styles.module.scss'
 
-const PlayerWidget = ({ playbackInfo }) => {
-  if (playbackInfo.id) {
+const { trackIdSelector, trackNameSelector, artistNameSelector } = PlaybackStatusModule
+
+const PlayerWidget = ({ trackId, trackName, artistName }) => {
+  console.log('render PlayerWidget')
+  if (trackId) {
     return (
       <div>
         <div className={styles.wrap}>
@@ -24,9 +29,9 @@ const PlayerWidget = ({ playbackInfo }) => {
             <SkipNextButton />
           </div>
           <div className={styles.meta}>
-            <Text className={styles.metaText}>{playbackInfo.name}</Text>
+            <Text className={styles.metaText}>{trackName}</Text>
             <Text className={styles.metaText} size="xs">
-              {playbackInfo.artistName}
+              {artistName}
             </Text>
           </div>
           <div className={styles.extraControls}>
@@ -44,11 +49,20 @@ const PlayerWidget = ({ playbackInfo }) => {
 }
 
 PlayerWidget.propTypes = {
-  playbackInfo: PropTypes.object.isRequired,
+  trackId: PropTypes.string,
+  trackName: PropTypes.string,
+  artistName: PropTypes.string,
+}
+PlayerWidget.defaultProps = {
+  trackId: null,
+  trackName: null,
+  artistName: null,
 }
 
-const mapStateToProps = ({ playbackInfo }) => ({
-  playbackInfo,
+const mapStateToProps = state => ({
+  trackId: trackIdSelector(state),
+  trackName: trackNameSelector(state),
+  artistName: artistNameSelector(state),
 })
 
 export default connect(mapStateToProps)(PlayerWidget)

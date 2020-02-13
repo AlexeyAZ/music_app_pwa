@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
 import { withRouter } from 'react-router'
 
-import { GlobalThemeContext } from 'components'
+import { GlobalThemeContext, Text } from 'components'
 
 import * as AuthModule from 'modules/auth'
 
@@ -30,6 +30,10 @@ class Profile extends Component {
           Logout
         </button>
         <ThemeChooser />
+        <Text>
+          This product uses the NAPSTER PLATFORM but is not endorsed, certified, or otherwise
+          approved by Napster ®.
+        </Text>
       </div>
     )
   }

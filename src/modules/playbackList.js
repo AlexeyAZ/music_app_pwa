@@ -11,14 +11,15 @@ const playbackListModule = {
     {
       initialState: {
         tracks: [],
-        favorites: [],
+        tempTracks: [],
         listened: [],
       },
       customTypes: {
         [setPlaybackList.start]: (state, payload) => {
           return {
             ...state,
-            tracks: payload,
+            tracks: payload.tracks || state.tracks,
+            tempTracks: payload.tempTracks || state.tempTracks,
             listened: [],
           }
         },

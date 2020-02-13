@@ -2,7 +2,20 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  position: relative;
+  &:after {
+    content: '';
+    background-color: var(--color-disabled);
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 1px;
+  }
 }
 .playButton {
   margin-right: 10px;
+}
+.actions {
+  margin-left: auto;
 }

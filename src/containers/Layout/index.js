@@ -8,12 +8,14 @@ import routes from 'routes'
 import { Navbar, HorizontalNavbar } from 'components'
 
 import HeaderContainer from './HeaderContainer'
+import BottomSpacer from './BottomSpacer'
+
 import PlayerWidget from '../PlayerWidget'
 
 import styles from './styles.module.scss'
 
 const navbarData = [
-  { href: '/library/playlists', label: 'Library' },
+  { href: '/library/favorites', label: 'Library' },
   { href: '/trending', label: 'Trending' },
   { href: '/search', label: 'Search' },
   { href: '/profile', label: 'Profile' },
@@ -48,7 +50,6 @@ class Layout extends Component {
         className={cn(
           {
             [styles.wrapWithHorizontalNavbar]: isShowHorizontalNavbar,
-            // [styles.wrapWithWidget]: trackId,
           },
           styles.wrap
         )}
@@ -66,6 +67,7 @@ class Layout extends Component {
           </div>
         )}
         <main>{children}</main>
+        <BottomSpacer />
         <footer className={styles.footerWrap}>
           <PlayerWidget />
           <Navbar data={navbarData} />

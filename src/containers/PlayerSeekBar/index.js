@@ -6,25 +6,23 @@ import isNil from 'lodash/isNil'
 import { SeekBar } from 'components'
 import { playerControls } from 'helpers'
 
+import * as PlaybackStatusModule from 'modules/playbackStatus'
+
+const { trackIdSelector, durationSelector } = PlaybackStatusModule
 const { seekTrack } = playerControls
 
 class PlayerSeekBar extends Component {
   getDurationAsPercent = () => {
-    const {
-      playbackPosition: { position },
-      playbackInfo: { playbackSeconds: duration },
-    } = this.props
-    if (!isNil(duration) && !isNil(position)) {
-      return position / duration
+    const { playbackPosition, playbackDuration } = this.props
+    if (!isNil(playbackDuration) && !isNil(playbackPosition)) {
+      return playbackPosition / playbackDuration
     }
     return 0
   }
 
   onBarClick = ({ position }) => {
-    const {
-      playbackInfo: { id: trackId, playbackSeconds: duration },
-    } = this.props
-    const newPosition = duration * position
+    const { trackId, playbackDuration } = this.props
+    const newPosition = playbackDuration * position
     seekTrack(trackId, newPosition)
   }
 
@@ -34,13 +32,19 @@ class PlayerSeekBar extends Component {
 }
 
 PlayerSeekBar.propTypes = {
-  playbackInfo: PropTypes.object.isRequired,
-  playbackPosition: PropTypes.object.isRequired,
+  trackId: PropTypes.string,
+  playbackDuration: PropTypes.number,
+  playbackPosition: PropTypes.number.isRequired,
+}
+PlayerSeekBar.defaultProps = {
+  trackId: null,
+  playbackDuration: null,
 }
 
-const mapStateToProps = ({ playbackPosition, playbackInfo }) => ({
-  playbackPosition,
-  playbackInfo,
+const mapStateToProps = state => ({
+  playbackPosition: state.playbackPosition.position,
+  trackId: trackIdSelector(state),
+  playbackDuration: durationSelector(state),
 })
 
 export default connect(mapStateToProps)(PlayerSeekBar)

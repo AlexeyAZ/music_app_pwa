@@ -8,6 +8,7 @@ import {
   MdShuffle,
   MdRepeat,
   MdRepeatOne,
+  MdFavorite,
 } from 'react-icons/md'
 import { AiOutlineLoading } from 'react-icons/ai'
 
@@ -22,6 +23,7 @@ const materialTheme = {
   Shuffle: MdShuffle,
   Repeat: MdRepeat,
   RepeatOne: MdRepeatOne,
+  Favorite: MdFavorite,
 }
 
 export default materialTheme
