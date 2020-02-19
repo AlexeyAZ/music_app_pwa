@@ -39,13 +39,13 @@ class AppContainer extends Component {
 
     if (search.includes('code')) {
       const code = search.split('code=')[1]
-      const authResponse = await authUser({ params: { code } })
+      const authResponse = await authUser({ data: code })
       await this.saveTokensToStorage(authResponse)
       return 'Logged'
     }
 
     if (refresh_token) {
-      const refreshTokenResponse = await refreshToken({ params: { refresh_token } })
+      const refreshTokenResponse = await refreshToken({ data: refresh_token })
       await this.saveTokensToStorage(refreshTokenResponse)
       return 'Token refreshed'
     }

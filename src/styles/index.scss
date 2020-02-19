@@ -3,6 +3,22 @@
 @import 'variables.scss';
 @import 'theme.scss';
 
+:root {
+  --container-h-offset: 20px;
+  --header-z-index: 10;
+}
+
+:root, [data-base] {
+  @each $value in $base-list {
+    --base-#{$value}: #{$value * $base};
+  }
+}
+
+:root, [data-fonts-weights] {
+  @each $name, $weight in $fonts-weights {
+    --font-weight-#{$name}: #{$weight};
+  }
+}
 :root, [data-fonts-sizes] {
   @each $name, $size in $fonts-sizes {
     --font-size-#{$name}: #{$size};

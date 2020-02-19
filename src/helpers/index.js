@@ -5,5 +5,6 @@ export { default as getServerUrl } from './getServerUrl'
 export { default as getCurrentApi } from './getCurrentApi'
 export { default as playerControls } from './playerControls'
 export { default as initPlayer } from './initPlayer'
+export { default as getNapsterImage } from './getNapsterImage'
 
 export { default as getTracks } from './getTracks'

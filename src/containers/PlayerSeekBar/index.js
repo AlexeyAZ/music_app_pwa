@@ -23,6 +23,7 @@ class PlayerSeekBar extends Component {
   onBarClick = ({ position }) => {
     const { trackId, playbackDuration } = this.props
     const newPosition = playbackDuration * position
+    console.log('trackId', trackId)
     seekTrack(trackId, newPosition)
   }
 

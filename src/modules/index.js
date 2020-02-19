@@ -8,14 +8,16 @@ import playbackStatusModule from './playbackStatus'
 import playbackPositionModule from './playbackPosition'
 import genresModule from './genres'
 import artistsModule from './artists'
-import playlistsModule from './playlists'
 import favoritesModule from './favorites'
 import tracksModule from './tracks'
 import playerModule from './player'
 import themesModule from './themes'
 import iconThemesModule from './iconThemes'
 import playbackListModule from './playbackList'
-import playbackInfoModule from './playbackInfo'
+import albumsModule from './albums'
+import playlistsModule from './playlists'
+import stationsModule from './stations'
+import gridModule from './grid'
 
 const { playbackStatus, ...otherPlaybackStatusModule } = playbackStatusModule
 const playbackStatusPersistConfig = {
@@ -39,7 +41,10 @@ const rootReducer = combineReducers({
   ...themesModule,
   ...iconThemesModule,
   ...playbackListModule,
-  ...playbackInfoModule,
+  ...albumsModule,
+  ...playlistsModule,
+  ...stationsModule,
+  ...gridModule,
 })
 
 export default rootReducer

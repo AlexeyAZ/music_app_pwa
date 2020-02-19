@@ -1,9 +1,11 @@
 import Main from '../pages/Main'
 import Login from '../pages/Login'
 import Genres from '../pages/Genres'
+import GenreDetail from '../pages/GenreDetail'
+import Artists from '../pages/Artists'
 import Tracks from '../pages/Tracks'
 import Library from '../pages/Library'
-import Artists from '../pages/Library/Artists'
+import LibraryArtists from '../pages/Library/Artists'
 import Playlists from '../pages/Library/Playlists'
 import Favorites from '../pages/Library/Favorites'
 import Trending from '../pages/Trending'
@@ -25,6 +27,19 @@ const routes = [
     path: '/genres',
     title: 'Genres',
     component: Genres,
+    exact: true,
+  },
+  {
+    path: '/genres/:id',
+    title: 'Genre detail',
+    component: GenreDetail,
+    exact: true,
+  },
+  {
+    path: '/artists',
+    title: 'Artists',
+    component: Artists,
+    exact: true,
   },
   {
     path: '/tracks',
@@ -49,7 +64,7 @@ const routes = [
       {
         path: '/library/artists',
         title: 'Artists',
-        component: Artists,
+        component: LibraryArtists,
       },
       {
         path: '/library/albums',

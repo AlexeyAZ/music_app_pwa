@@ -10,6 +10,8 @@ import * as FavoritesModule from 'modules/favorites'
 
 import TrackRow from '../../../containers/TrackRow'
 
+const playbackListId = 'id2'
+
 class Favorites extends Component {
   componentDidMount() {
     this.getFavoriteTracks()
@@ -17,7 +19,7 @@ class Favorites extends Component {
 
   getFavoriteTracks = () => {
     const { getMyFavorites } = this.props
-    getTracks(getMyFavorites, 'data.favorites.data.tracks', { limit: 20 })
+    getTracks(getMyFavorites, 'data.favorites.data.tracks', { limit: 20 }, playbackListId)
   }
 
   handleFavoriteButtonClick = () => {

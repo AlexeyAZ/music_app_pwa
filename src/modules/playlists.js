@@ -1,25 +1,11 @@
 import { createAction, createReducer } from 'helpers'
 
-export const setActivePlaylist = createAction('SET_ACTIVE_PLAYLIST')
+export const getTopPlaylists = createAction('GET_TOP_PLAYLISTS_REQUEST', {
+  url: `/playlists/top`,
+})
 
 const playlistsModule = {
-  activePlaylist: createReducer(setActivePlaylist, {
-    initialState: {
-      tracks: [],
-      favorites: [],
-    },
-    customTypes: {
-      [setActivePlaylist.start]: (state, payload) => {
-        const tracks = payload.tracks || state.tracks
-        const favorites = payload.favorites || state.favorites
-        return {
-          ...state,
-          tracks,
-          favorites,
-        }
-      },
-    },
-  }),
+  topPlaylists: createReducer(getTopPlaylists),
 }
 
 export default playlistsModule

@@ -24,6 +24,7 @@ module.exports = [
           routes: path.resolve(__dirname, 'src/routes/'),
           store: path.resolve(__dirname, 'src/store/'),
           hocs: path.resolve(__dirname, 'src/hocs/'),
+          portals: path.resolve(__dirname, 'src/portals/'),
         },
       },
     }

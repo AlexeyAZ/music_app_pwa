@@ -4,13 +4,16 @@ import union from 'lodash/union'
 export const getMyFavorites = createAction('GET_MY_FAVORITES_REQUEST', {
   url: '/me/favorites',
 })
-export const getFavoritesStatus = createAction('GET_FAVORITES_STATUS_REQUEST', {
+export const getFavoritesStatus = createAction('GET_FAVORITES_STATUS_REQUEST', ids => ({
   url: `/me/favorites/status`,
-})
-export const addToFavorites = createAction('ADD_TO_FAVORITES_REQUEST', {
+  params: { ids },
+}))
+export const addToFavorites = createAction('ADD_TO_FAVORITES_REQUEST', id => ({
   method: 'post',
   url: `/me/favorites`,
-})
+  data: { favorites: [{ id }] },
+}))
+
 export const removeFromFavorites = createAction('REMOVE_FROM_FAVORITES_REQUEST', id => ({
   method: 'delete',
   url: `/me/favorites/${id}`,
@@ -18,11 +21,6 @@ export const removeFromFavorites = createAction('REMOVE_FROM_FAVORITES_REQUEST',
 
 export const addToGeneralFavorites = createAction('ADD_TO_GENERAL_FAVORITES')
 export const removeFromGeneralFavorites = createAction('REMOVE_FROM_GENERAL_FAVORITES')
-
-export const checkTracksFavorites = async dispatch => {
-  const myFavorites = await dispatch(getMyFavorites())
-  const favoriteStatus = await dispatch(getFavoritesStatus({ data: ['tra.2035491', '2'] }))
-}
 
 const favoritesModule = {
   myFavorites: createReducer(getMyFavorites),

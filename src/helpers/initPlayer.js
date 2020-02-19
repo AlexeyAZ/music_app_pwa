@@ -44,6 +44,7 @@ const initPlayerMethods = player => {
   // player.player.on('error', e => {
   //   console.log(e)
   // })
+  // player.player.on('seeked', e => console.log(e))
 }
 
 const initMediaSessionHandlers = () => {
@@ -69,6 +70,7 @@ const initPlayer = async () => {
   let date = moment()
 
   const player = new DrmStreamingPlayer({
+    // enableLogging: true,
     id: 'napster-streaming-player',
     apikey: napsterConfig.clientId,
     token: access_token,
@@ -87,7 +89,6 @@ const initPlayer = async () => {
       await store.dispatch(updatePlaybackStatus({ isPlaying: true, isTrackLoaded: true }))
     }
     const newDate = moment()
-    console.log(newDate.diff(date, 'milliseconds'))
     if (newDate.diff(date, 'milliseconds') >= 750) {
       date = newDate
       store.dispatch(updatePlaybackPosition({ position: player.currentTime() }))

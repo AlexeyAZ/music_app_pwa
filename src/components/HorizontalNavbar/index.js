@@ -4,6 +4,8 @@ import cn from 'classnames'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
 
+import { Container } from '../Grid'
+
 import styles from './styles.module.scss'
 
 class HorizontalNavbar extends Component {
@@ -29,20 +31,22 @@ class HorizontalNavbar extends Component {
     const { data, value, className } = this.props
     const currentKey = value || activeKey
     return (
-      <div className={cn(styles.wrap, className)}>
-        <div className={styles.container}>
-          {data.map(({ key, title }) => (
-            <button
-              type="button"
-              className={styles.listItem}
-              key={key}
-              onClick={() => this.handleItemClick(key)}
-            >
-              <b className={currentKey === key ? styles.listItemText : ''}>{title}</b>
-            </button>
-          ))}
+      <Container>
+        <div className={cn(styles.wrap, className)}>
+          <div className={styles.container}>
+            {data.map(({ key, title }) => (
+              <button
+                type="button"
+                className={styles.listItem}
+                key={key}
+                onClick={() => this.handleItemClick(key)}
+              >
+                <b className={currentKey === key ? styles.listItemText : ''}>{title}</b>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      </Container>
     )
   }
 }

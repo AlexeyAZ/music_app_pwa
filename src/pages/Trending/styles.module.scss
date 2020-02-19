@@ -1,0 +1,30 @@
+.station {
+  display: grid;
+  column-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: 100px;
+}
+.genres {
+  display: grid;
+  column-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: 100px;
+}
+.playlists {
+  display: grid;
+  column-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: 80px;
+}
+.artists {
+  display: grid;
+  column-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: 80px;
+}
+.albums {
+  display: grid;
+  column-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: 100px;
+}

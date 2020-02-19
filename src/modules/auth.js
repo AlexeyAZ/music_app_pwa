@@ -1,5 +1,4 @@
 import { createAction, createReducer, getServerUrl, getCurrentApi } from 'helpers'
-import isNil from 'lodash/isNil'
 
 const { authBackendUrl, refreshTokenBackendUrl } = getCurrentApi()
 
@@ -9,19 +8,17 @@ const authOptionsInitialState = {
   expiration_date: null,
 }
 
-export const authUser = createAction('AUTH_USER_REQUEST', {
+export const authUser = createAction('AUTH_USER_REQUEST', code => ({
   url: authBackendUrl,
-  axiosOptions: {
-    baseURL: getServerUrl(),
-  },
-})
+  baseURL: getServerUrl(),
+  params: { code },
+}))
 
-export const refreshToken = createAction('REFRESH_TOKEN_REQUEST', {
+export const refreshToken = createAction('REFRESH_TOKEN_REQUEST', refresh_token => ({
   url: refreshTokenBackendUrl,
-  axiosOptions: {
-    baseURL: getServerUrl(),
-  },
-})
+  baseURL: getServerUrl(),
+  params: { refresh_token },
+}))
 
 export const setAuthOptions = createAction('SET_AUTH_OPTIONS')
 export const resetAuthOptions = createAction('RESET_AUTH_OPTIONS')

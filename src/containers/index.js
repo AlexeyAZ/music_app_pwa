@@ -12,6 +12,8 @@ import RepeatButton from './RepeatButton'
 import PlayerInstance from './PlayerInstance'
 import FavoriteButton from './FavoriteButton'
 
+import BaseGrid from './BaseGrid'
+
 export {
   App,
   Layout,
@@ -26,4 +28,5 @@ export {
   RepeatButton,
   PlayerInstance,
   FavoriteButton,
+  BaseGrid,
 }

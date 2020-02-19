@@ -5,6 +5,9 @@ import differenceBy from 'lodash/differenceBy'
 
 import { store } from 'store'
 
+import { napsterImageSizes } from 'config'
+import { getNapsterImage } from 'helpers'
+
 import {
   REPEAT_BUTTON_STATUS_ONE,
   REPEAT_BUTTON_STATUS_ALL,
@@ -19,6 +22,24 @@ const { updatePlaybackStatus } = PlaybackStatusModule
 const { addToListened, clearListened, setPlaybackList } = PlaybackListModule
 const { updatePlaybackPosition } = PlaybackPositionModule
 
+const setMediaSessionData = track => {
+  if (track) {
+    const trackSizes = napsterImageSizes.track
+    const artwork = Object.keys(trackSizes).map(size => ({
+      src: getNapsterImage({ type: 'album', id: track.albumId, size }),
+      sizes: trackSizes[size],
+      type: 'image/jpg',
+    }))
+    // eslint-disable-next-line no-undef
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.name,
+      artist: track.artistName,
+      album: track.albumName,
+      artwork,
+    })
+  }
+}
+
 const getPlayerTrackId = trackId => {
   return trackId.replace('tra', 'Tra')
 }
@@ -30,19 +51,6 @@ const getPlayerContext = () => {
 // eslint-disable-next-line no-unused-vars
 const getRealTrackId = trackId => {
   return trackId.replace('Tra', 'tra')
-}
-
-const getRandomTrackIndex = tracks => {
-  const {
-    playbackStatus: {
-      track: { id: playbackId },
-    },
-    playbackList: { tracks: playbackTracks },
-  } = store.getState()
-  if (tracks) {
-    return random(0, tracks.length - 1)
-  }
-  return random(0, playbackTracks.length - 1)
 }
 
 const getRandomTrack = tracks => {
@@ -72,18 +80,12 @@ const resumeTrack = trackId => {
   instance.resume(trackId, getPlayerContext())
 }
 
-const seekTrack = (trackId, time) => {
-  const {
-    player: { instance },
-  } = store.getState()
-  instance.seek(getPlayerTrackId(trackId), time, getPlayerContext())
-}
-
 const playTrackAsync = async track => {
   const {
     player: { instance },
   } = store.getState()
   const trackId = get(track, 'id')
+  setMediaSessionData(track)
 
   await store.dispatch(updatePlaybackStatus({ isTrackLoaded: false, isPlaying: false, track }))
 
@@ -100,7 +102,7 @@ const pauseTrackAsync = async () => {
 
 const playControlAsync = async track => {
   const {
-    playbackList: { listened, tempTracks },
+    playbackList: { listened },
     playbackStatus: {
       isPlaying,
       isShuffle,
@@ -116,8 +118,8 @@ const playControlAsync = async track => {
   const isNeedClearListened =
     isShuffle && repeat === REPEAT_BUTTON_STATUS_NONE && listened.length !== 0
 
-  if (tempTracks.length > 0) {
-    await store.dispatch(setPlaybackList({ tracks: tempTracks, tempTracks: [] }))
+  if (trackId) {
+    await store.dispatch(setPlaybackList())
   }
 
   if (isPlaying) {
@@ -202,6 +204,13 @@ const nextTrackAsync = async () => {
     }
   }
   return null
+}
+
+const seekTrack = (trackId, time) => {
+  const {
+    player: { instance },
+  } = store.getState()
+  instance.seek(getPlayerTrackId(trackId), time, getPlayerContext())
 }
 
 // eslint-disable-next-line no-unused-vars

@@ -14,7 +14,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1;
+  z-index: var(--header-z-index);
 }
 .horizontalNavbarWrap {
   background-color: white;
@@ -22,6 +22,10 @@
   top: var(--player-header-height);
   left: 0;
   width: 100%;
+}
+.contentWrap {
+  padding-top: 20px;
+  padding-bottom: 16px;
 }
 .footerWrap {
   background-color: white;

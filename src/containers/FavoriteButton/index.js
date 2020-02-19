@@ -18,9 +18,7 @@ class FavoriteButton extends Component {
 
   addTrackToFavorites = async id => {
     const { addToFavorites, addToGeneralFavorites } = this.props
-    const addToFavoritesResponse = await addToFavorites({
-      reqData: { favorites: [{ id }] },
-    })
+    const addToFavoritesResponse = await addToFavorites({ data: id })
 
     const favoritesData = get(addToFavoritesResponse, 'data.favorites[0]')
     const favoritesItem = favoritesData.acknowledged === true ? [favoritesData.id] : []
@@ -30,9 +28,7 @@ class FavoriteButton extends Component {
 
   removeTrackFromFavorites = async id => {
     const { removeFromFavorites, removeFromGeneralFavorites } = this.props
-    const removeFromFavoritesResponse = await removeFromFavorites({
-      data: id,
-    })
+    const removeFromFavoritesResponse = await removeFromFavorites({ data: id })
 
     const favoritesData = get(removeFromFavoritesResponse, 'data.favorites[0]')
     const favoritesItem = favoritesData.acknowledged === true ? [favoritesData.id] : []

@@ -2,7 +2,6 @@
 
 .text {
   margin-top: 0;
-  margin-bottom: 0;
 }
 
 @each $name, $size in $fonts-sizes {
@@ -10,4 +9,29 @@
     composes: text;
     font-size: var(--font-size-#{$name});
   }
+}
+@each $name, $weight in $fonts-weights {
+  .text-#{$name} {
+    composes: text;
+    font-weight: var(--font-weight-#{$name});
+  }
+}
+@each $name, $color in $colors {
+  .color-#{$name} {
+    composes: text;
+    color: var(--color-#{$name});
+  }
+}
+@each $value in $base-list {
+  .mb-#{$value} {
+    composes: text;
+    margin-bottom: var(--base-#{$value});
+  }
+}
+
+.overflow {
+  composes: text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

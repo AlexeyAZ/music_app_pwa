@@ -30,6 +30,11 @@ class HeaderContainer extends Component {
     return !location.pathname.includes('/tracks/')
   }
 
+  handleBackButtonClick = () => {
+    const { history } = this.props
+    return history.goBack()
+  }
+
   renderRightContent = () => {
     return (
       <Text size="xs">
@@ -42,6 +47,7 @@ class HeaderContainer extends Component {
     if (this.showHeader())
       return (
         <Header
+          onBackButtonClick={this.handleBackButtonClick}
           renderRightContent={this.renderRightContent}
           hideBackButton={this.hideBackButton()}
           title={this.getHeaderTitle()}
@@ -52,6 +58,7 @@ class HeaderContainer extends Component {
 }
 
 HeaderContainer.propTypes = {
+  history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
 }
 

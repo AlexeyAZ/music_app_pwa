@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 
 import routes from 'routes'
 
-import { Navbar, HorizontalNavbar } from 'components'
+import { Container, Navbar, HorizontalNavbar } from 'components'
 
 import HeaderContainer from './HeaderContainer'
 import BottomSpacer from './BottomSpacer'
@@ -66,7 +66,9 @@ class Layout extends Component {
             />
           </div>
         )}
-        <main>{children}</main>
+        <main className={styles.contentWrap}>
+          <Container>{children}</Container>
+        </main>
         <BottomSpacer />
         <footer className={styles.footerWrap}>
           <PlayerWidget />

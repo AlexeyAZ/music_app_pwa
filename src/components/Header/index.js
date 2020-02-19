@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import noop from 'lodash/noop'
 
+import { HEADER_TITLE_ID } from 'constants'
+
 import styles from './styles.module.scss'
+
+import { Container } from '../Grid'
 
 class Header extends Component {
   renderBackButton = () => {
@@ -28,13 +32,15 @@ class Header extends Component {
   render() {
     const { title, renderRightContent } = this.props
     return (
-      <div className={styles.wrap}>
-        <div>{this.renderLeftContent()}</div>
-        <div>
-          <p>{title}</p>
+      <Container>
+        <div className={styles.wrap}>
+          <div>{this.renderLeftContent()}</div>
+          <div>
+            <p id={HEADER_TITLE_ID}>{title}</p>
+          </div>
+          <div>{renderRightContent()}</div>
         </div>
-        <div>{renderRightContent()}</div>
-      </div>
+      </Container>
     )
   }
 }

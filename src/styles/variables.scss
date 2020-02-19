@@ -1,4 +1,11 @@
+@import './colors.scss';
+
 $base: 4px;
+$base-list: ();
+
+@for $i from 0 through 20 {
+  $base-list: append($base-list, $i);
+}
 
 $fonts-sizes: (
   xxs: 8px,
@@ -8,6 +15,18 @@ $fonts-sizes: (
   l: 24px,
   xl: 28px,
   xxl: 32px
+);
+
+$fonts-weights: (
+  thin: 100,
+	extralight: 200,
+	light: 300,
+	normal: 400,
+	medium: 500,
+	semibold: 600,
+	bold: 700,
+	extrabold: 800,
+	heavy: 900,
 );
 
 $icon-sizes: (
@@ -26,8 +45,15 @@ $colors: (
   success: lime,
   warning: gold,
   danger: red,
-  disabled: lightgray,
-  inactive: gray,
+  disabled: $gray-lighten,
+  inactive: $gray,
   black: black,
-  white: white
+  white: white,
+  gray-lightest: $gray-lightest,
+  gray-lighten: $gray-lighten,
+  gray-light: $gray-light,
+  gray: $gray,
+  gray-dark: $gray-dark,
+  gray-darken: $gray-darken,
+  gray-darkest: $gray-darkest,
 );

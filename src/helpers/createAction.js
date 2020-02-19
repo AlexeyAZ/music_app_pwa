@@ -1,5 +1,7 @@
 import get from 'lodash/get'
 
+import { history } from 'config'
+
 import axiosInstance from './axiosInstance'
 
 const createActionTypes = actionType => {
@@ -38,11 +40,10 @@ const createAction = (type, prepareAction) => {
       return new Promise(resolve => resolve(args))
     }
 
-    const method = get(prepared, 'method', 'get')
-    const axiosOptions = get(prepared, 'axiosOptions', {})
-    const params = get(args, 'params', {})
-    const axiosData = get(args, 'reqData', {})
-    const config = { method, url, params, data: axiosData, ...axiosOptions }
+    const preparedParams = get(prepared, 'params') || {}
+    const argsParams = get(args, 'params') || {}
+    const params = { ...preparedParams, ...argsParams }
+    const config = { ...prepared, params }
 
     return axiosInstance(config)
       .then(response => {

@@ -55,10 +55,11 @@ class PlayButton extends Component {
   }
 
   render() {
-    const { className } = this.props
+    const { className, iconSize } = this.props
     return (
       <ThemedPlayerButton
         className={className}
+        iconSize={iconSize}
         onClick={this.handleButtonClick}
         iconName={this.getIconName()}
       />
@@ -68,10 +69,12 @@ class PlayButton extends Component {
 
 PlayButton.propTypes = {
   className: PropTypes.string,
+  iconSize: PropTypes.string,
   track: PropTypes.object,
   playbackStatus: PropTypes.object.isRequired,
 }
 PlayButton.defaultProps = {
+  iconSize: 's',
   className: '',
   track: null,
 }

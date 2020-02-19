@@ -15,7 +15,7 @@ class TrackRow extends Component {
     const { track, className, onFavoriteButtonClick } = this.props
     return (
       <div className={cn(styles.wrap, className)}>
-        <PlayButton track={track} className={styles.playButton} />
+        <PlayButton iconSize="m" track={track} className={styles.playButton} />
         <div>
           <Text>{track.name}</Text>
           <Text size="xs">{track.artistName}</Text>
@@ -23,7 +23,7 @@ class TrackRow extends Component {
         <div className={styles.actions}>
           <FavoriteButton
             onFavoriteButtonClick={onFavoriteButtonClick}
-            iconSize="xs"
+            iconSize="s"
             trackId={track.id}
           />
         </div>
