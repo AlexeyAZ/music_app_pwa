@@ -5,9 +5,10 @@ import { withRouter } from 'react-router'
 
 import routes from 'routes'
 
-import { Container, Navbar, HorizontalNavbar } from 'components'
+import { Container, HorizontalNavbar } from 'components'
 
 import HeaderContainer from './HeaderContainer'
+import Navbar from './Navbar'
 import BottomSpacer from './BottomSpacer'
 
 import PlayerWidget from '../PlayerWidget'
@@ -15,10 +16,10 @@ import PlayerWidget from '../PlayerWidget'
 import styles from './styles.module.scss'
 
 const navbarData = [
-  { href: '/library/favorites', label: 'Library' },
-  { href: '/trending', label: 'Trending' },
-  { href: '/search', label: 'Search' },
-  { href: '/profile', label: 'Profile' },
+  { href: '/library/favorites', label: 'Library', iconName: 'MusicLibrary' },
+  { href: '/trending', label: 'Trending', iconName: 'Trending' },
+  { href: '/search', label: 'Search', iconName: 'Search' },
+  { href: '/profile', label: 'Profile', iconName: 'User' },
 ]
 
 const libraryNavbarData = routes
@@ -26,6 +27,10 @@ const libraryNavbarData = routes
   .routes.map(route => ({ ...route, key: route.title.toLowerCase() }))
 
 class Layout extends Component {
+  componentDidMount() {
+    window.scrollTo(0, 0)
+  }
+
   handleNavbarItemClick = key => {
     const { history } = this.props
     const { path } = libraryNavbarData.find(item => item.key === key)

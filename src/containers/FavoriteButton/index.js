@@ -40,10 +40,10 @@ class FavoriteButton extends Component {
     const { trackId, onFavoriteButtonClick } = this.props
     if (isFavorite) {
       await this.removeTrackFromFavorites(trackId)
-      return onFavoriteButtonClick()
+      return onFavoriteButtonClick(trackId)
     }
     await this.addTrackToFavorites(trackId)
-    return onFavoriteButtonClick()
+    return onFavoriteButtonClick(trackId)
   }
 
   render() {

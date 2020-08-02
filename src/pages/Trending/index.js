@@ -5,17 +5,18 @@ import { bindActionCreators, compose } from 'redux'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
 
-import { getTracks } from 'helpers'
-
 import {
+  CommonCard,
   ScrollContainer,
   StationCard,
   GenreCard,
   PlaysistCard,
   ArtistCard,
   AlbumCard,
+  Grid,
   Container,
   Row,
+  Title,
 } from 'components'
 
 import * as GenresModule from 'modules/genres'
@@ -24,12 +25,14 @@ import * as PlaylistsModule from 'modules/playlists'
 import * as ArtistsModule from 'modules/artists'
 import * as AlbumsModule from 'modules/albums'
 import * as TacksModule from 'modules/tracks'
+import * as TempStorageModule from 'modules/tempStorage'
 
-import TrackRow from '../../containers/TrackRow'
+import TracksGrid from '../../containers/TracksGrid'
+import AutoLoadContainer from '../../containers/AutoLoadContainer'
 
 import styles from './styles.module.scss'
 
-const playbackListId = 'id3'
+const albumsStorageId = 'trendingAlbums'
 
 class Trending extends Component {
   async componentDidMount() {
@@ -38,11 +41,9 @@ class Trending extends Component {
       getAllGenres,
       getTopPlaylists,
       getTopArtists,
-      getTopAlbums,
-      getTopTracks,
+      clearTempStorage,
     } = this.props
-    getTracks(getTopTracks, 'data.tracks', { limit: 10 }, playbackListId)
-    getTopAlbums()
+    await clearTempStorage(albumsStorageId)
     getTopArtists()
     getAllGenres()
     getTopPlaylists()
@@ -52,6 +53,11 @@ class Trending extends Component {
   handleGenreClick = genreId => {
     const { history } = this.props
     history.push(`/genres/${genreId}`)
+  }
+
+  handleAlbumClick = id => {
+    const { history } = this.props
+    history.push(`/album/${id}`)
   }
 
   handleArtistClick = () => {
@@ -65,78 +71,137 @@ class Trending extends Component {
   }
 
   render() {
-    const { topStations, allGenres, topPlaylists, topArtists, topAlbums, topTracks } = this.props
-    const tracks = get(topTracks, 'data.tracks', [])
+    const {
+      getTopTracks,
+      topStations,
+      allGenres,
+      topPlaylists,
+      topArtists,
+      getTopAlbums,
+      tempStorage,
+    } = this.props
+
+    const albumTempStorageItems = get(
+      tempStorage.data.find(item => item.id === albumsStorageId),
+      'items',
+      []
+    )
 
     return (
       <div>
         <Row>
+          <Container>
+            <Title mb={2}>Top albums</Title>
+          </Container>
+          <AutoLoadContainer
+            type="horizontal"
+            entityAction={getTopAlbums}
+            entityDataPatch="data.albums"
+            storageId={albumsStorageId}
+            customParams={{ limit: 10 }}
+          >
+            <Container>
+              <Grid direction="horizontal">
+                {albumTempStorageItems.map(album => (
+                  <CommonCard
+                    imageRatio={0.8}
+                    imageType="album"
+                    key={album.id}
+                    title={album.name}
+                    subtitle={album.artistName}
+                    id={album.id}
+                    onClick={() => this.handleAlbumClick(album.id)}
+                  />
+                ))}
+              </Grid>
+            </Container>
+          </AutoLoadContainer>
+
+          <Container>
+            <Title mb={2}>Top stations</Title>
+          </Container>
           <ScrollContainer>
             <Container>
-              <div className={styles.genres}>
+              <Grid direction="horizontal">
                 {get(topStations, 'data.stations', []).map(station => (
-                  <StationCard key={station.id} name={station.name} id={station.id} />
+                  <CommonCard
+                    imageType="station"
+                    key={station.id}
+                    title={station.name}
+                    id={station.id}
+                  />
                 ))}
-              </div>
+              </Grid>
             </Container>
           </ScrollContainer>
+
+          <Container>
+            <Title mb={2}>Genres</Title>
+          </Container>
           <ScrollContainer>
             <Container>
-              <div className={styles.genres}>
+              <Grid direction="horizontal">
                 {get(allGenres, 'data.genres', []).map(genre => (
-                  <GenreCard
+                  <CommonCard
+                    borderRadius="l"
+                    imageType="genre"
                     onClick={() => this.handleGenreClick(genre.id)}
                     key={genre.id}
-                    name={genre.name}
+                    title={genre.name}
                     id={genre.id}
                   />
                 ))}
-              </div>
+              </Grid>
             </Container>
           </ScrollContainer>
+
+          <Container>
+            <Title mb={2}>Top playlists</Title>
+          </Container>
           <ScrollContainer>
             <Container>
-              <div className={styles.genres}>
+              <Grid direction="horizontal">
                 {get(topPlaylists, 'data.playlists', []).map(playlist => (
-                  <PlaysistCard key={playlist.id} name={playlist.name} id={playlist.id} />
+                  <CommonCard
+                    borderRadius="s"
+                    imageType="playlist"
+                    key={playlist.id}
+                    title={playlist.name}
+                    id={playlist.id}
+                  />
                 ))}
-              </div>
+              </Grid>
             </Container>
           </ScrollContainer>
+
+          <Container>
+            <Title mb={2}>Top artists</Title>
+          </Container>
           <ScrollContainer>
             <Container>
-              <div className={styles.artists}>
+              <Grid direction="horizontal">
                 {get(topArtists, 'data.artists', []).map(artist => (
-                  <ArtistCard
+                  <CommonCard
+                    borderRadius="round"
+                    imageType="artist"
                     key={artist.id}
-                    name={artist.name}
+                    title={artist.name}
                     id={artist.id}
                     onClick={this.handleArtistClick}
                   />
                 ))}
-              </div>
-            </Container>
-          </ScrollContainer>
-          <ScrollContainer>
-            <Container>
-              <div className={styles.albums}>
-                {get(topAlbums, 'data.albums', []).map(album => (
-                  <AlbumCard
-                    key={album.id}
-                    albumName={album.name}
-                    artistName={album.artistName}
-                    id={album.id}
-                    onClick={this.handleTrackClick}
-                  />
-                ))}
-              </div>
+              </Grid>
             </Container>
           </ScrollContainer>
         </Row>
 
-        {tracks.map(track => {
-          return <TrackRow key={track.id} track={track} />
-        })}
+        <Title mb={2}>Top tracks</Title>
+        <TracksGrid
+          disableAutoload
+          getTracksAction={getTopTracks}
+          storageId="trending"
+          dataPath="data.tracks"
+        />
       </div>
     )
   }
@@ -148,14 +213,14 @@ Trending.propTypes = {
   allGenres: PropTypes.object.isRequired,
   topPlaylists: PropTypes.object.isRequired,
   topArtists: PropTypes.object.isRequired,
-  topAlbums: PropTypes.object.isRequired,
-  topTracks: PropTypes.object.isRequired,
+  tempStorage: PropTypes.object.isRequired,
   getTopStations: PropTypes.func.isRequired,
   getAllGenres: PropTypes.func.isRequired,
   getTopPlaylists: PropTypes.func.isRequired,
   getTopArtists: PropTypes.func.isRequired,
   getTopAlbums: PropTypes.func.isRequired,
   getTopTracks: PropTypes.func.isRequired,
+  clearTempStorage: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({
@@ -164,14 +229,14 @@ const mapStateToProps = ({
   topPlaylists,
   topArtists,
   topAlbums,
-  topTracks,
+  tempStorage,
 }) => ({
   topStations,
   allGenres,
   topPlaylists,
   topArtists,
   topAlbums,
-  topTracks,
+  tempStorage,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -182,6 +247,7 @@ const mapDispatchToProps = dispatch => ({
   getTopAlbums: bindActionCreators(AlbumsModule.getTopAlbums, dispatch),
   getTopTracks: bindActionCreators(TacksModule.getTopTracks, dispatch),
   getAlbumImages: bindActionCreators(AlbumsModule.getAlbumImages, dispatch),
+  clearTempStorage: bindActionCreators(TempStorageModule.clearTempStorage, dispatch),
 })
 
 export default compose(

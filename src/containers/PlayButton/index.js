@@ -28,8 +28,9 @@ class PlayButton extends Component {
   }
 
   handleButtonClick = () => {
-    const { track } = this.props
-    return playControlAsync(track)
+    const { track, playbackListId } = this.props
+    console.log(track)
+    return playControlAsync(track, playbackListId)
   }
 
   getIconName = () => {
@@ -55,9 +56,10 @@ class PlayButton extends Component {
   }
 
   render() {
-    const { className, iconSize } = this.props
+    const { disabled, className, iconSize } = this.props
     return (
       <ThemedPlayerButton
+        disabled={disabled}
         className={className}
         iconSize={iconSize}
         onClick={this.handleButtonClick}
@@ -72,11 +74,15 @@ PlayButton.propTypes = {
   iconSize: PropTypes.string,
   track: PropTypes.object,
   playbackStatus: PropTypes.object.isRequired,
+  playbackListId: PropTypes.string,
+  disabled: PropTypes.bool,
 }
 PlayButton.defaultProps = {
   iconSize: 's',
   className: '',
   track: null,
+  playbackListId: null,
+  disabled: false,
 }
 
 const mapStateToProps = ({ playbackStatus }) => ({

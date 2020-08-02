@@ -99,8 +99,8 @@ const initPlayer = async () => {
   })
   player.callbackHandler('trackEnded', async () => {
     console.log('initPlayer -> trackEnded')
-    await store.dispatch(updatePlaybackStatus({ isPlaying: false, isTrackEnded: true }))
-    await store.dispatch(updatePlaybackPosition({ position: 0 }))
+    // await store.dispatch(updatePlaybackStatus({ isPlaying: false, isTrackEnded: true }))
+    // await store.dispatch(updatePlaybackPosition({ position: 0 }))
     nextTrackAsync()
   })
 

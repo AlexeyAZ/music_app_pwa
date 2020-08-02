@@ -4,3 +4,6 @@
   grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
   height: var(--player-bottom-navbar-height);
 }
+.navbarItem {
+  text-align: center;
+}

@@ -12,7 +12,8 @@ import RepeatButton from './RepeatButton'
 import PlayerInstance from './PlayerInstance'
 import FavoriteButton from './FavoriteButton'
 
-import BaseGrid from './BaseGrid'
+import AutoLoadContainer from './AutoLoadContainer'
+import TracksGrid from './TracksGrid'
 
 export {
   App,
@@ -28,5 +29,6 @@ export {
   RepeatButton,
   PlayerInstance,
   FavoriteButton,
-  BaseGrid,
+  AutoLoadContainer,
+  TracksGrid,
 }

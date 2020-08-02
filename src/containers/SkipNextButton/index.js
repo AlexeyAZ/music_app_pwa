@@ -17,7 +17,7 @@ class SkipNextButton extends Component {
 
   isButtonDisabled = () => {
     const {
-      playbackList: { tracks, listened },
+      playbackList: { playbackTracks, listened },
       playbackStatus: {
         isShuffle,
         repeat,
@@ -27,11 +27,13 @@ class SkipNextButton extends Component {
     } = this.props
 
     if (repeat === REPEAT_BUTTON_STATUS_NONE) {
-      if (isShuffle && differenceBy(tracks, listened, [track], 'id').length === 0) {
+      if (isShuffle && differenceBy(playbackTracks, listened, [track], 'id').length === 0) {
         return true
       }
-      const tracksCount = tracks.length
-      const currentTrackIndex = tracks.findIndex(currentTrack => currentTrack.id === playbackId)
+      const tracksCount = playbackTracks.length
+      const currentTrackIndex = playbackTracks.findIndex(
+        currentTrack => currentTrack.id === playbackId
+      )
       const nextTrackIndex = currentTrackIndex + 1
       if (!isShuffle && tracksCount === nextTrackIndex) {
         return true

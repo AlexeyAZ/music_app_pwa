@@ -13,16 +13,33 @@ const gridModule = {
     {
       initialState,
       customTypes: {
-        [addItemsToGrid.start]: (state, payload) => {
+        [addItemsToGrid.start]: (state, { gridName, items }) => {
+          if (state.data.find(item => item.name === gridName)) {
+            return {
+              ...state,
+              data: state.data.map(item => {
+                if (item.name === gridName) {
+                  return { ...item, items: [...item.items, ...items] }
+                }
+                return item
+              }),
+            }
+          }
           return {
             ...state,
-            data: [...state.data, ...payload],
+            data: [...state.data, { name: gridName, items }],
           }
         },
-        [clearGrid.start]: state => {
+
+        [clearGrid.start]: (state, gridName) => {
+          if (state.data.find(item => item.name === gridName)) {
+            return {
+              ...state,
+              data: state.data.filter(item => item.name !== gridName),
+            }
+          }
           return {
             ...state,
-            data: [],
           }
         },
       },

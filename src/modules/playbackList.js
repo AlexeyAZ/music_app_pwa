@@ -1,19 +1,19 @@
 import uniqBy from 'lodash/uniqBy'
+import get from 'lodash/get'
 import { createAction, createReducer } from 'helpers'
 
 export const setPlaybackList = createAction('SET_PLAYBACK_LIST')
 
-export const addTracksToTemp = createAction('ADD_TRACKS_TO_TEMP')
 export const addTracksToPlayback = createAction('ADD_TRACKS_TO_PLAYBACK')
+export const removeTracksFromPlayback = createAction('REMOVE_TRACKS_FROM_PLAYBACK')
 
-export const clearPlaybackTracks = createAction('CLEAR_PLAYBACK_TRACKS')
-export const clearTempTracks = createAction('CLEAR_TEMP_TRACKS')
-
-export const setPlaybackListId = createAction('SET_PLAYBACK_LIST_ID')
-export const setTempListId = createAction('SET_TEMP_LIST_ID')
+export const clearPlaybackListId = createAction('CLEAR_PLAYBACK_LIST_ID')
 
 export const addToListened = createAction('ADD_TO_LISTENED')
 export const clearListened = createAction('CLEAR_LISTENED')
+
+export const getPlaybackListTracksSelector = state => state.playbackList.playbackTracks
+export const getPlaybackListIdSelector = state => state.playbackList.playbackListId
 
 const playbackListModule = {
   playbackList: createReducer(
@@ -21,61 +21,44 @@ const playbackListModule = {
     {
       initialState: {
         playbackListId: null,
-        tempListId: null,
-        tracks: [],
-        tempTracks: [],
+        playbackTracks: [],
         listened: [],
       },
       customTypes: {
-        [setPlaybackList.start]: state => {
+        [setPlaybackList.start]: (state, payload) => {
+          const playbackTracks = get(payload, 'tracks') || state.playbackTracks
+          const listened = playbackTracks.filter(track => !track.isStreamable)
           return {
             ...state,
-            playbackListId: state.tempListId,
-            tracks: state.tempTracks,
+            playbackListId: payload.id,
+            playbackTracks,
+            listened,
+          }
+        },
+        [addTracksToPlayback.start]: (state, payload) => {
+          const playbackTracks = uniqBy([...state.playbackTracks, ...payload], 'id')
+          const existListened = state.listened
+          const newListened = playbackTracks.filter(track => !track.isStreamable)
+          const listened = uniqBy([...existListened, ...newListened], 'id')
+          return {
+            ...state,
+            playbackTracks,
+            listened,
+          }
+        },
+        [removeTracksFromPlayback.start]: (state, { tracksIds }) => {
+          const playbackTracks = state.playbackTracks.filter(track => !tracksIds.includes(track.id))
+          return {
+            ...state,
+            playbackTracks,
+          }
+        },
+        [clearListened.start]: state => {
+          return {
+            ...state,
             listened: [],
           }
         },
-
-        [addTracksToPlayback.start]: (state, payload) => {
-          const newTracks = uniqBy([...state.tracks, ...payload], 'id')
-          return {
-            ...state,
-            tracks: newTracks,
-          }
-        },
-        [addTracksToTemp.start]: (state, payload) => {
-          return {
-            ...state,
-            tempTracks: [...state.tempTracks, ...payload],
-          }
-        },
-
-        [setPlaybackListId.start]: (state, payload) => {
-          return {
-            ...state,
-            playbackListId: payload,
-          }
-        },
-        [setTempListId.start]: (state, payload) => {
-          return {
-            ...state,
-            tempListId: payload,
-          }
-        },
-
-        [clearPlaybackTracks.start]: state => {
-          return {
-            ...state,
-            tracks: [],
-          }
-        },
-        [clearTempTracks.start]: state => {
-          return {
-            ...state,
-            tempTracks: [],
-          }
-        },
-
         [addToListened.start]: (state, payload) => {
           if (!payload || state.listened.find(item => item.id === payload.id)) {
             return { ...state }
@@ -85,10 +68,10 @@ const playbackListModule = {
             listened: [...state.listened, payload],
           }
         },
-        [clearListened.start]: state => {
+        [clearPlaybackListId.start]: state => {
           return {
             ...state,
-            listened: [],
+            playbackListId: null,
           }
         },
       },

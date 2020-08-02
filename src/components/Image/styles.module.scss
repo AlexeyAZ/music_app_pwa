@@ -1,0 +1,39 @@
+.wrap {
+  overflow: hidden;
+  padding-bottom: 100%;
+  position: relative;
+}
+.imageBase {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.image {
+  composes: imageBase;
+  object-fit: cover;
+}
+.imageDummy {
+  composes: imageBase;
+  background-color: var(--color-gray-lighten);
+}
+
+.borderRadius-default {
+  border-radius: 0;
+}
+.borderRadius-xs {
+  border-radius: 2px;
+}
+.borderRadius-s {
+  border-radius: 4px;
+}
+.borderRadius-m {
+  border-radius: 8px;
+}
+.borderRadius-l {
+  border-radius: 12px;
+}
+.borderRadius-round {
+  border-radius: 50%;
+}

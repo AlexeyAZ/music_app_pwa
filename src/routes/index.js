@@ -10,6 +10,8 @@ import Playlists from '../pages/Library/Playlists'
 import Favorites from '../pages/Library/Favorites'
 import Trending from '../pages/Trending'
 import Profile from '../pages/Profile'
+import Search from '../pages/Search'
+import Album from '../pages/Album'
 
 const routes = [
   {
@@ -87,6 +89,16 @@ const routes = [
     path: '/profile',
     title: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/search',
+    title: 'Search',
+    component: Search,
+  },
+  {
+    path: '/album/:id',
+    title: 'Album',
+    component: Album,
   },
 ]
 

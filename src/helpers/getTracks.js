@@ -2,63 +2,44 @@ import { store } from 'store'
 import get from 'lodash/get'
 
 import * as PlaybackListModule from 'modules/playbackList'
+import * as TempStorageModule from 'modules/tempStorage'
 import * as FavoritesModule from 'modules/favorites'
 
-const {
-  addTracksToTemp,
-  addTracksToPlayback,
-  setPlaybackListId,
-  setTempListId,
-  clearTempTracks,
-  clearPlaybackTracks,
-} = PlaybackListModule
+const { addTracksToPlayback } = PlaybackListModule
+const { addItemsToTempStorage } = TempStorageModule
 const { addToGeneralFavorites, getFavoritesStatus } = FavoritesModule
 
-const getTracks = async (action, path, params = {}, listId) => {
+const getTracks = async ({ action, data = null, dataPath, countPatch, params = {}, storageId }) => {
   const {
-    playbackList: { playbackListId, tempListId },
+    playbackList: { playbackListId },
   } = store.getState()
-  const tracksResponse = await action({ params })
-  const tracksData = get(tracksResponse, path, [])
+  const actionPayload = data ? { params, data } : { params }
+  const tracksResponse = await action(actionPayload)
+  const tracksData = get(tracksResponse, dataPath, [])
+  const tracksCount = get(tracksResponse, countPatch)
 
-  if (!playbackListId) {
-    await store.dispatch(setPlaybackListId(listId))
-  }
-
-  const {
-    playbackList: { playbackListId: newPlaybackListId },
-  } = store.getState()
-
-  await store.dispatch(setTempListId(listId))
-
-  const {
-    playbackList: { tempListId: newTempListId },
-  } = store.getState()
-
-  if (tempListId !== newTempListId) {
-    await store.dispatch(clearTempTracks())
-  }
-
-  if (listId === newTempListId) {
-    await store.dispatch(addTracksToTemp(tracksData))
-  }
-
-  if (playbackListId !== newPlaybackListId) {
-    await store.dispatch(clearPlaybackTracks())
-  }
-
-  if (listId === newPlaybackListId) {
+  if (playbackListId === storageId) {
     await store.dispatch(addTracksToPlayback(tracksData))
+    await store.dispatch(
+      addItemsToTempStorage({ storageId, items: tracksData, itemsCount: tracksCount })
+    )
+  } else {
+    await store.dispatch(
+      addItemsToTempStorage({ storageId, items: tracksData, itemsCount: tracksCount })
+    )
   }
 
   const tracksIds = tracksData.map(item => item.id)
-  const favoritesTracksResponse = await store.dispatch(
-    getFavoritesStatus({ data: tracksIds.join() })
-  )
-  const favoritesTracksData = get(favoritesTracksResponse, 'data.status', [])
-    .filter(item => item.favorite === true)
-    .map(item => item.id)
-  await store.dispatch(addToGeneralFavorites(favoritesTracksData))
+  if (tracksIds.length > 0) {
+    const favoritesTracksResponse = await store.dispatch(
+      getFavoritesStatus({ data: tracksIds.join() })
+    )
+    const favoritesTracksData = get(favoritesTracksResponse, 'data.status', [])
+      .filter(item => item.favorite === true)
+      .map(item => item.id)
+    await store.dispatch(addToGeneralFavorites(favoritesTracksData))
+  }
+
   return tracksData
 }
 

@@ -15,3 +15,16 @@
   right: 0;
   bottom: 0;
 }
+.timer {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.duration {
+  composes: timer;
+  left: 10px;
+}
+.timeLeft {
+  composes: timer;
+  right: 10px;
+}

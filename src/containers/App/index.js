@@ -11,9 +11,10 @@ import { history } from 'config'
 import routes from '../../routes'
 
 import Layout from '../Layout'
-
-import AppContainer from './AppContainer'
 import PlayerInstance from '../PlayerInstance'
+
+import ScrollToTop from './ScrollToTop'
+import AppContainer from './AppContainer'
 
 import 'react-notifications-component/dist/theme.css'
 
@@ -31,6 +32,7 @@ class App extends Component {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Router history={history}>
+            <ScrollToTop />
             <AppContainer>
               <PlayerInstance />
               <ReactNotification />

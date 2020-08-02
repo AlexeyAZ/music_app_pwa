@@ -6,5 +6,7 @@ import Main from './Main'
 import Login from './Login'
 import Tracks from './Tracks'
 import Profile from './Profile'
+import Search from './Search'
+import Album from './Album'
 
-export { Library, Genres, GenreDetail, Artists, Main, Login, Tracks, Profile }
+export { Library, Genres, GenreDetail, Artists, Main, Login, Tracks, Profile, Search, Album }

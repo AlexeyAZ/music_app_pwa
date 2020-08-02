@@ -4,10 +4,12 @@ import cn from 'classnames'
 
 import styles from './styles.module.scss'
 
-const ScrollContainer = ({ children, className }) => {
+const ScrollContainer = ({ containerRef, children, className }) => {
   return (
     <div className={cn(styles.wrap, className)}>
-      <div className={styles.container}>{children}</div>
+      <div ref={containerRef} className={styles.container}>
+        {children}
+      </div>
     </div>
   )
 }

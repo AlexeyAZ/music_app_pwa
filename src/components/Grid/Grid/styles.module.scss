@@ -1,0 +1,10 @@
+.grid {
+  display: grid;
+}
+.grid-horizontal {
+  grid-auto-flow: column;
+}
+
+.grid-vertical {
+  grid-auto-flow: row;
+}

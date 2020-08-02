@@ -14,6 +14,12 @@ export const addToFavorites = createAction('ADD_TO_FAVORITES_REQUEST', id => ({
   data: { favorites: [{ id }] },
 }))
 
+export const addToFavoritesMultiple = createAction('ADD_TO_FAVORITES_MULTIPLE_REQUEST', ids => ({
+  method: 'post',
+  url: `/me/favorites`,
+  data: { favorites: ids.map(id => ({ id })) },
+}))
+
 export const removeFromFavorites = createAction('REMOVE_FROM_FAVORITES_REQUEST', id => ({
   method: 'delete',
   url: `/me/favorites/${id}`,

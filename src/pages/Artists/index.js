@@ -9,7 +9,7 @@ import * as ArtistsModule from 'modules/artists'
 
 import { ArtistCard, Text } from 'components'
 
-import BaseGrid from '../../containers/BaseGrid'
+import AutoLoadContainer from '../../containers/AutoLoadContainer'
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Artists extends Component {
@@ -28,11 +28,11 @@ class Artists extends Component {
     return (
       <div>
         <Text>Top artists</Text>
-        <BaseGrid isLoading={loading} customAction={this.getTopArtists}>
+        <AutoLoadContainer isLoading={loading} customAction={this.getTopArtists}>
           {gridItemsData.map(({ id, name }) => {
             return <ArtistCard id={id} key={id} name={name} />
           })}
-        </BaseGrid>
+        </AutoLoadContainer>
       </div>
     )
   }

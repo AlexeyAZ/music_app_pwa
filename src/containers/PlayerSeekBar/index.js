@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import isNil from 'lodash/isNil'
+import moment from 'moment'
+import momentDurationFormatSetup from 'moment-duration-format'
 
 import { SeekBar } from 'components'
 import { playerControls } from 'helpers'
@@ -23,12 +25,23 @@ class PlayerSeekBar extends Component {
   onBarClick = ({ position }) => {
     const { trackId, playbackDuration } = this.props
     const newPosition = playbackDuration * position
-    console.log('trackId', trackId)
     seekTrack(trackId, newPosition)
   }
 
   render() {
-    return <SeekBar value={this.getDurationAsPercent()} onClick={this.onBarClick} />
+    const { playbackDuration, playbackPosition } = this.props
+    const duration = moment.duration(playbackDuration, 'seconds').format('mm:ss', { trim: false })
+    const timeLeft = moment
+      .duration(playbackDuration - playbackPosition, 'seconds')
+      .format('mm:ss', { trim: false })
+    return (
+      <SeekBar
+        duration={duration}
+        timeLeft={timeLeft}
+        value={this.getDurationAsPercent()}
+        onClick={this.onBarClick}
+      />
+    )
   }
 }
 

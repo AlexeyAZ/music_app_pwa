@@ -5,7 +5,7 @@ const napsterConfig = {
   authBackendUrl: '/auth',
   refreshTokenBackendUrl: '/refresh-token',
   baseVersion: 'v2.2',
-  clientId: 'NDllNDUzNmYtODBmNS00NjcwLWIxYjItNDVkNjkxNzg4OGQ4',
+  clientId: 'ODNkNmMzZWYtZjM1Zi00MGNlLTk1MzMtNzc1NDg2MWY3MzRi',
   apiName: 'NAPSTER',
 }
 

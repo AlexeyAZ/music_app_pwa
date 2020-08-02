@@ -20,7 +20,7 @@ const getNapsterImage = ({ type, id, size = 's' }) => {
   if (type === 'station') {
     return `${imageServerUrl}/v2/stations/${id}/images/${imageSize}.${extension}`
   }
-  throw new Error('getNapsterImage: type must be specified')
+  return null
 }
 
 export default getNapsterImage
