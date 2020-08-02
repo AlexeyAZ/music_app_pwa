@@ -107,7 +107,6 @@ const pauseTrackAsync = async () => {
 }
 
 const playControlAsync = async (track, playbackListId) => {
-  console.log(track)
   const {
     playbackList: { listened },
     playbackStatus: {

@@ -29,7 +29,6 @@ class PlayButton extends Component {
 
   handleButtonClick = () => {
     const { track, playbackListId } = this.props
-    console.log(track)
     return playControlAsync(track, playbackListId)
   }
 
