@@ -1,6 +1,8 @@
 import { store } from 'store'
 import get from 'lodash/get'
 
+import { getEntityDataPath } from 'helpers'
+
 import * as PlaybackListModule from 'modules/playbackList'
 import * as TempStorageModule from 'modules/tempStorage'
 import * as FavoritesModule from 'modules/favorites'
@@ -15,17 +17,22 @@ const getTracks = async ({ action, data = null, dataPath, countPatch, params = {
   } = store.getState()
   const actionPayload = data ? { params, data } : { params }
   const tracksResponse = await action(actionPayload)
-  const tracksData = get(tracksResponse, dataPath, [])
-  const tracksCount = get(tracksResponse, countPatch)
+  console.log('tracksResponse', tracksResponse)
+
+  const entityDataPath = dataPath || `data.${getEntityDataPath(tracksResponse.data)}`
+  const entityCountPatch = countPatch || 'data.meta.totalCount'
+  console.log(entityDataPath)
+  const tracksData = get(tracksResponse, entityDataPath, [])
+  const tracksCount = get(tracksResponse, entityCountPatch)
 
   if (playbackListId === storageId) {
     await store.dispatch(addTracksToPlayback(tracksData))
     await store.dispatch(
-      addItemsToTempStorage({ storageId, items: tracksData, itemsCount: tracksCount })
+      addItemsToTempStorage({ storageId, items: tracksData, totalCount: tracksCount })
     )
   } else {
     await store.dispatch(
-      addItemsToTempStorage({ storageId, items: tracksData, itemsCount: tracksCount })
+      addItemsToTempStorage({ storageId, items: tracksData, totalCount: tracksCount })
     )
   }
 

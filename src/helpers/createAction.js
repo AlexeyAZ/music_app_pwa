@@ -1,8 +1,7 @@
 import get from 'lodash/get'
 
-import { history } from 'config'
-
 import axiosInstance from './axiosInstance'
+import getEntityDataPath from './getEntityDataPath'
 
 const createActionTypes = actionType => {
   const typeState = actionType.split('_').reverse()
@@ -47,8 +46,22 @@ const createAction = (type, prepareAction) => {
 
     return axiosInstance(config)
       .then(response => {
-        dispatch({ type: successType, payload: response.data })
-        return response
+        const dataPath = `data.${getEntityDataPath(response.data)}`
+        const countPatch = 'data.meta.totalCount'
+        const returnedCountPath = 'data.meta.returnedCount'
+        const responseData = get(response, dataPath)
+        const responseCount = get(response, countPatch)
+        const responseReturnedCount = get(response, returnedCountPath)
+        const payload = {
+          items: responseData,
+          totalCount: responseCount,
+          returnedCount: responseReturnedCount,
+        }
+        dispatch({
+          type: successType,
+          payload,
+        })
+        return { ...response, transformedData: payload }
       })
       .catch(error => {
         const errorCode = get(error, 'response.data.code')

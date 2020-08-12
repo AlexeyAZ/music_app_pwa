@@ -37,3 +37,26 @@
 .borderRadius-round {
   border-radius: 50%;
 }
+.imageSize-auto {
+  width: auto;
+  max-width: none;
+}
+.imageSize-xs {
+  width: 50px;
+  max-width: 50px;
+}
+.imageSize-s {
+  width: 100px;
+  max-width: 100px;
+}
+.imageSize-m {
+  width: 150px;
+  max-width: 150px;
+}
+.imageSize-l {
+  width: 200px;
+  max-width: 200px;
+}
+.imageSize-fullscreen {
+  width: 100%;
+}

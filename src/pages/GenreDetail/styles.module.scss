@@ -1,8 +1,4 @@
 .wrap {
-  display: grid;
-  column-gap: 10px;
-  row-gap: 10px;
-  grid-template-columns: repeat(4, minmax(70px, 1fr));
   position: relative;
   &:before {
     content: '';
@@ -15,10 +11,7 @@
   }
 }
 .imageWrap {
-  margin-left: calc(-1 * var(--container-h-offset));
-  margin-right: calc(-1 * var(--container-h-offset));
   margin-bottom: 20px;
-  padding-bottom: 70%;
   position: relative;
   &:after {
     content: '';
@@ -29,13 +22,6 @@
     height: 100%;
     width: 100%;
   }
-}
-.image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
 }
 .imageTitle {
   text-shadow: 4px 4px 4px rgba(0,0,0,0.8);

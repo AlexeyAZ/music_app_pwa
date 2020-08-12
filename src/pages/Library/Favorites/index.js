@@ -77,8 +77,6 @@ class Favorites extends Component {
         <TracksGrid
           getTracksAction={getMyFavorites}
           storageId={storageId}
-          dataPath="data.favorites.data.tracks"
-          countPatch="data.meta.totalCount"
           onFavoriteButtonClick={this.removeFromFavorites}
         />
       </div>

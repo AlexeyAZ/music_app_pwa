@@ -3,10 +3,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import isNil from 'lodash/isNil'
 import get from 'lodash/get'
+import cn from 'classnames'
 
 import { playerControls } from 'helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
+
+import styles from './styles.module.scss'
 
 const { playControlAsync } = playerControls
 
@@ -56,13 +59,14 @@ class PlayButton extends Component {
 
   render() {
     const { disabled, className, iconSize } = this.props
+    const iconName = this.getIconName()
     return (
       <ThemedPlayerButton
         disabled={disabled}
-        className={className}
+        className={cn(styles[`button-${iconName}`], className)}
         iconSize={iconSize}
         onClick={this.handleButtonClick}
-        iconName={this.getIconName()}
+        iconName={iconName}
       />
     )
   }

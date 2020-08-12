@@ -1,9 +1,8 @@
-import { napsterConfig, backendConfig } from 'config'
+import { napsterConfig } from 'config'
 
 const getCurrentApi = () => {
   return {
     ...napsterConfig,
-    ...backendConfig,
   }
 }
 

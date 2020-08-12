@@ -11,7 +11,7 @@ import { Image, Row } from 'components'
 
 import TracksGrid from '../../containers/TracksGrid'
 
-class Album extends Component {
+class Albums extends Component {
   render() {
     const { match, getAlbumTracks } = this.props
     const id = get(match, 'params.id')
@@ -19,13 +19,12 @@ class Album extends Component {
     return (
       <div>
         <Row>
-          <Image type="album" size="xl" id={id} imageRatio={0.9} />
+          <Image type="album" napsterImageSize="xl" napsterImageId={id} imageRatio={0.9} />
           <TracksGrid
-            disableAutoload
+            disableAutoLoad
             getTracksAction={getAlbumTracks}
-            data={id}
+            requestData={id}
             storageId="albumTracks"
-            dataPath="data.tracks"
           />
         </Row>
       </div>
@@ -33,7 +32,7 @@ class Album extends Component {
   }
 }
 
-Album.propTypes = {
+Albums.propTypes = {
   match: PropTypes.object.isRequired,
   getAlbumTracks: PropTypes.func.isRequired,
 }
@@ -45,4 +44,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps
-)(Album)
+)(Albums)

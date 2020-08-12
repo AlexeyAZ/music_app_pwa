@@ -20,6 +20,8 @@ import NapsterImage from './NapsterImage'
 import DangerHtml from './DangerHtml'
 import Input from './Input'
 import Image from './Image'
+import ImageLazy from './ImageLazy'
+import LayoutWithNavbar from './LayoutWithNavbar'
 
 import { Text, Title } from './Typography'
 import { CommonCard } from './Cards'
@@ -54,4 +56,6 @@ export {
   CommonCard,
   Input,
   Image,
+  ImageLazy,
+  LayoutWithNavbar,
 }

@@ -1,101 +1,129 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators, compose } from 'redux'
-import { withRouter } from 'react-router'
+import React, { useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams, useHistory } from 'react-router'
 import get from 'lodash/get'
 
 import * as GenresModule from 'modules/genres'
 
-import { getNapsterImage } from 'helpers'
-import { ArtistCard, AlbumCard, Text, Title, DangerHtml } from 'components'
+import { Row, Text, Title, Image, DangerHtml } from 'components'
 import { HeaderTitle } from 'portals'
+
+import TracksGrid from '../../containers/TracksGrid'
+import CardsGrid from '../../containers/CardsGrid'
+
+import { CARD_TYPE_GENRE, CARD_TYPE_ARTIST, CARD_TYPE_ALBUM } from '../../constants'
 
 import styles from './styles.module.scss'
 
-class GenreDetail extends Component {
-  componentDidMount() {
-    const {
-      getTopArtistsByGenre,
-      getGenreDetail,
-      getTopAlbumsByGenre,
-      match: {
-        params: { id },
-      },
-    } = this.props
-    const limit = 30
-    getTopAlbumsByGenre({ data: id, params: { limit } })
-    getTopArtistsByGenre({ data: id, params: { limit } })
-    getGenreDetail({ data: id })
-  }
+const genreTopArtistsStorageId = 'genreTopArtistsStorageId'
+const genreTopAlbumsStorageId = 'genreTopAlbumsStorageId'
+const genreTopTracksStorageId = 'genreTopTracksStorageId'
 
-  render() {
-    const { topArtistsByGenre, genreDetail, topAlbumsByGenre } = this.props
-    const topArtistsData = get(topArtistsByGenre, 'data.artists', [])
-    const topAlbumsData = get(topAlbumsByGenre, 'data.albums', [])
-    const genreDetailData = get(genreDetail, 'data.genres[0]', {})
-    const imgSrc = getNapsterImage({ type: 'genre', id: genreDetailData.id })
-    return (
-      <div>
-        <HeaderTitle>{genreDetailData.name}</HeaderTitle>
+const limit = 30
+
+const GenreDetail = () => {
+  const { id: genreId } = useParams()
+  console.log(genreId)
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const genreDetail = useSelector(GenresModule.getGenreDetailSelector)
+  const getGenreDetail = useCallback(id => dispatch(GenresModule.getGenreDetail(id)), [dispatch])
+
+  const getTopAlbumsByGenre = useCallback(id => dispatch(GenresModule.getTopAlbumsByGenre(id)), [
+    dispatch,
+  ])
+
+  const getTopArtistsByGenre = useCallback(id => dispatch(GenresModule.getTopArtistsByGenre(id)), [
+    dispatch,
+  ])
+
+  const getTopTracksByGenre = useCallback(id => dispatch(GenresModule.getTopTracksByGenre(id)), [
+    dispatch,
+  ])
+
+  const genreName = get(genreDetail, 'name')
+  const genreDescription = get(genreDetail, 'description')
+
+  const handleArtistClick = useCallback(id => {
+    history.push(`/artists/${id}`)
+  }, [])
+
+  const handleAlbumClick = useCallback(id => {
+    history.push(`/albums/${id}`)
+  }, [])
+
+  useEffect(() => {
+    getGenreDetail({ data: genreId })
+  }, [])
+
+  return (
+    <div>
+      <HeaderTitle>{genreName}</HeaderTitle>
+      <Row>
         <div className={styles.imageWrap}>
-          {imgSrc && <img src={imgSrc} className={styles.image} alt="" />}
+          <Image
+            cardSize="fullscreen"
+            imageRatio={0.7}
+            napsterImageId={genreId}
+            type={CARD_TYPE_GENRE}
+          />
           <Title className={styles.imageTitle} color="white" size="xxl">
-            {genreDetailData.name}
+            {genreName}
           </Title>
         </div>
-        <Text mb="4">
-          <DangerHtml html={genreDetailData.description} />
-        </Text>
-        <div className={styles.section}>
-          <Title size="m" className={styles.sectionTitle}>
-            Top artists by genre
-          </Title>
-          <div className={styles.wrap}>
-            {topArtistsData.map(({ id, name }) => {
-              return <ArtistCard id={id} key={id} name={name} />
-            })}
-          </div>
+      </Row>
+      <Text mb="4">
+        <DangerHtml html={genreDescription} />
+      </Text>
+      <div className={styles.section}>
+        <Title size="m" className={styles.sectionTitle}>
+          Top artists by genre
+        </Title>
+        <div className={styles.wrap}>
+          <CardsGrid
+            disableAutoLoad
+            cardType={CARD_TYPE_ARTIST}
+            requestAction={getTopArtistsByGenre}
+            requestData={genreId}
+            storageId={`${genreTopArtistsStorageId}:${genreId}`}
+            requestParams={{ limit }}
+            onCardClick={handleArtistClick}
+          />
         </div>
-        <Title size="m" mb="4">
+      </div>
+      <div className={styles.section}>
+        <Title size="m" className={styles.sectionTitle}>
           Top albums by genre
         </Title>
         <div className={styles.wrap}>
-          {topAlbumsData.map(({ id, name, artistName }) => {
-            return <AlbumCard id={id} key={id} albumName={name} artistName={artistName} />
-          })}
+          <CardsGrid
+            disableAutoLoad
+            cardType={CARD_TYPE_ALBUM}
+            requestAction={getTopAlbumsByGenre}
+            requestData={genreId}
+            storageId={`${genreTopAlbumsStorageId}:${genreId}`}
+            requestParams={{ limit }}
+            onCardClick={handleAlbumClick}
+          />
         </div>
       </div>
-    )
-  }
+      <div className={styles.section}>
+        <Title size="m" className={styles.sectionTitle}>
+          Top tracks by genre
+        </Title>
+        <div className={styles.wrap}>
+          <TracksGrid
+            disableAutoLoad
+            storageId={`${genreTopTracksStorageId}:${genreId}`}
+            requestData={genreId}
+            getTracksAction={getTopTracksByGenre}
+          />
+        </div>
+      </div>
+    </div>
+  )
 }
 
-GenreDetail.propTypes = {
-  match: PropTypes.object.isRequired,
-  topArtistsByGenre: PropTypes.object.isRequired,
-  genreDetail: PropTypes.object.isRequired,
-  getTopArtistsByGenre: PropTypes.func.isRequired,
-  topAlbumsByGenre: PropTypes.object.isRequired,
-  getGenreDetail: PropTypes.func.isRequired,
-  getTopAlbumsByGenre: PropTypes.func.isRequired,
-}
+GenreDetail.propTypes = {}
 
-const mapStateToProps = ({ topArtistsByGenre, genreDetail, topAlbumsByGenre }) => ({
-  topArtistsByGenre,
-  genreDetail,
-  topAlbumsByGenre,
-})
-
-const mapDispatchToProps = dispatch => ({
-  getTopArtistsByGenre: bindActionCreators(GenresModule.getTopArtistsByGenre, dispatch),
-  getGenreDetail: bindActionCreators(GenresModule.getGenreDetail, dispatch),
-  getTopAlbumsByGenre: bindActionCreators(GenresModule.getTopAlbumsByGenre, dispatch),
-})
-
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withRouter
-)(GenreDetail)
+export default GenreDetail

@@ -5,19 +5,21 @@ import { bindActionCreators } from 'redux'
 import cn from 'classnames'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
+import moment from 'moment'
 
 import * as TempStorageModule from 'modules/tempStorage'
 
 import { ScrollActionContainer, SimpleButton } from 'components'
+import { getEntityDataPath } from '../../helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
 import styles from './styles.module.scss'
 
-const { horizontalContainerType, verticalContainerType } = ScrollActionContainer
+const { HORIZONTAL_CONTAINER_TYPE, VERTICAL_CONTAINER_TYPE } = ScrollActionContainer
 const defaultLimit = 100
 
-class AutoLoadContainer extends Component {
+class LoadContainer extends Component {
   page = 0
 
   isScrollExist = false
@@ -38,18 +40,13 @@ class AutoLoadContainer extends Component {
 
   increasePageNumber = () => {
     this.page += 1
-    return this.setState({ isLoading: false }, () => {
-      if (this.isScrollLimit() && this.isScrollExist) {
-        return this.getEntity()
-      }
-      return null
-    })
+    return this.setState({ isLoading: false })
   }
 
   getEntity = () => {
     const { isLoading } = this.state
     const {
-      customParams,
+      requestParams,
       customAction,
       entityAction,
       storageId,
@@ -57,21 +54,24 @@ class AutoLoadContainer extends Component {
       entityDataPatch,
       entityCountPatch,
       addItemsToTempStorage,
+      requestData,
     } = this.props
 
     if (!isLoading && !disableAutoLoad) {
       this.setState({ isLoading: true }, async () => {
-        const limit = get(customParams, 'limit') || defaultLimit
-        const params = { limit, offset: limit * this.page }
+        const limit = get(requestParams, 'limit') || defaultLimit
+        const params = { ...requestParams, limit, offset: limit * this.page }
 
         if (customAction) {
           await customAction(params)
           return this.increasePageNumber()
         }
-        const response = await entityAction({ params })
-        const entityData = get(response, entityDataPatch, [])
-        const entityCount = get(response, entityCountPatch, [])
-        await addItemsToTempStorage({ storageId, items: entityData, itemsCount: entityCount })
+        const requestOptions = requestData ? { data: requestData, params } : { params }
+        const response = await entityAction(requestOptions)
+        const dataPath = entityDataPatch || `data.${getEntityDataPath(response.data)}`
+        const entityData = get(response, dataPath, [])
+        const entityCount = get(response, entityCountPatch)
+        await addItemsToTempStorage({ storageId, items: entityData, totalCount: entityCount })
         return this.increasePageNumber()
       })
     }
@@ -79,14 +79,14 @@ class AutoLoadContainer extends Component {
 
   renderLoaderContainer = () => {
     const { type } = this.props
-    if (type === horizontalContainerType) {
+    if (type === HORIZONTAL_CONTAINER_TYPE) {
       return (
         <div className={styles.horizontalLoadingContainer}>
           <ThemedPlayerButton iconName="Spinner" className={styles.spinner} />
         </div>
       )
     }
-    if (type === verticalContainerType) {
+    if (type === VERTICAL_CONTAINER_TYPE) {
       return (
         <div className={styles.verticalLoadingContainer}>
           <ThemedPlayerButton iconName="Spinner" className={styles.spinner} />
@@ -96,56 +96,69 @@ class AutoLoadContainer extends Component {
     return null
   }
 
+  handleScrollEnd = () => {
+    const { disableLoadOnScroll } = this.props
+    if (!disableLoadOnScroll) {
+      this.getEntity()
+    }
+  }
+
   render() {
-    console.log('render AutoLoadContainer')
     const { isLoading } = this.state
     const { children, type } = this.props
 
     return (
-      <ScrollActionContainer type={type} onScrollEnd={this.getEntity}>
-        {({ isScrollExist, isScrollLimit }) => {
-          this.isScrollExist = isScrollExist
-          this.isScrollLimit = isScrollLimit
-          return (
-            <div
-              className={cn({
-                [styles.wrapHorizontal]: type === horizontalContainerType,
-                [styles.wrapVertical]: type === verticalContainerType,
-              })}
-            >
-              {children}
-              {isLoading && this.renderLoaderContainer()}
-              {!isScrollExist && !isLoading && (
-                <SimpleButton onClick={this.getEntity}>Load more</SimpleButton>
-              )}
-            </div>
-          )
-        }}
-      </ScrollActionContainer>
+      <div className={styles.loadContainerWrap}>
+        {isLoading && <div className={styles.loaderCap} />}
+        <ScrollActionContainer type={type} onScrollEnd={this.handleScrollEnd}>
+          {({ isScrollExist, isScrollLimit }) => {
+            this.isScrollExist = isScrollExist
+            this.isScrollLimit = isScrollLimit
+            return (
+              <div
+                className={cn({
+                  [styles.wrapHorizontal]: type === HORIZONTAL_CONTAINER_TYPE,
+                  [styles.wrapVertical]: type === VERTICAL_CONTAINER_TYPE,
+                })}
+              >
+                {children}
+                {/* {isLoading && this.renderLoaderContainer()} */}
+                {!isScrollExist && !isLoading && (
+                  <SimpleButton onClick={this.getEntity}>Load more</SimpleButton>
+                )}
+              </div>
+            )
+          }}
+        </ScrollActionContainer>
+      </div>
     )
   }
 }
 
-AutoLoadContainer.propTypes = {
-  type: PropTypes.oneOf([horizontalContainerType, verticalContainerType]),
+LoadContainer.propTypes = {
+  disableLoadOnScroll: PropTypes.bool,
+  type: PropTypes.oneOf([HORIZONTAL_CONTAINER_TYPE, VERTICAL_CONTAINER_TYPE]),
   children: PropTypes.any,
   entityDataPatch: PropTypes.string,
   entityCountPatch: PropTypes.string,
   storageId: PropTypes.string,
   disableAutoLoad: PropTypes.bool,
-  customParams: PropTypes.object,
+  requestData: PropTypes.any,
+  requestParams: PropTypes.object,
   addItemsToTempStorage: PropTypes.func.isRequired,
   entityAction: PropTypes.func,
   customAction: PropTypes.func,
 }
-AutoLoadContainer.defaultProps = {
-  type: verticalContainerType,
+LoadContainer.defaultProps = {
+  disableLoadOnScroll: false,
+  type: VERTICAL_CONTAINER_TYPE,
   children: null,
   entityDataPatch: null,
   entityCountPatch: null,
   storageId: '',
   disableAutoLoad: false,
-  customParams: {},
+  requestData: null,
+  requestParams: {},
   entityAction: noop,
   customAction: null,
 }
@@ -157,4 +170,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps
-)(AutoLoadContainer)
+)(LoadContainer)

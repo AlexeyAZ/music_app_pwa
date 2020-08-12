@@ -11,13 +11,17 @@ export const clearTempStorage = createAction('CLEAR_TEMP_STORAGE')
 export const removeItemsFromTempStorage = createAction('REMOVE_ITEMS_FROM_TEMP_STORAGE')
 
 export const getTempStorageDataSelector = state => state.tempStorage.data
+export const getTempStorageByIdSelector = (state, storageId) => {
+  const data = getTempStorageDataSelector(state)
+  return data.find(item => item.id === storageId)
+}
 export const getTempStorageItemsByIdSelector = (state, storageId) => {
   const data = getTempStorageDataSelector(state)
   return get(data.find(item => item.id === storageId), 'items') || []
 }
-export const getTempStorageItemsCountByIdSelector = (state, storageId) => {
+export const getTempStorageTotalCountByIdSelector = (state, storageId) => {
   const data = getTempStorageDataSelector(state)
-  return get(data.find(item => item.id === storageId), 'itemsCount')
+  return get(data.find(item => item.id === storageId), 'totalCount')
 }
 
 const tempStorageModule = {
@@ -26,13 +30,23 @@ const tempStorageModule = {
     {
       initialState,
       customTypes: {
-        [addItemsToTempStorage.start]: (state, { storageId, items, itemsCount }) => {
+        [addItemsToTempStorage.start]: (
+          state,
+          { storageId, items, totalCount, returnedCount, query, page }
+        ) => {
           if (state.data.find(item => item.id === storageId)) {
             return {
               ...state,
               data: state.data.map(item => {
                 if (item.id === storageId) {
-                  return { ...item, items: [...item.items, ...items], itemsCount }
+                  return {
+                    ...item,
+                    items: [...item.items, ...items],
+                    totalCount,
+                    returnedCount,
+                    query,
+                    page,
+                  }
                 }
                 return item
               }),
@@ -40,7 +54,7 @@ const tempStorageModule = {
           }
           return {
             ...state,
-            data: [...state.data, { id: storageId, items, itemsCount }],
+            data: [...state.data, { id: storageId, items, totalCount, returnedCount, query, page }],
           }
         },
 
@@ -60,7 +74,7 @@ const tempStorageModule = {
           const data = state.data.map(storage => {
             if (storage.id === storageId) {
               const items = storage.items.filter(item => !itemsIds.includes(item.id))
-              return { ...storage, items, itemsCount: items.length }
+              return { ...storage, items, totalCount: items.length }
             }
             return storage
           })

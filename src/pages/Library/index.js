@@ -1,20 +1,46 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { withRouter } from 'react-router'
-import { renderRoutes } from 'react-router-config'
+import React from 'react'
 
-import styles from './styles.module.scss'
+import { LayoutWithNavbar } from '../../components'
 
-// eslint-disable-next-line react/prefer-stateless-function
-class Library extends Component {
-  render() {
-    const { route } = this.props
-    return <div className={styles.wrap}>{renderRoutes(route.routes)}</div>
-  }
-}
+import Favorites from './Favorites'
+import Playlists from './Playlists'
+import Artists from './Artists'
 
-Library.propTypes = {
-  route: PropTypes.object.isRequired,
-}
+const navbarData = [
+  {
+    title: 'Favorites',
+    to: `/library/favorites`,
+    key: `favorites`,
+    component: Favorites,
+  },
+  {
+    title: 'Playlists',
+    to: `/library/playlists`,
+    key: `playlists`,
+    component: Playlists,
+  },
+  {
+    title: 'Artists',
+    to: `/library/artists`,
+    key: `artists`,
+    component: Artists,
+  },
+  {
+    title: 'Albums',
+    to: `/library/albums`,
+    key: `albums`,
+    component: Artists,
+  },
+  {
+    title: 'Tracks',
+    to: `/library/tracks`,
+    key: `tracks`,
+    component: Artists,
+  },
+]
 
-export default withRouter(Library)
+const Library = () => <LayoutWithNavbar data={navbarData} />
+
+Library.propTypes = {}
+
+export default Library

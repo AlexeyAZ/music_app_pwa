@@ -1,8 +1,16 @@
+import get from 'lodash/get'
+
 import { createAction, createReducer } from 'helpers'
+
+export const getArtistDetailSelector = state => get(state, 'artistDetail.data.artists[0]')
 
 export const getTopArtists = createAction('GET_TOP_ARTIST_REQUEST', {
   url: `/artists/top`,
 })
+
+export const getArtistDetail = createAction('GET_ARTIST_DETAIL_REQUEST', artistId => ({
+  url: `/artists/${artistId}`,
+}))
 
 export const getArtistAlbums = createAction('GET_ARTIST_ALBUMS_REQUEST', artistId => ({
   url: `/artists/${artistId}/albums`,
@@ -22,6 +30,7 @@ export const getTopArtistTracks = createAction('GET_TOP_ARTIST_TRACKS_REQUEST', 
 
 const artistsModule = {
   topArtists: createReducer(getTopArtists),
+  artistDetail: createReducer(getArtistDetail),
   artistAlbums: createReducer(getArtistAlbums),
   topArtistAlbums: createReducer(getTopArtistAlbums),
   artistTracks: createReducer(getArtistTracks),

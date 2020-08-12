@@ -1,7 +1,49 @@
-
-.image {
-  margin-bottom: 6px;
+.cardFormat-row {
+  display: flex;
+  .imageWrap {
+    margin-right: 10px;
+  }
 }
-.info {
-  text-align: center;
+.cardFormat-column {
+  .imageWrap {
+    margin-bottom: 6px;
+  }
+  .info {
+    text-align: center;
+  }
+}
+.cardFormat-poster {
+  .info {
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+  }
+}
+.imageWrap {
+  flex-shrink: 0;
+}
+.imageSize-auto {
+  width: auto;
+  max-width: none;
+}
+.imageSize-xs {
+  width: 50px;
+  max-width: 50px;
+}
+.imageSize-s {
+  width: 100px;
+  max-width: 100px;
+}
+.imageSize-m {
+  width: 150px;
+  max-width: 150px;
+}
+.imageSize-l {
+  width: 200px;
+  max-width: 200px;
+}
+.imageSize-fullscreen {
+  width: 100%;
 }

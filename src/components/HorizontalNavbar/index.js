@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
 import get from 'lodash/get'
-import noop from 'lodash/noop'
+import { withRouter } from 'react-router'
 
 import { Container } from '../Grid'
 
@@ -18,8 +18,14 @@ class HorizontalNavbar extends Component {
     }
   }
 
-  handleItemClick = async key => {
-    const { onItemClick, value } = this.props
+  moveToPath = key => {
+    const { history, data } = this.props
+    const { to } = data.find(item => item.key === key)
+    history.push(to)
+  }
+
+  handleItemClick = key => {
+    const { value, onItemClick } = this.props
     if (value) {
       return onItemClick(key)
     }
@@ -28,41 +34,46 @@ class HorizontalNavbar extends Component {
 
   render() {
     const { activeKey } = this.state
-    const { data, value, className } = this.props
+    const { data, value, className, isNavbarFixed } = this.props
     const currentKey = value || activeKey
     return (
-      <Container>
-        <div className={cn(styles.wrap, className)}>
-          <div className={styles.container}>
-            {data.map(({ key, title }) => (
-              <button
-                type="button"
-                className={styles.listItem}
-                key={key}
-                onClick={() => this.handleItemClick(key)}
-              >
-                <b className={currentKey === key ? styles.listItemText : ''}>{title}</b>
-              </button>
-            ))}
+      <div className={cn({ [styles.fixed]: isNavbarFixed })}>
+        <Container>
+          <div className={cn(styles.wrap, className)}>
+            <div className={styles.container}>
+              {data.map(({ key, title }) => (
+                <button
+                  type="button"
+                  className={styles.listItem}
+                  key={key}
+                  onClick={() => this.handleItemClick(key)}
+                >
+                  <b className={currentKey === key ? styles.listItemText : ''}>{title}</b>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     )
   }
 }
 
 HorizontalNavbar.propTypes = {
+  isNavbarFixed: PropTypes.bool,
   className: PropTypes.string,
   value: PropTypes.string,
   data: PropTypes.array.isRequired,
   onItemClick: PropTypes.func,
   defaultKey: PropTypes.string,
+  history: PropTypes.object.isRequired,
 }
 HorizontalNavbar.defaultProps = {
+  isNavbarFixed: true,
   className: '',
   value: null,
-  onItemClick: noop,
+  onItemClick: null,
   defaultKey: null,
 }
 
-export default HorizontalNavbar
+export default withRouter(HorizontalNavbar)

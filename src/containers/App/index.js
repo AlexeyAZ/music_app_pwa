@@ -8,7 +8,7 @@ import ReactNotification from 'react-notifications-component'
 import { store, persistor } from 'store'
 import { history } from 'config'
 
-import routes from '../../routes'
+import { routes, RoutesContext } from '../../routes'
 
 import Layout from '../Layout'
 import PlayerInstance from '../PlayerInstance'
@@ -29,18 +29,20 @@ class App extends Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Router history={history}>
-            <ScrollToTop />
-            <AppContainer>
-              <PlayerInstance />
-              <ReactNotification />
-              <Layout>{renderRoutes(routes)}</Layout>
-            </AppContainer>
-          </Router>
-        </PersistGate>
-      </Provider>
+      <RoutesContext.Provider value={routes}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Router history={history}>
+              <ScrollToTop />
+              <AppContainer>
+                <PlayerInstance />
+                <ReactNotification />
+                <Layout>{renderRoutes(routes)}</Layout>
+              </AppContainer>
+            </Router>
+          </PersistGate>
+        </Provider>
+      </RoutesContext.Provider>
     )
   }
 }

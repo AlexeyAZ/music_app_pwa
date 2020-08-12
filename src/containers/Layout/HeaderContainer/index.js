@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 import get from 'lodash/get'
 
-import routes from 'routes'
+import { RoutesContext } from '../../../routes'
 
-import { Header, Text } from 'components'
+import { Header, Text } from '../../../components'
 
 class HeaderContainer extends Component {
   getHeaderTitle = () => {
     const { location } = this.props
-    const flatRoutes = routes.reduce((acc, route) => {
+    const flatRoutes = this.context.reduce((acc, route) => {
       if (route.routes) {
         const { routes: routeRoutes, ...newRoute } = route
         return [...acc, newRoute, ...route.routes]
@@ -35,6 +35,8 @@ class HeaderContainer extends Component {
     return history.goBack()
   }
 
+  static contextType = RoutesContext
+
   renderRightContent = () => {
     return (
       <Text size="xs">
@@ -44,6 +46,7 @@ class HeaderContainer extends Component {
   }
 
   render() {
+    const { history } = this.props
     if (this.showHeader())
       return (
         <Header

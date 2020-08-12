@@ -1,4 +1,4 @@
-import { createAction, createReducer, getServerUrl, getCurrentApi } from 'helpers'
+import { createAction, createReducer, getCurrentApi } from 'helpers'
 
 const { authBackendUrl, refreshTokenBackendUrl } = getCurrentApi()
 
@@ -10,13 +10,13 @@ const authOptionsInitialState = {
 
 export const authUser = createAction('AUTH_USER_REQUEST', code => ({
   url: authBackendUrl,
-  baseURL: getServerUrl(),
+  baseURL: process.env.REACT_APP_SERVER_URL,
   params: { code },
 }))
 
 export const refreshToken = createAction('REFRESH_TOKEN_REQUEST', refresh_token => ({
   url: refreshTokenBackendUrl,
-  baseURL: getServerUrl(),
+  baseURL: process.env.REACT_APP_SERVER_URL,
   params: { refresh_token },
 }))
 

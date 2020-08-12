@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
 
@@ -10,30 +10,46 @@ const getImagePadding = ratio => {
   return { paddingBottom: `${100 * ratio}%` }
 }
 
-class Image extends Component {
-  renderImage = () => {
-    const { type, id, size, src, alt } = this.props
-    if (type && id) {
-      return <NapsterImage type={type} id={id} size={size} className={styles.image} />
+const Image = ({
+  src,
+  alt,
+  className,
+  type,
+  napsterImageId,
+  napsterImageSize,
+  imageRatio,
+  imageSize,
+  borderRadius,
+}) => {
+  const renderImage = useCallback(() => {
+    if (type && napsterImageId) {
+      return (
+        <NapsterImage
+          type={type}
+          id={napsterImageId}
+          size={napsterImageSize}
+          className={styles.image}
+        />
+      )
     }
     if (src) {
       return <img src={src} alt={alt} className={styles.image} />
     }
     return <div className={styles.imageDummy} />
-  }
+  }, [type, napsterImageId, napsterImageSize, src, alt])
 
-  render() {
-    const { className, imageRatio, borderRadius } = this.props
-    const imageStyle = getImagePadding(imageRatio)
-    return (
+  const imageStyle = getImagePadding(imageRatio)
+
+  return (
+    <div className={styles[`imageSize-${imageSize}`]}>
       <div
         className={cn(styles.wrap, styles[`borderRadius-${borderRadius}`], className)}
         style={imageStyle}
       >
-        {this.renderImage()}
+        {renderImage()}
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 Image.propTypes = {
@@ -41,9 +57,10 @@ Image.propTypes = {
   src: PropTypes.string,
   alt: PropTypes.string,
   type: PropTypes.string,
-  id: PropTypes.string,
-  size: PropTypes.string,
+  napsterImageId: PropTypes.string,
+  napsterImageSize: PropTypes.string,
   imageRatio: PropTypes.number,
+  imageSize: PropTypes.oneOf(['auto', 'xs', 's', 'm', 'l', 'fullscreen']),
   borderRadius: PropTypes.oneOf(['default', 'xs', 's', 'm', 'l', 'round']),
 }
 Image.defaultProps = {
@@ -51,9 +68,10 @@ Image.defaultProps = {
   src: null,
   alt: '',
   type: null,
-  id: null,
-  size: 's',
+  napsterImageId: null,
+  napsterImageSize: 's',
   imageRatio: 1,
+  imageSize: 'auto',
   borderRadius: 'default',
 }
 

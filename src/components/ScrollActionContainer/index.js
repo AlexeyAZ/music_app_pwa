@@ -4,8 +4,6 @@ import noop from 'lodash/noop'
 
 import ScrollContainer from '../ScrollContainer'
 
-import styles from './styles.module.scss'
-
 const HORIZONTAL_CONTAINER_TYPE = 'horizontal'
 const VERTICAL_CONTAINER_TYPE = 'vertical'
 
@@ -37,9 +35,9 @@ class ScrollActionContainer extends Component {
     }, 1000)
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const { isScrollExist } = this.state
-    if (this.checkIsScrollExist() !== isScrollExist) {
+    if (this.checkIsScrollExist() !== isScrollExist && prevState.isScrollExist !== isScrollExist) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ isScrollExist: true })
     }
@@ -122,17 +120,17 @@ class ScrollActionContainer extends Component {
     }
   }
 
-  static horizontalContainerType = HORIZONTAL_CONTAINER_TYPE
+  static HORIZONTAL_CONTAINER_TYPE = HORIZONTAL_CONTAINER_TYPE
 
-  static verticalContainerType = VERTICAL_CONTAINER_TYPE
+  static VERTICAL_CONTAINER_TYPE = VERTICAL_CONTAINER_TYPE
 
   render() {
     const { isScrollExist } = this.state
-    const { children, type } = this.props
+    const { children, type, scrollContainerClassName } = this.props
 
     if (type === VERTICAL_CONTAINER_TYPE) {
       return (
-        <div className={styles.content}>
+        <div className={scrollContainerClassName}>
           {children({ isScrollExist, isScrollLimit: this.isScrollLimit })}
         </div>
       )
@@ -140,6 +138,7 @@ class ScrollActionContainer extends Component {
     if (type === HORIZONTAL_CONTAINER_TYPE) {
       return (
         <ScrollContainer
+          containerClassName={scrollContainerClassName}
           containerRef={el => {
             this.horizontalContainer = el
           }}
@@ -156,11 +155,13 @@ ScrollActionContainer.propTypes = {
   type: PropTypes.oneOf([VERTICAL_CONTAINER_TYPE, HORIZONTAL_CONTAINER_TYPE]),
   children: PropTypes.any,
   onScrollEnd: PropTypes.func,
+  scrollContainerClassName: PropTypes.string,
 }
 ScrollActionContainer.defaultProps = {
   type: VERTICAL_CONTAINER_TYPE,
   children: null,
   onScrollEnd: noop,
+  scrollContainerClassName: '',
 }
 
 export default ScrollActionContainer

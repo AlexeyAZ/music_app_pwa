@@ -12,12 +12,11 @@ import TracksGrid from '../../containers/TracksGrid'
 // eslint-disable-next-line react/prefer-stateless-function
 class Tracks extends Component {
   render() {
-    console.log('render Tracks')
     const { getTopTracks } = this.props
     return (
       <div>
         <Text>Top artists</Text>
-        <TracksGrid getTracksAction={getTopTracks} gridId="tracks" path="data.tracks" />
+        <TracksGrid getTracksAction={getTopTracks} gridId="tracks" />
       </div>
     )
   }

@@ -4,11 +4,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import * as SearchModule from 'modules/search'
+import * as TempStorageModule from 'modules/tempStorage'
 
-import { ArtistCard, Text } from 'components'
+import { Text } from 'components'
 
-import AutoLoadContainer from '../../containers/AutoLoadContainer'
 import TracksGrid from '../../containers/TracksGrid'
+
+const SEARCH_STORAGE_ID = 'searchStorageId'
 
 class Search extends Component {
   state = {
@@ -20,40 +22,43 @@ class Search extends Component {
     this.setState({ value })
   }
 
-  handleSearchButtonClick = () => {
-    const { value, searchValue } = this.state
+  handleSearchButtonClick = async () => {
+    const { value } = this.state
+    const { clearTempStorage } = this.props
+    await clearTempStorage(SEARCH_STORAGE_ID)
     this.setState({ searchValue: null }, () => this.setState({ searchValue: value }))
   }
 
   render() {
-    console.log('Render search')
     const { value, searchValue } = this.state
     const { searchContent } = this.props
     return (
-      <div>
+      <form>
         <Text>Search</Text>
         <input value={value} onChange={this.handleInputChange} />
-        <button onClick={this.handleSearchButtonClick}>Search</button>
+        <button type="button" onClick={this.handleSearchButtonClick}>
+          Search
+        </button>
         {searchValue && (
           <TracksGrid
             getTracksAction={searchContent}
-            customParams={{ query: searchValue, per_type_limit: 10 }}
-            storageId="searchTracks"
-            dataPath="data.search.data.tracks"
-            countPatch="data.meta.totalCount"
+            requestParams={{ query: searchValue, per_type_limit: 50, limit: 50, type: 'track' }}
+            storageId={SEARCH_STORAGE_ID}
           />
         )}
-      </div>
+      </form>
     )
   }
 }
 
 Search.propTypes = {
   searchContent: PropTypes.func.isRequired,
+  clearTempStorage: PropTypes.func.isRequired,
 }
 
 const mapDispatchToProps = dispatch => ({
   searchContent: bindActionCreators(SearchModule.searchContent, dispatch),
+  clearTempStorage: bindActionCreators(TempStorageModule.clearTempStorage, dispatch),
 })
 
 export default connect(

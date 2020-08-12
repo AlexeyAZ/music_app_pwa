@@ -3,15 +3,16 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import noop from 'lodash/noop'
-
-import { getTracks } from 'helpers'
+import get from 'lodash/get'
 
 import * as TracksModule from 'modules/tracks'
 import * as PlaybackListModule from 'modules/playbackList'
 import * as TempStorageModule from 'modules/tempStorage'
+import * as FavoritesModule from 'modules/favorites'
 
+import { Text } from '../../components'
 import TrackRow from '../TrackRow'
-import AutoLoadContainer from '../AutoLoadContainer'
+import LoadContainer from '../LoadContainerNew'
 
 // eslint-disable-next-line react/prefer-stateless-function
 class TracksGrid extends Component {
@@ -20,59 +21,97 @@ class TracksGrid extends Component {
   }
 
   async componentDidMount() {
-    const { clearTempStorage, clearPlaybackListId, storageId, disableAutoload } = this.props
-    await clearTempStorage(storageId)
+    const { clearTempStorage, clearPlaybackListId, storageId } = this.props
+    // await clearTempStorage(storageId)
     await clearPlaybackListId()
-    if (disableAutoload) {
-      await this.getEntity()
-    }
+
     this.setState({ mounted: true })
   }
 
-  getEntity = async params => {
-    const { getTracksAction, storageId, data, dataPath, countPatch, customParams } = this.props
+  handleResponseDataAction = async ({
+    storageId,
+    responseData,
+    responseCount,
+    responseReturnedCount,
+    query,
+    page,
+  }) => {
+    const {
+      playbackListId,
+      addTracksToPlayback,
+      addItemsToTempStorage,
+      getFavoritesStatus,
+      addToGeneralFavorites,
+    } = this.props
 
-    await getTracks({
-      action: getTracksAction,
-      data,
-      dataPath,
-      countPatch,
-      params: { ...params, ...customParams },
+    if (playbackListId === storageId) {
+      await addTracksToPlayback(responseData)
+    }
+
+    await addItemsToTempStorage({
       storageId,
+      items: responseData,
+      totalCount: responseCount,
+      returnedCount: responseReturnedCount,
+      query,
+      page,
     })
+
+    const tracksIds = responseData.map(item => item.id)
+    if (tracksIds.length > 0) {
+      const favoritesTracksResponse = await getFavoritesStatus({ data: tracksIds.join() })
+      const favoritesTracksData = get(favoritesTracksResponse, 'data.status', [])
+        .filter(item => item.favorite === true)
+        .map(item => item.id)
+      await addToGeneralFavorites(favoritesTracksData)
+    }
   }
 
   renderContent = () => {
-    const { storageId, tempStorageItems, onFavoriteButtonClick } = this.props
-
-    return tempStorageItems.map(track => {
-      return (
-        <TrackRow
-          track={track}
-          key={track.id}
-          playbackListId={storageId}
-          onFavoriteButtonClick={onFavoriteButtonClick}
-        />
-      )
-    })
+    const { storageId, tempStorageItems, tempStorageTotalCount, onFavoriteButtonClick } = this.props
+    return (
+      <div>
+        <Text>Items count:{tempStorageItems.length}</Text>
+        <Text>Total count:{tempStorageTotalCount}</Text>
+        {tempStorageItems.map((track, index) => (
+          <TrackRow
+            rowNumber={index + 1}
+            track={track}
+            key={track.id}
+            playbackListId={storageId}
+            onFavoriteButtonClick={onFavoriteButtonClick}
+          />
+        ))}
+      </div>
+    )
   }
 
   render() {
     const { mounted } = this.state
-    const { disableAutoload, tempStorageItems, tempStorageItemsCount } = this.props
-
-    if (disableAutoload) {
-      return <div>{this.renderContent()}</div>
-    }
+    const {
+      dataPath,
+      countPatch,
+      storageId,
+      disableAutoLoad,
+      requestParams,
+      requestData,
+      getTracksAction,
+    } = this.props
 
     if (mounted) {
       return (
-        <AutoLoadContainer
-          customAction={this.getEntity}
-          disableAutoLoad={tempStorageItems.length === tempStorageItemsCount}
+        <LoadContainer
+          storageId={storageId}
+          entityDataPatch={dataPath}
+          entityCountPatch={countPatch}
+          requestAction={getTracksAction}
+          requestParams={requestParams}
+          requestData={requestData}
+          onResponseDataAction={this.handleResponseDataAction}
+          disableLoadOnScroll={disableAutoLoad}
         >
           {this.renderContent()}
-        </AutoLoadContainer>
+        </LoadContainer>
       )
     }
     return null
@@ -80,41 +119,53 @@ class TracksGrid extends Component {
 }
 
 TracksGrid.propTypes = {
-  data: PropTypes.any,
-  dataPath: PropTypes.string.isRequired,
+  requestData: PropTypes.any,
+  dataPath: PropTypes.string,
   countPatch: PropTypes.string,
-  disableAutoload: PropTypes.bool,
+  disableAutoLoad: PropTypes.bool,
   storageId: PropTypes.string.isRequired,
   tempStorageItems: PropTypes.array,
-  tempStorageItemsCount: PropTypes.number,
-  customParams: PropTypes.object,
+  requestParams: PropTypes.object,
+  tempStorageTotalCount: PropTypes.number,
+  playbackListId: PropTypes.string,
   clearTempStorage: PropTypes.func.isRequired,
   clearPlaybackListId: PropTypes.func.isRequired,
   getTracksAction: PropTypes.func.isRequired,
   onFavoriteButtonClick: PropTypes.func,
+  addTracksToPlayback: PropTypes.func.isRequired,
+  addItemsToTempStorage: PropTypes.func.isRequired,
+  getFavoritesStatus: PropTypes.func.isRequired,
+  addToGeneralFavorites: PropTypes.func.isRequired,
 }
 TracksGrid.defaultProps = {
-  data: null,
+  requestData: null,
+  dataPath: null,
   countPatch: '',
-  disableAutoload: false,
+  disableAutoLoad: false,
   tempStorageItems: [],
-  tempStorageItemsCount: null,
-  customParams: {},
+  requestParams: {},
+  tempStorageTotalCount: null,
+  playbackListId: null,
   onFavoriteButtonClick: noop,
 }
 
 const mapStateToProps = (state, props) => ({
   tempStorageItems: TempStorageModule.getTempStorageItemsByIdSelector(state, props.storageId),
-  tempStorageItemsCount: TempStorageModule.getTempStorageItemsCountByIdSelector(
+  tempStorageTotalCount: TempStorageModule.getTempStorageTotalCountByIdSelector(
     state,
     props.storageId
   ),
+  playbackListId: PlaybackListModule.getPlaybackListIdSelector(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   getTopTracks: bindActionCreators(TracksModule.getTopTracks, dispatch),
   clearPlaybackListId: bindActionCreators(PlaybackListModule.clearPlaybackListId, dispatch),
   clearTempStorage: bindActionCreators(TempStorageModule.clearTempStorage, dispatch),
+  addTracksToPlayback: bindActionCreators(PlaybackListModule.addTracksToPlayback, dispatch),
+  addItemsToTempStorage: bindActionCreators(TempStorageModule.addItemsToTempStorage, dispatch),
+  getFavoritesStatus: bindActionCreators(FavoritesModule.getFavoritesStatus, dispatch),
+  addToGeneralFavorites: bindActionCreators(FavoritesModule.addToGeneralFavorites, dispatch),
 })
 
 export default connect(

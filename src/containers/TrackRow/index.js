@@ -12,9 +12,10 @@ import styles from './styles.module.scss'
 // eslint-disable-next-line react/prefer-stateless-function
 class TrackRow extends Component {
   render() {
-    const { track, playbackListId, className, onFavoriteButtonClick } = this.props
+    const { rowNumber, track, playbackListId, className, onFavoriteButtonClick } = this.props
     return (
       <div className={cn(styles.wrap, className)}>
+        {rowNumber && <Text>{rowNumber}</Text>}
         <PlayButton
           iconSize="m"
           track={track}
@@ -39,6 +40,7 @@ class TrackRow extends Component {
 }
 
 TrackRow.propTypes = {
+  rowNumber: PropTypes.number,
   className: PropTypes.string,
   track: PropTypes.object.isRequired,
   artistName: PropTypes.string,
@@ -46,6 +48,7 @@ TrackRow.propTypes = {
   onFavoriteButtonClick: PropTypes.func,
 }
 TrackRow.defaultProps = {
+  rowNumber: null,
   className: '',
   artistName: '',
   playbackListId: null,

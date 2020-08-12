@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 
 import { getNapsterImage } from 'helpers'
 
+import ImageLazy from '../ImageLazy'
+
 const NapsterImage = ({ type, id, size, className }) => {
-  return <img className={className} src={getNapsterImage({ type, id, size })} alt="" />
+  return <ImageLazy className={className} src={getNapsterImage({ type, id, size })} alt="" />
 }
 
 NapsterImage.propTypes = {

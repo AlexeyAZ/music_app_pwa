@@ -1,0 +1,5 @@
+export const CARD_TYPE_ARTIST = 'artist'
+export const CARD_TYPE_ALBUM = 'album'
+export const CARD_TYPE_PLAYLIST = 'playlist'
+export const CARD_TYPE_GENRE = 'genre'
+export const CARD_TYPE_STATION = 'station'
