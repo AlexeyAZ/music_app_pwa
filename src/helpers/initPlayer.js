@@ -1,14 +1,14 @@
 import get from 'lodash/get'
 import moment from 'moment'
 
-import { napsterConfig } from 'config'
-import { store } from 'store'
+import { napsterConfig } from '../config'
+import { store } from '../store'
 
-import * as PlayerModule from 'modules/player'
-import * as PlaybackStatusModule from 'modules/playbackStatus'
-import * as PlaybackPositionModule from 'modules/playbackPosition'
+import * as PlayerModule from '../modules/player'
+import * as PlaybackStatusModule from '../modules/playbackStatus'
+import * as PlaybackPositionModule from '../modules/playbackPosition'
 
-import { playerControls } from 'helpers'
+import playerControls from './playerControls'
 
 const {
   playControlAsync,
@@ -25,7 +25,7 @@ const { updatePlaybackPosition } = PlaybackPositionModule
 const { DrmStreamingPlayer } = window
 
 // eslint-disable-next-line no-unused-vars
-const initPlayerMethods = player => {
+const initPlayerMethods = (player) => {
   // player.player.on('play', e => {
   //   console.log(e)
   // })
@@ -104,22 +104,22 @@ const initPlayer = async () => {
     nextTrackAsync()
   })
 
-  player.callbackHandler('error', е => {
+  player.callbackHandler('error', (е) => {
     console.log(`initPlayer -> error ->`, е)
     const code = get(е, 'error.code')
     createNotification(code)
     pauseTrackAsync()
   })
-  player.callbackHandler('sessionError', е => {
+  player.callbackHandler('sessionError', (е) => {
     console.log(`initPlayer -> sessionError ->`, е)
   })
-  player.callbackHandler('sessionExpired', e => {
+  player.callbackHandler('sessionExpired', (e) => {
     console.log(`initPlayer -> sessionExpired ->`, e)
   })
-  player.callbackHandler('trackError', е => {
+  player.callbackHandler('trackError', (е) => {
     console.log(`initPlayer -> trackError ->`, е)
   })
-  player.callbackHandler('reporting', е => {
+  player.callbackHandler('reporting', (е) => {
     console.log(`initPlayer -> reporting ->`, е)
   })
 

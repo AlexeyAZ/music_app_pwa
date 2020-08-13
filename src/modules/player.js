@@ -1,4 +1,4 @@
-import { createAction, createReducer } from 'helpers'
+import { createAction, createReducer } from '../helpers'
 
 const playerInitialState = {
   instance: null,

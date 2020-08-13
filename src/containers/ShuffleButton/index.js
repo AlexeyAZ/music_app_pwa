@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as PlaybackStatusModule from 'modules/playbackStatus'
-import * as PlaybackListModule from 'modules/playbackList'
+import * as PlaybackStatusModule from '../../modules/playbackStatus'
+import * as PlaybackListModule from '../../modules/playbackList'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
@@ -43,12 +43,9 @@ const mapStateToProps = ({ playbackStatus }) => ({
   playbackStatus,
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   updatePlaybackStatus: bindActionCreators(PlaybackStatusModule.updatePlaybackStatus, dispatch),
   clearListened: bindActionCreators(PlaybackListModule.clearListened, dispatch),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ShuffleButton)
+export default connect(mapStateToProps, mapDispatchToProps)(ShuffleButton)

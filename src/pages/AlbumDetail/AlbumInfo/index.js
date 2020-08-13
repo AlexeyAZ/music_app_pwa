@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import get from 'lodash/get'
 
-import { CARD_TYPE_ALBUM } from '../../../constants'
+import { CARD_TYPES } from '../../../constants'
 import { Row, Image, Text } from '../../../components'
 import * as AlbumsModule from '../../../modules/albums'
 
@@ -11,7 +11,7 @@ const AlbumInfo = () => {
   const { id: albumId } = useParams()
   const dispatch = useDispatch()
   const albumDetail = useSelector(AlbumsModule.getAlbumDetailSelector)
-  const getAlbumDetail = useCallback(id => dispatch(AlbumsModule.getAlbumDetail(id)), [dispatch])
+  const getAlbumDetail = useCallback((id) => dispatch(AlbumsModule.getAlbumDetail(id)), [dispatch])
 
   console.log(albumDetail)
 
@@ -29,7 +29,7 @@ const AlbumInfo = () => {
           cardSize="fullscreen"
           imageRatio={1}
           napsterImageId={albumId}
-          type={CARD_TYPE_ALBUM}
+          type={CARD_TYPES.ALBUM}
           napsterImageSize="l"
         />
       </Row>

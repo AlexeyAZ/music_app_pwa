@@ -1,12 +1,19 @@
+.wrap {
+  text-align: left;
+}
 .cardFormat-row {
+  composes: wrap;
   display: flex;
   .imageWrap {
     margin-right: 10px;
   }
 }
 .cardFormat-column {
+  composes: wrap;
   .imageWrap {
     margin-bottom: 6px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .info {
     text-align: center;
@@ -23,27 +30,4 @@
 }
 .imageWrap {
   flex-shrink: 0;
-}
-.imageSize-auto {
-  width: auto;
-  max-width: none;
-}
-.imageSize-xs {
-  width: 50px;
-  max-width: 50px;
-}
-.imageSize-s {
-  width: 100px;
-  max-width: 100px;
-}
-.imageSize-m {
-  width: 150px;
-  max-width: 150px;
-}
-.imageSize-l {
-  width: 200px;
-  max-width: 200px;
-}
-.imageSize-fullscreen {
-  width: 100%;
 }

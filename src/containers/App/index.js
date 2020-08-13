@@ -5,8 +5,8 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import ReactNotification from 'react-notifications-component'
 
-import { store, persistor } from 'store'
-import { history } from 'config'
+import { store, persistor } from '../../store'
+import { history } from '../../config'
 
 import { routes, RoutesContext } from '../../routes'
 

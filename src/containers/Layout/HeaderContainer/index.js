@@ -8,6 +8,8 @@ import { RoutesContext } from '../../../routes'
 import { Header, Text } from '../../../components'
 
 class HeaderContainer extends Component {
+  static contextType = RoutesContext
+
   getHeaderTitle = () => {
     const { location } = this.props
     const flatRoutes = this.context.reduce((acc, route) => {
@@ -17,7 +19,11 @@ class HeaderContainer extends Component {
       }
       return [...acc, route]
     }, [])
-    return get(flatRoutes.find(route => route.path === location.pathname), 'title', '')
+    return get(
+      flatRoutes.find((route) => route.path === location.pathname),
+      'title',
+      ''
+    )
   }
 
   showHeader = () => {
@@ -34,8 +40,6 @@ class HeaderContainer extends Component {
     const { history } = this.props
     return history.goBack()
   }
-
-  static contextType = RoutesContext
 
   renderRightContent = () => {
     return (

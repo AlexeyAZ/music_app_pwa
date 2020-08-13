@@ -1,11 +1,11 @@
-import { createAction, createReducer } from 'helpers'
+import { createAction, createReducer } from '../helpers'
 
 const initialState = {
   name: '',
   isOpen: false,
 }
 
-export const openModal = createAction('OPEN_MODAL', data => {
+export const openModal = createAction('OPEN_MODAL', (data) => {
   console.log('data', data)
   return {
     method: 'post',
@@ -24,7 +24,7 @@ const modalModule = {
           name: payload.name,
         }
       },
-      [closeModal.start]: state => {
+      [closeModal.start]: (state) => {
         return {
           ...state,
           isOpen: false,

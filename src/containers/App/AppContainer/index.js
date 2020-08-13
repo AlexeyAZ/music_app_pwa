@@ -6,11 +6,11 @@ import { withRouter } from 'react-router'
 import get from 'lodash/get'
 import moment from 'moment'
 
-import * as AuthUserModule from 'modules/auth'
+import * as AuthUserModule from '../../../modules/auth'
 
-import { axiosInstance } from 'helpers'
+import { axiosInstance } from '../../../helpers'
 
-const PAGE_AFTER_LOGIN = '/library/playlists'
+// const PAGE_AFTER_LOGIN = '/library/playlists'
 
 class AppContainer extends Component {
   state = {
@@ -52,12 +52,12 @@ class AppContainer extends Component {
     return false
   }
 
-  setAuthorizationHeader = async token => {
+  setAuthorizationHeader = async (token) => {
     axiosInstance.defaults.headers.common.authorization = `Bearer ${token}`
     this.setState({ loading: false })
   }
 
-  saveTokensToStorage = async response => {
+  saveTokensToStorage = async (response) => {
     console.log('AppContainer: saveTokensToStorage')
     const { setAuthOptions } = this.props
     const access_token = get(response, 'data.access_token')
@@ -70,7 +70,6 @@ class AppContainer extends Component {
   }
 
   render() {
-    console.log('render AppContainer')
     const { loading } = this.state
     const { children } = this.props
     if (loading) {
@@ -95,16 +94,10 @@ AppContainer.defaultProps = {
 
 const mapStateToProps = ({ authOptions }) => ({ authOptions })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   authUser: bindActionCreators(AuthUserModule.authUser, dispatch),
   setAuthOptions: bindActionCreators(AuthUserModule.setAuthOptions, dispatch),
   refreshToken: bindActionCreators(AuthUserModule.refreshToken, dispatch),
 })
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withRouter
-)(AppContainer)
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(AppContainer)

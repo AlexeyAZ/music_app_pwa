@@ -5,10 +5,10 @@ import { bindActionCreators } from 'redux'
 import noop from 'lodash/noop'
 import get from 'lodash/get'
 
-import * as TracksModule from 'modules/tracks'
-import * as PlaybackListModule from 'modules/playbackList'
-import * as TempStorageModule from 'modules/tempStorage'
-import * as FavoritesModule from 'modules/favorites'
+import * as TracksModule from '../../modules/tracks'
+import * as PlaybackListModule from '../../modules/playbackList'
+import * as TempStorageModule from '../../modules/tempStorage'
+import * as FavoritesModule from '../../modules/favorites'
 
 import { Text } from '../../components'
 import TrackRow from '../TrackRow'
@@ -57,12 +57,12 @@ class TracksGrid extends Component {
       page,
     })
 
-    const tracksIds = responseData.map(item => item.id)
+    const tracksIds = responseData.map((item) => item.id)
     if (tracksIds.length > 0) {
       const favoritesTracksResponse = await getFavoritesStatus({ data: tracksIds.join() })
       const favoritesTracksData = get(favoritesTracksResponse, 'data.status', [])
-        .filter(item => item.favorite === true)
-        .map(item => item.id)
+        .filter((item) => item.favorite === true)
+        .map((item) => item.id)
       await addToGeneralFavorites(favoritesTracksData)
     }
   }
@@ -158,7 +158,7 @@ const mapStateToProps = (state, props) => ({
   playbackListId: PlaybackListModule.getPlaybackListIdSelector(state),
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getTopTracks: bindActionCreators(TracksModule.getTopTracks, dispatch),
   clearPlaybackListId: bindActionCreators(PlaybackListModule.clearPlaybackListId, dispatch),
   clearTempStorage: bindActionCreators(TempStorageModule.clearTempStorage, dispatch),
@@ -168,7 +168,4 @@ const mapDispatchToProps = dispatch => ({
   addToGeneralFavorites: bindActionCreators(FavoritesModule.addToGeneralFavorites, dispatch),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TracksGrid)
+export default connect(mapStateToProps, mapDispatchToProps)(TracksGrid)

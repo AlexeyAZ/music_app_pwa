@@ -3,6 +3,7 @@
 	"rules": {
 		"import/prefer-default-export": "off",
 		"react/prefer-stateless-function": [1, { "ignorePureComponents": true }],
+		"react/state-in-constructor": ["never"],
 		"max-len": ["error", 120, 2],
 		"semi": ["error", "never"],
 		"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
@@ -13,7 +14,7 @@
 		"react/jsx-indent": [2, 2],
 		"react/jsx-indent-props": [2, 2],
 		"linebreak-style": [0, "unix"],
-		"no-underscore-dangle": 0
+		"no-underscore-dangle": 0,
 	},
 	"settings": {
 		"import/resolver": {

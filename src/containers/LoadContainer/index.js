@@ -7,9 +7,9 @@ import get from 'lodash/get'
 import noop from 'lodash/noop'
 import moment from 'moment'
 
-import * as TempStorageModule from 'modules/tempStorage'
+import * as TempStorageModule from '../../modules/tempStorage'
 
-import { ScrollActionContainer, SimpleButton } from 'components'
+import { ScrollActionContainer, SimpleButton } from '../../components'
 import { getEntityDataPath } from '../../helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
@@ -163,11 +163,8 @@ LoadContainer.defaultProps = {
   customAction: null,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   addItemsToTempStorage: bindActionCreators(TempStorageModule.addItemsToTempStorage, dispatch),
 })
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(LoadContainer)
+export default connect(null, mapDispatchToProps)(LoadContainer)

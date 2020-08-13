@@ -5,10 +5,10 @@ import { bindActionCreators, compose } from 'redux'
 import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 
-import * as GenresModule from 'modules/genres'
-import * as ModalModule from 'modules/modal'
+import * as GenresModule from '../../modules/genres'
+import * as ModalModule from '../../modules/modal'
 
-import { getCurrentApi, axiosInstance } from 'helpers'
+import { getCurrentApi, axiosInstance } from '../../helpers'
 
 const { apiName } = getCurrentApi()
 
@@ -21,7 +21,7 @@ class Genres extends Component {
     if (apiName === 'NAPSTER') {
       getAllGenres()
     } else {
-      axiosInstance.get('/me').then(res => console.log(res))
+      axiosInstance.get('/me').then((res) => console.log(res))
     }
   }
 
@@ -38,7 +38,7 @@ class Genres extends Component {
     const allGenresData = get(allGenres, 'data.genres', [])
     return (
       <div>
-        {allGenresData.map(genre => {
+        {allGenresData.map((genre) => {
           return <div key={genre.id}>{genre.name}</div>
         })}
         <Link to="/main">To main</Link>
@@ -57,14 +57,9 @@ const mapStateToProps = ({ authOptions, allGenres }) => ({
   allGenres,
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getAllGenres: bindActionCreators(GenresModule.getAllGenres, dispatch),
   openModal: bindActionCreators(ModalModule.openModal, dispatch),
 })
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(Genres)
+export default compose(connect(mapStateToProps, mapDispatchToProps))(Genres)

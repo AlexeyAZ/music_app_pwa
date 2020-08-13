@@ -7,45 +7,39 @@ import SimpleButton from '../../SimpleButton'
 import Image from '../../Image'
 import { Text } from '../../Typography'
 
-import {
-  CARD_TYPE_ARTIST,
-  CARD_TYPE_ALBUM,
-  CARD_TYPE_PLAYLIST,
-  CARD_TYPE_GENRE,
-  CARD_TYPE_STATION,
-} from '../../../constants'
+import { NAPSTER_IMAGE_SIZES, CARD_TYPES } from '../../../constants'
 
 import styles from './styles.module.scss'
 
 const cardConfig = {
-  [CARD_TYPE_ARTIST]: {
+  [CARD_TYPES.ARTIST]: {
     borderRadius: 'round',
     imageRatio: 1,
-    imageType: CARD_TYPE_ARTIST,
+    imageType: CARD_TYPES.ARTIST,
     napsterImageSize: 's',
   },
-  [CARD_TYPE_PLAYLIST]: {
+  [CARD_TYPES.PLAYLIST]: {
     borderRadius: 's',
     imageRatio: 1,
-    imageType: CARD_TYPE_PLAYLIST,
+    imageType: CARD_TYPES.PLAYLIST,
     napsterImageSize: 's',
   },
-  [CARD_TYPE_GENRE]: {
+  [CARD_TYPES.GENRE]: {
     borderRadius: 'l',
     imageRatio: 1,
-    imageType: CARD_TYPE_GENRE,
+    imageType: CARD_TYPES.GENRE,
     napsterImageSize: 's',
   },
-  [CARD_TYPE_STATION]: {
+  [CARD_TYPES.STATION]: {
     borderRadius: 'default',
     imageRatio: 1,
-    imageType: CARD_TYPE_STATION,
+    imageType: CARD_TYPES.STATION,
     napsterImageSize: 's',
   },
-  [CARD_TYPE_ALBUM]: {
+  [CARD_TYPES.ALBUM]: {
     borderRadius: 'default',
     imageRatio: 1,
-    imageType: CARD_TYPE_ALBUM,
+    imageType: CARD_TYPES.ALBUM,
     napsterImageSize: 's',
   },
 }
@@ -53,7 +47,7 @@ const cardConfig = {
 const CommonCard = ({
   format,
   type,
-  id,
+  napsterImageId,
   imageSize,
   napsterImageSize,
   imageRatio,
@@ -73,13 +67,14 @@ const CommonCard = ({
 }) => {
   const defaultBorderRadius = get(cardConfig, `${type}.borderRadius`) || borderRadius
   const defaultImageRatio = get(cardConfig, `${type}.imageRatio`) || imageRatio
+  console.log(defaultImageRatio)
   const defaultImageType = get(cardConfig, `${type}.imageType`) || imageType
   const defaultNapsterImageSize = get(cardConfig, `${type}.napsterImageSize`) || napsterImageSize
   const defaultTitleSize = titleSize || (format === 'row' ? 's' : 'xs')
   const defaultSubtitleSize = subtitleSize || (format === 'row' ? 's' : 'xs')
   const defaultTextSize = textSize || (format === 'row' ? 's' : 'xs')
   const wrapClassName = cn(styles[`cardFormat-${format}`], className)
-  const getTextOverflow = overflowType => {
+  const getTextOverflow = (overflowType) => {
     if (overflowType) {
       return overflowType
     }
@@ -93,15 +88,15 @@ const CommonCard = ({
   const defaultTextOverflow = getTextOverflow(textOverflow)
   const renderContent = () => (
     <>
-      <div className={cn(styles[`imageSize-${imageSize}`], styles.imageWrap)}>
-        <Image
-          type={defaultImageType}
-          napsterImageId={id}
-          napsterImageSize={defaultNapsterImageSize}
-          borderRadius={defaultBorderRadius}
-          imageRatio={defaultImageRatio}
-        />
-      </div>
+      <Image
+        type={defaultImageType}
+        napsterImageId={napsterImageId}
+        napsterImageSize={defaultNapsterImageSize}
+        borderRadius={defaultBorderRadius}
+        imageRatio={defaultImageRatio}
+        imageSize={imageSize}
+        className={styles.imageWrap}
+      />
       <div className={styles.info}>
         <Text size={defaultTitleSize} overflow={defaultTitleOverflow}>
           {title}
@@ -125,21 +120,17 @@ const CommonCard = ({
   return <div className={wrapClassName}>{renderContent()}</div>
 }
 
+const sizes = JSON.parse(JSON.stringify(Object.values(NAPSTER_IMAGE_SIZES)))
+console.log(sizes)
 CommonCard.propTypes = {
   format: PropTypes.oneOf(['row', 'column', 'poster']),
-  type: PropTypes.oneOf([
-    CARD_TYPE_ARTIST,
-    CARD_TYPE_ALBUM,
-    CARD_TYPE_PLAYLIST,
-    CARD_TYPE_GENRE,
-    CARD_TYPE_STATION,
-  ]),
+  type: PropTypes.oneOf(Object.values(CARD_TYPES)),
   borderRadius: PropTypes.oneOf(['default', 'xs', 's', 'm', 'l', 'round']),
-  id: PropTypes.string,
-  imageSize: PropTypes.string,
-  napsterImageSize: PropTypes.string,
+  napsterImageId: PropTypes.string,
+  imageSize: PropTypes.oneOf(['auto', 'xs', 's', 'm', 'l', 'fullscreen']),
+  napsterImageSize: PropTypes.oneOf(Object.values(NAPSTER_IMAGE_SIZES)),
   imageRatio: PropTypes.number,
-  imageType: PropTypes.string,
+  imageType: PropTypes.oneOf(Object.values(CARD_TYPES)),
   title: PropTypes.string,
   titleSize: PropTypes.string,
   titleOverflow: PropTypes.bool,
@@ -156,7 +147,7 @@ CommonCard.defaultProps = {
   format: 'column',
   type: null,
   borderRadius: 'default',
-  id: null,
+  napsterImageId: null,
   imageSize: 'auto',
   napsterImageSize: 's',
   imageRatio: 1,

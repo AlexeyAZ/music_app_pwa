@@ -1,11 +1,12 @@
-import { store } from 'store'
 import get from 'lodash/get'
 
-import { getEntityDataPath } from 'helpers'
+import getEntityDataPath from './getEntityDataPath'
 
-import * as PlaybackListModule from 'modules/playbackList'
-import * as TempStorageModule from 'modules/tempStorage'
-import * as FavoritesModule from 'modules/favorites'
+import { store } from '../store'
+
+import * as PlaybackListModule from '../modules/playbackList'
+import * as TempStorageModule from '../modules/tempStorage'
+import * as FavoritesModule from '../modules/favorites'
 
 const { addTracksToPlayback } = PlaybackListModule
 const { addItemsToTempStorage } = TempStorageModule
@@ -36,14 +37,14 @@ const getTracks = async ({ action, data = null, dataPath, countPatch, params = {
     )
   }
 
-  const tracksIds = tracksData.map(item => item.id)
+  const tracksIds = tracksData.map((item) => item.id)
   if (tracksIds.length > 0) {
     const favoritesTracksResponse = await store.dispatch(
       getFavoritesStatus({ data: tracksIds.join() })
     )
     const favoritesTracksData = get(favoritesTracksResponse, 'data.status', [])
-      .filter(item => item.favorite === true)
-      .map(item => item.id)
+      .filter((item) => item.favorite === true)
+      .map((item) => item.id)
     await store.dispatch(addToGeneralFavorites(favoritesTracksData))
   }
 

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as TracksModule from 'modules/tracks'
+import * as TracksModule from '../../modules/tracks'
 
-import { Text } from 'components'
+import { Text } from '../../components'
 
-import TracksGrid from '../../containers/TracksGrid'
+import { TracksGrid } from '../../containers'
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Tracks extends Component {
@@ -26,11 +26,8 @@ Tracks.propTypes = {
   getTopTracks: PropTypes.func.isRequired,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getTopTracks: bindActionCreators(TracksModule.getTopTracks, dispatch),
 })
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Tracks)
+export default connect(null, mapDispatchToProps)(Tracks)

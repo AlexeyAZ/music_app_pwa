@@ -4,25 +4,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
 import { withRouter } from 'react-router'
 
-import { Container, Row, Title } from 'components'
+import { Container, Row, Title } from '../../components'
 
-import * as GenresModule from 'modules/genres'
-import * as StationsModule from 'modules/stations'
-import * as PlaylistsModule from 'modules/playlists'
-import * as ArtistsModule from 'modules/artists'
-import * as AlbumsModule from 'modules/albums'
-import * as TacksModule from 'modules/tracks'
+import * as GenresModule from '../../modules/genres'
+import * as StationsModule from '../../modules/stations'
+import * as PlaylistsModule from '../../modules/playlists'
+import * as ArtistsModule from '../../modules/artists'
+import * as AlbumsModule from '../../modules/albums'
+import * as TacksModule from '../../modules/tracks'
 
-import TracksGrid from '../../containers/TracksGrid'
-import CardsGrid from '../../containers/CardsGrid'
+import { TracksGrid, CardsGrid } from '../../containers'
 
-import {
-  CARD_TYPE_ARTIST,
-  CARD_TYPE_ALBUM,
-  CARD_TYPE_PLAYLIST,
-  CARD_TYPE_GENRE,
-  CARD_TYPE_STATION,
-} from '../../constants'
+import { CARD_TYPES } from '../../constants'
 
 const albumsStorageId = 'trendingAlbums'
 const stationsStorageId = 'trendingStations'
@@ -32,27 +25,27 @@ const artistsStorageId = 'trendingArtists'
 const trendingTopTracksStorageId = 'trendingTopTracksStorageId'
 
 class Trending extends Component {
-  handleGenreClick = genreId => {
+  handleGenreClick = (genreId) => {
     const { history } = this.props
     history.push(`/genres/${genreId}`)
   }
 
-  handleAlbumClick = id => {
+  handleAlbumClick = (id) => {
     const { history } = this.props
     history.push(`/albums/${id}/tracks`)
   }
 
-  handleArtistClick = artistId => {
+  handleArtistClick = (artistId) => {
     const { history } = this.props
     history.push(`/artists/${artistId}`)
   }
 
-  handlePlaylistClick = playlistId => {
+  handlePlaylistClick = (playlistId) => {
     const { history } = this.props
     history.push(`/playlists/${playlistId}`)
   }
 
-  handleStationClick = stationId => {
+  handleStationClick = (stationId) => {
     const { history } = this.props
     history.push(`/stations/${stationId}`)
   }
@@ -74,7 +67,7 @@ class Trending extends Component {
             <Title mb={2}>Top albums</Title>
           </Container>
           <CardsGrid
-            cardType={CARD_TYPE_ALBUM}
+            cardType={CARD_TYPES.ALBUM}
             containerScrollType="horizontal"
             gridDirection="horizontal"
             requestAction={getTopAlbums}
@@ -87,7 +80,7 @@ class Trending extends Component {
             <Title mb={2}>Top stations</Title>
           </Container>
           <CardsGrid
-            cardType={CARD_TYPE_STATION}
+            cardType={CARD_TYPES.STATION}
             containerScrollType="horizontal"
             gridDirection="horizontal"
             requestAction={getTopStations}
@@ -101,7 +94,7 @@ class Trending extends Component {
           </Container>
           <CardsGrid
             disableAutoLoad
-            cardType={CARD_TYPE_GENRE}
+            cardType={CARD_TYPES.GENRE}
             containerScrollType="horizontal"
             gridDirection="horizontal"
             requestAction={getAllGenres}
@@ -113,7 +106,7 @@ class Trending extends Component {
             <Title mb={2}>Top playlists</Title>
           </Container>
           <CardsGrid
-            cardType={CARD_TYPE_PLAYLIST}
+            cardType={CARD_TYPES.PLAYLIST}
             containerScrollType="horizontal"
             gridDirection="horizontal"
             requestAction={getTopPlaylists}
@@ -126,7 +119,7 @@ class Trending extends Component {
             <Title mb={2}>Top artists</Title>
           </Container>
           <CardsGrid
-            cardType={CARD_TYPE_ARTIST}
+            cardType={CARD_TYPES.ARTIST}
             containerScrollType="horizontal"
             gridDirection="horizontal"
             requestAction={getTopArtists}
@@ -153,7 +146,7 @@ Trending.propTypes = {
   getTopTracks: PropTypes.func.isRequired,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getTopStations: bindActionCreators(StationsModule.getTopStations, dispatch),
   getAllGenres: bindActionCreators(GenresModule.getAllGenres, dispatch),
   getTopPlaylists: bindActionCreators(PlaylistsModule.getTopPlaylists, dispatch),
@@ -162,10 +155,4 @@ const mapDispatchToProps = dispatch => ({
   getTopTracks: bindActionCreators(TacksModule.getTopTracks, dispatch),
 })
 
-export default compose(
-  connect(
-    null,
-    mapDispatchToProps
-  ),
-  withRouter
-)(Trending)
+export default compose(connect(null, mapDispatchToProps), withRouter)(Trending)

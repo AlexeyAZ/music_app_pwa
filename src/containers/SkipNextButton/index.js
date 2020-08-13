@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import differenceBy from 'lodash/differenceBy'
 
-import { REPEAT_BUTTON_STATUS_NONE } from 'constants'
-import { playerControls } from 'helpers'
+import { REPEAT_BUTTON_STATUS_NONE } from '../../constants'
+import { playerControls } from '../../helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
@@ -32,7 +32,7 @@ class SkipNextButton extends Component {
       }
       const tracksCount = playbackTracks.length
       const currentTrackIndex = playbackTracks.findIndex(
-        currentTrack => currentTrack.id === playbackId
+        (currentTrack) => currentTrack.id === playbackId
       )
       const nextTrackIndex = currentTrackIndex + 1
       if (!isShuffle && tracksCount === nextTrackIndex) {

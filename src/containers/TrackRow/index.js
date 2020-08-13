@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import cn from 'classnames'
 import noop from 'lodash/noop'
 
-import { Text } from 'components'
+import { Text } from '../../components'
 import PlayButton from '../PlayButton'
 import FavoriteButton from '../FavoriteButton'
 

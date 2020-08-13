@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useHistory } from 'react-router'
-import { Redirect } from 'react-router-dom'
 import get from 'lodash/get'
 
 import HorizontalNavbar from '../HorizontalNavbar'
@@ -12,9 +11,12 @@ const LayoutWithNavbar = ({ data, splitLocationValue }) => {
   const location = useLocation()
   const history = useHistory()
   const navbarValue = location.pathname.split('/')[splitLocationValue]
-  const NavbarContent = get(data.find(item => item.key === navbarValue), 'component')
-  const handleNavbarItemClick = key => {
-    const { to } = data.find(item => item.key === key)
+  const NavbarContent = get(
+    data.find((item) => item.key === navbarValue),
+    'component'
+  )
+  const handleNavbarItemClick = (key) => {
+    const { to } = data.find((item) => item.key === key)
     history.push(to)
   }
   if (!navbarValue) {

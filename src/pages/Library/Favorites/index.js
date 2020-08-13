@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash/get'
 
-import * as FavoritesModule from 'modules/favorites'
-import * as TempStorageModule from 'modules/tempStorage'
-import * as PlaybackListModule from 'modules/playbackList'
+import * as FavoritesModule from '../../../modules/favorites'
+import * as TempStorageModule from '../../../modules/tempStorage'
+import * as PlaybackListModule from '../../../modules/playbackList'
 
-import { Input } from 'components'
+import { Input } from '../../../components'
 
-import TracksGrid from '../../../containers/TracksGrid'
+import { TracksGrid } from '../../../containers'
 
 const storageId = 'libraryFavorites'
 
@@ -24,7 +24,7 @@ class Favorites extends Component {
   getFavoritesIds = async () => {
     const { getMyFavorites } = this.props
     const result = await getMyFavorites({ params: { limit: 200 } })
-    const ids = (get(result, 'data.favorites.data.tracks') || []).map(track => track.id).join()
+    const ids = (get(result, 'data.favorites.data.tracks') || []).map((track) => track.id).join()
     console.log(ids)
   }
 
@@ -35,7 +35,7 @@ class Favorites extends Component {
     this.hideAddFavoritesForm()
   }
 
-  removeFromFavorites = async trackId => {
+  removeFromFavorites = async (trackId) => {
     const { playbackListId, removeItemsFromTempStorage, removeTracksFromPlayback } = this.props
     await removeItemsFromTempStorage({ storageId, itemsIds: [trackId] })
     if (playbackListId === storageId) {
@@ -43,7 +43,7 @@ class Favorites extends Component {
     }
   }
 
-  handleInputChange = value => {
+  handleInputChange = (value) => {
     this.inputValue = value
   }
 
@@ -95,11 +95,11 @@ Favorites.defaultProps = {
   playbackListId: null,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   playbackListId: PlaybackListModule.getPlaybackListIdSelector(state),
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getMyFavorites: bindActionCreators(FavoritesModule.getMyFavorites, dispatch),
   addToFavoritesMultiple: bindActionCreators(FavoritesModule.addToFavoritesMultiple, dispatch),
   removeItemsFromTempStorage: bindActionCreators(
@@ -112,7 +112,4 @@ const mapDispatchToProps = dispatch => ({
   ),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Favorites)
+export default connect(mapStateToProps, mapDispatchToProps)(Favorites)

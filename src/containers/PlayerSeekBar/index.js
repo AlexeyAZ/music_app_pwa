@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import isNil from 'lodash/isNil'
 import moment from 'moment'
-import momentDurationFormatSetup from 'moment-duration-format'
 
-import { SeekBar } from 'components'
-import { playerControls } from 'helpers'
+import { SeekBar } from '../../components'
+import { playerControls } from '../../helpers'
 
-import * as PlaybackStatusModule from 'modules/playbackStatus'
+import * as PlaybackStatusModule from '../../modules/playbackStatus'
 
 const { trackIdSelector, durationSelector } = PlaybackStatusModule
 const { seekTrack } = playerControls
@@ -55,7 +54,7 @@ PlayerSeekBar.defaultProps = {
   playbackDuration: null,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   playbackPosition: state.playbackPosition.position,
   trackId: trackIdSelector(state),
   playbackDuration: durationSelector(state),

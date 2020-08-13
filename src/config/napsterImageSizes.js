@@ -1,31 +1,41 @@
+import { NAPSTER_IMAGE_SIZES } from '../constants'
+
 const albumAndTrackSizes = {
-  xs: '70x70',
-  s: '170x170',
-  m: '200x200',
-  l: '300x300',
-  xl: '500x500',
+  [NAPSTER_IMAGE_SIZES.XS]: '70x70',
+  [NAPSTER_IMAGE_SIZES.S]: '170x170',
+  [NAPSTER_IMAGE_SIZES.M]: '200x200',
+  [NAPSTER_IMAGE_SIZES.L]: '300x300',
+  [NAPSTER_IMAGE_SIZES.XL]: '500x500',
 }
 
 const napsterImageSizes = {
   station: {
-    xs: '230x153',
-    s: '400x400',
-    m: '500x500',
+    [NAPSTER_IMAGE_SIZES.XS]: '230x153',
+    [NAPSTER_IMAGE_SIZES.S]: '400x400',
+    [NAPSTER_IMAGE_SIZES.M]: '500x500',
+    [NAPSTER_IMAGE_SIZES.L]: '500x500',
+    [NAPSTER_IMAGE_SIZES.XL]: '500x500',
   },
   genre: {
-    xs: '161x64',
-    s: '240x160',
+    [NAPSTER_IMAGE_SIZES.XS]: '161x64',
+    [NAPSTER_IMAGE_SIZES.S]: '240x160',
+    [NAPSTER_IMAGE_SIZES.M]: '240x160',
+    [NAPSTER_IMAGE_SIZES.L]: '240x160',
+    [NAPSTER_IMAGE_SIZES.XL]: '240x160',
   },
   playlist: {
-    xs: '230x153',
-    s: '1200x400',
-    m: '1800x600',
+    [NAPSTER_IMAGE_SIZES.XS]: '230x153',
+    [NAPSTER_IMAGE_SIZES.S]: '1200x400',
+    [NAPSTER_IMAGE_SIZES.M]: '1800x600',
+    [NAPSTER_IMAGE_SIZES.L]: '1800x600',
+    [NAPSTER_IMAGE_SIZES.XL]: '1800x600',
   },
   artist: {
-    xs: '70x47',
-    s: '150x100',
-    m: '356x237',
-    l: '633x422',
+    [NAPSTER_IMAGE_SIZES.XS]: '70x47',
+    [NAPSTER_IMAGE_SIZES.S]: '150x100',
+    [NAPSTER_IMAGE_SIZES.M]: '356x237',
+    [NAPSTER_IMAGE_SIZES.L]: '633x422',
+    [NAPSTER_IMAGE_SIZES.XL]: '633x422',
   },
   album: albumAndTrackSizes,
   track: albumAndTrackSizes,

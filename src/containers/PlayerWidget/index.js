@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { Text } from 'components'
+import { Text } from '../../components'
 
-import * as PlaybackStatusModule from 'modules/playbackStatus'
+import * as PlaybackStatusModule from '../../modules/playbackStatus'
 
 import PlayButton from '../PlayButton'
 import SkipNextButton from '../SkipNextButton'
@@ -18,7 +18,6 @@ import styles from './styles.module.scss'
 const { trackIdSelector, trackNameSelector, artistNameSelector } = PlaybackStatusModule
 
 const PlayerWidget = ({ trackId, trackName, artistName }) => {
-  console.log('render PlayerWidget')
   if (trackId) {
     return (
       <div>
@@ -59,7 +58,7 @@ PlayerWidget.defaultProps = {
   artistName: null,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   trackId: trackIdSelector(state),
   trackName: trackNameSelector(state),
   artistName: artistNameSelector(state),

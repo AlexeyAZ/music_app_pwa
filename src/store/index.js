@@ -4,7 +4,7 @@ import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import storage from 'redux-persist/lib/storage'
 
-import rootReducer from 'modules'
+import rootReducer from '../modules'
 
 const logger = createLogger({
   collapsed: true,

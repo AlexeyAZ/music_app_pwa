@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useHistory } from 'react-router'
 import get from 'lodash/get'
 
-import * as GenresModule from 'modules/genres'
+import * as GenresModule from '../../modules/genres'
 
-import { Row, Text, Title, Image, DangerHtml } from 'components'
-import { HeaderTitle } from 'portals'
+import { Row, Text, Title, Image, DangerHtml } from '../../components'
+import { HeaderTitle } from '../../portals'
 
 import TracksGrid from '../../containers/TracksGrid'
 import CardsGrid from '../../containers/CardsGrid'
 
-import { CARD_TYPE_GENRE, CARD_TYPE_ARTIST, CARD_TYPE_ALBUM } from '../../constants'
+import { CARD_TYPES } from '../../constants'
 
 import styles from './styles.module.scss'
 
@@ -27,28 +27,29 @@ const GenreDetail = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const genreDetail = useSelector(GenresModule.getGenreDetailSelector)
-  const getGenreDetail = useCallback(id => dispatch(GenresModule.getGenreDetail(id)), [dispatch])
+  const getGenreDetail = useCallback((id) => dispatch(GenresModule.getGenreDetail(id)), [dispatch])
 
-  const getTopAlbumsByGenre = useCallback(id => dispatch(GenresModule.getTopAlbumsByGenre(id)), [
+  const getTopAlbumsByGenre = useCallback((id) => dispatch(GenresModule.getTopAlbumsByGenre(id)), [
     dispatch,
   ])
 
-  const getTopArtistsByGenre = useCallback(id => dispatch(GenresModule.getTopArtistsByGenre(id)), [
-    dispatch,
-  ])
+  const getTopArtistsByGenre = useCallback(
+    (id) => dispatch(GenresModule.getTopArtistsByGenre(id)),
+    [dispatch]
+  )
 
-  const getTopTracksByGenre = useCallback(id => dispatch(GenresModule.getTopTracksByGenre(id)), [
+  const getTopTracksByGenre = useCallback((id) => dispatch(GenresModule.getTopTracksByGenre(id)), [
     dispatch,
   ])
 
   const genreName = get(genreDetail, 'name')
   const genreDescription = get(genreDetail, 'description')
 
-  const handleArtistClick = useCallback(id => {
+  const handleArtistClick = useCallback((id) => {
     history.push(`/artists/${id}`)
   }, [])
 
-  const handleAlbumClick = useCallback(id => {
+  const handleAlbumClick = useCallback((id) => {
     history.push(`/albums/${id}`)
   }, [])
 
@@ -65,7 +66,7 @@ const GenreDetail = () => {
             cardSize="fullscreen"
             imageRatio={0.7}
             napsterImageId={genreId}
-            type={CARD_TYPE_GENRE}
+            type={CARD_TYPES.GENRE}
           />
           <Title className={styles.imageTitle} color="white" size="xxl">
             {genreName}
@@ -82,7 +83,7 @@ const GenreDetail = () => {
         <div className={styles.wrap}>
           <CardsGrid
             disableAutoLoad
-            cardType={CARD_TYPE_ARTIST}
+            cardType={CARD_TYPES.ARTIST}
             requestAction={getTopArtistsByGenre}
             requestData={genreId}
             storageId={`${genreTopArtistsStorageId}:${genreId}`}
@@ -98,7 +99,7 @@ const GenreDetail = () => {
         <div className={styles.wrap}>
           <CardsGrid
             disableAutoLoad
-            cardType={CARD_TYPE_ALBUM}
+            cardType={CARD_TYPES.ALBUM}
             requestAction={getTopAlbumsByGenre}
             requestData={genreId}
             storageId={`${genreTopAlbumsStorageId}:${genreId}`}

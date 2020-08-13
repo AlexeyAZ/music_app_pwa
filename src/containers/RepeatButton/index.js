@@ -7,10 +7,10 @@ import {
   REPEAT_BUTTON_STATUS_ONE,
   REPEAT_BUTTON_STATUS_ALL,
   REPEAT_BUTTON_STATUS_NONE,
-} from 'constants'
+} from '../../constants'
 
-import * as PlaybackStatusModule from 'modules/playbackStatus'
-import * as PlaybackListModule from 'modules/playbackList'
+import * as PlaybackStatusModule from '../../modules/playbackStatus'
+import * as PlaybackListModule from '../../modules/playbackList'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
@@ -67,12 +67,9 @@ const mapStateToProps = ({ playbackStatus: { repeat } }) => ({
   repeat,
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   updatePlaybackStatus: bindActionCreators(PlaybackStatusModule.updatePlaybackStatus, dispatch),
   clearListened: bindActionCreators(PlaybackListModule.clearListened, dispatch),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RepeatButton)
+export default connect(mapStateToProps, mapDispatchToProps)(RepeatButton)

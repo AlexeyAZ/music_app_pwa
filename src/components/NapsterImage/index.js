@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { getNapsterImage } from 'helpers'
+import { getNapsterImage } from '../../helpers'
 
 import ImageLazy from '../ImageLazy'
 

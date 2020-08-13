@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useHistory } from 'react-router'
 import get from 'lodash/get'
 
-import * as ArtistsModule from 'modules/artists'
+import * as ArtistsModule from '../../modules/artists'
 
 import { Row, Image, Text, DangerHtml } from '../../components'
 import CardsGrid from '../../containers/CardsGrid'
 import TracksGrid from '../../containers/TracksGrid'
-import { CARD_TYPE_ARTIST, CARD_TYPE_ALBUM } from '../../constants'
+import { CARD_TYPES } from '../../constants'
 
 const artistTopAlbumsStorageId = 'artistAlbumsStorageId'
 const artistTopTracksStorageId = 'artistTopTracksStorageId'
@@ -20,20 +19,20 @@ const ArtistDetail = () => {
   const dispatch = useDispatch()
   const artistDetail = useSelector(ArtistsModule.getArtistDetailSelector)
   const getArtistDetail = useCallback(
-    artistId => dispatch(ArtistsModule.getArtistDetail(artistId)),
+    (artistId) => dispatch(ArtistsModule.getArtistDetail(artistId)),
     [dispatch]
   )
   const getTopArtistAlbums = useCallback(
-    artistId => dispatch(ArtistsModule.getTopArtistAlbums(artistId)),
+    (artistId) => dispatch(ArtistsModule.getTopArtistAlbums(artistId)),
     [dispatch]
   )
 
   const getTopArtistTracks = useCallback(
-    artistId => dispatch(ArtistsModule.getTopArtistTracks(artistId)),
+    (artistId) => dispatch(ArtistsModule.getTopArtistTracks(artistId)),
     [dispatch]
   )
 
-  const handleAlbumClick = useCallback(albumId => {
+  const handleAlbumClick = useCallback((albumId) => {
     history.push(`/albums/${albumId}/tracks`)
   }, [])
 
@@ -51,7 +50,7 @@ const ArtistDetail = () => {
           cardSize="fullscreen"
           imageRatio={1}
           napsterImageId={id}
-          type={CARD_TYPE_ARTIST}
+          type={CARD_TYPES.ARTIST}
           napsterImageSize="l"
         />
       </Row>
@@ -60,7 +59,7 @@ const ArtistDetail = () => {
       </Text>
       <CardsGrid
         disableAutoLoad
-        cardType={CARD_TYPE_ALBUM}
+        cardType={CARD_TYPES.ALBUM}
         requestData={id}
         requestAction={getTopArtistAlbums}
         storageId={`${artistTopAlbumsStorageId}:${id}`}

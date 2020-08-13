@@ -31,7 +31,7 @@ const CardsGrid = ({
   disableLoadOnScroll,
   onCardClick,
 }) => {
-  const tempStorageItems = useSelector(state => getTempStorageItemsByIdSelector(state, storageId))
+  const tempStorageItems = useSelector((state) => getTempStorageItemsByIdSelector(state, storageId))
 
   // const dispatch = useDispatch()
   // const clearTempStorage = useMemo(
@@ -50,7 +50,7 @@ const CardsGrid = ({
   const renderGrid = useCallback(() => {
     return (
       <Grid direction={gridDirection}>
-        {tempStorageItems.map(item => {
+        {tempStorageItems.map((item) => {
           const subtitle = cardSubtitleKey ? item[cardSubtitleKey] : null
           return (
             <CommonCard
@@ -61,7 +61,7 @@ const CardsGrid = ({
               key={item.id}
               title={item.name}
               subtitle={subtitle}
-              id={item.id}
+              napsterImageId={item.id}
               onClick={() => onCardClick(item.id)}
             />
           )

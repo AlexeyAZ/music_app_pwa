@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import noop from 'lodash/noop'
 
-import { HEADER_TITLE_ID } from 'constants'
+import { HEADER_TITLE_ID } from '../../constants'
 
 import styles from './styles.module.scss'
 

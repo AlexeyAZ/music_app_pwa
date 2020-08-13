@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { trackIdSelector } from 'modules/playbackStatus'
+import { trackIdSelector } from '../../../modules/playbackStatus'
 
 import styles from './styles.module.scss'
 
@@ -20,7 +20,7 @@ BottomSpacer.defaultProps = {
   trackId: null,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   trackId: trackIdSelector(state),
 })
 

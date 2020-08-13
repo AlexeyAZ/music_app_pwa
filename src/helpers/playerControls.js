@@ -3,31 +3,32 @@ import get from 'lodash/get'
 import random from 'lodash/random'
 import differenceBy from 'lodash/differenceBy'
 
-import { store } from 'store'
+import { store } from '../store'
 
-import { napsterImageSizes } from 'config'
-import { getNapsterImage } from 'helpers'
+import { napsterImageSizes } from '../config'
 
 import {
   REPEAT_BUTTON_STATUS_ONE,
   REPEAT_BUTTON_STATUS_ALL,
   REPEAT_BUTTON_STATUS_NONE,
-} from 'constants'
+} from '../constants'
 
-import * as PlaybackStatusModule from 'modules/playbackStatus'
-import * as PlaybackListModule from 'modules/playbackList'
-import * as PlaybackPositionModule from 'modules/playbackPosition'
-import * as TempStorageModule from 'modules/tempStorage'
+import getNapsterImage from './getNapsterImage'
+
+import * as PlaybackStatusModule from '../modules/playbackStatus'
+import * as PlaybackListModule from '../modules/playbackList'
+import * as PlaybackPositionModule from '../modules/playbackPosition'
+import * as TempStorageModule from '../modules/tempStorage'
 
 const { updatePlaybackStatus } = PlaybackStatusModule
 const { addToListened, clearListened, setPlaybackList } = PlaybackListModule
 const { updatePlaybackPosition } = PlaybackPositionModule
 const { getTempStorageItemsByIdSelector } = TempStorageModule
 
-const setMediaSessionData = track => {
+const setMediaSessionData = (track) => {
   if (track) {
     const trackSizes = napsterImageSizes.track
-    const artwork = Object.keys(trackSizes).map(size => ({
+    const artwork = Object.keys(trackSizes).map((size) => ({
       src: getNapsterImage({ type: 'album', id: track.albumId, size }),
       sizes: trackSizes[size],
       type: 'image/jpg',
@@ -42,7 +43,7 @@ const setMediaSessionData = track => {
   }
 }
 
-const getPlayerTrackId = trackId => {
+const getPlayerTrackId = (trackId) => {
   return trackId.replace('tra', 'Tra')
 }
 
@@ -51,16 +52,16 @@ const getPlayerContext = () => {
 }
 
 // eslint-disable-next-line no-unused-vars
-const getRealTrackId = trackId => {
+const getRealTrackId = (trackId) => {
   return trackId.replace('Tra', 'tra')
 }
 
-const getRandomTrack = tracks => {
+const getRandomTrack = (tracks) => {
   const randomIndex = random(0, tracks.length - 1)
   return tracks[randomIndex]
 }
 
-const getOnlyStreamableTracks = tracks => tracks.filter(track => track.isStreamable)
+const getOnlyStreamableTracks = (tracks) => tracks.filter((track) => track.isStreamable)
 
 const getPreviousTrackIndex = () => {
   const {
@@ -70,21 +71,21 @@ const getPreviousTrackIndex = () => {
     playbackList: { playbackTracks },
   } = store.getState()
   const tracksCount = playbackTracks.length
-  const currentTrackIndex = playbackTracks.findIndex(track => track.id === playbackId)
+  const currentTrackIndex = playbackTracks.findIndex((track) => track.id === playbackId)
   if (currentTrackIndex - 1 < 0) {
     return tracksCount - 1
   }
   return currentTrackIndex - 1
 }
 
-const resumeTrack = trackId => {
+const resumeTrack = (trackId) => {
   const {
     player: { instance },
   } = store.getState()
   instance.resume(trackId, getPlayerContext())
 }
 
-const playTrackAsync = async track => {
+const playTrackAsync = async (track) => {
   const {
     player: { instance },
   } = store.getState()
@@ -184,7 +185,7 @@ const nextTrackAsync = async () => {
 
   const streamableTracks = getOnlyStreamableTracks(playbackTracks)
   const tracksCount = streamableTracks.length
-  const currentTrackIndex = streamableTracks.findIndex(track => track.id === playbackId)
+  const currentTrackIndex = streamableTracks.findIndex((track) => track.id === playbackId)
   const nextTrackIndex = currentTrackIndex + 1
 
   if (repeat === REPEAT_BUTTON_STATUS_ALL) {
@@ -223,14 +224,14 @@ const seekTrack = (trackId, time) => {
 }
 
 // eslint-disable-next-line no-unused-vars
-const setVolume = value => {
+const setVolume = (value) => {
   const {
     player: { instance },
   } = store.getState()
   instance.setVolume(value)
 }
 
-const createNotification = message => {
+const createNotification = (message) => {
   notificationStore.addNotification({
     title: 'Error',
     message,

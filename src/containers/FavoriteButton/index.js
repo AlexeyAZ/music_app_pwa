@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
 
-import * as favoritesModule from 'modules/favorites'
+import * as favoritesModule from '../../modules/favorites'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
@@ -16,7 +16,7 @@ class FavoriteButton extends Component {
     return generalFavoritesNext.includes(trackId) !== generalFavorites.includes(trackId)
   }
 
-  addTrackToFavorites = async id => {
+  addTrackToFavorites = async (id) => {
     const { addToFavorites, addToGeneralFavorites } = this.props
     const addToFavoritesResponse = await addToFavorites({ data: id })
 
@@ -26,7 +26,7 @@ class FavoriteButton extends Component {
     await addToGeneralFavorites(favoritesItem)
   }
 
-  removeTrackFromFavorites = async id => {
+  removeTrackFromFavorites = async (id) => {
     const { removeFromFavorites, removeFromGeneralFavorites } = this.props
     const removeFromFavoritesResponse = await removeFromFavorites({ data: id })
 
@@ -36,7 +36,7 @@ class FavoriteButton extends Component {
     await removeFromGeneralFavorites(favoritesItem)
   }
 
-  handleFavoriteButtonClick = async isFavorite => {
+  handleFavoriteButtonClick = async (isFavorite) => {
     const { trackId, onFavoriteButtonClick } = this.props
     if (isFavorite) {
       await this.removeTrackFromFavorites(trackId)
@@ -79,7 +79,7 @@ FavoriteButton.defaultProps = {
 const mapStateToProps = ({ generalFavorites }) => ({
   generalFavorites,
 })
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   addToFavorites: bindActionCreators(favoritesModule.addToFavorites, dispatch),
   addToGeneralFavorites: bindActionCreators(favoritesModule.addToGeneralFavorites, dispatch),
   removeFromFavorites: bindActionCreators(favoritesModule.removeFromFavorites, dispatch),
@@ -89,7 +89,4 @@ const mapDispatchToProps = dispatch => ({
   ),
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FavoriteButton)
+export default connect(mapStateToProps, mapDispatchToProps)(FavoriteButton)

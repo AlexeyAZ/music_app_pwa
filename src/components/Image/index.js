@@ -6,7 +6,7 @@ import NapsterImage from '../NapsterImage'
 
 import styles from './styles.module.scss'
 
-const getImagePadding = ratio => {
+const getImagePadding = (ratio) => {
   return { paddingBottom: `${100 * ratio}%` }
 }
 
@@ -41,11 +41,8 @@ const Image = ({
   const imageStyle = getImagePadding(imageRatio)
 
   return (
-    <div className={styles[`imageSize-${imageSize}`]}>
-      <div
-        className={cn(styles.wrap, styles[`borderRadius-${borderRadius}`], className)}
-        style={imageStyle}
-      >
+    <div className={cn(styles[`imageSize-${imageSize}`], className)}>
+      <div className={cn(styles.wrap, styles[`borderRadius-${borderRadius}`])} style={imageStyle}>
         {renderImage()}
       </div>
     </div>

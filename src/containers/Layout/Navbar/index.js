@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { Text } from 'components'
+import { Text } from '../../../components'
 import ThemedPlayerButton from '../../ThemedPlayerButton'
 
 import styles from './styles.module.scss'

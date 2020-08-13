@@ -6,9 +6,9 @@ import cn from 'classnames'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
 
-import * as TempStorageModule from 'modules/tempStorage'
+import * as TempStorageModule from '../../modules/tempStorage'
 
-import { ScrollActionContainer, SimpleButton } from 'components'
+import { ScrollActionContainer, SimpleButton } from '../../components'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 
@@ -200,13 +200,8 @@ const mapStateToProps = (state, props) => ({
   tempStorage: TempStorageModule.getTempStorageByIdSelector(state, props.storageId),
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   addItemsToTempStorage: bindActionCreators(TempStorageModule.addItemsToTempStorage, dispatch),
 })
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(LoadContainer)
+export default compose(connect(mapStateToProps, mapDispatchToProps))(LoadContainer)

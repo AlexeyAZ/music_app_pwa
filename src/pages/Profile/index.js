@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
 import { withRouter } from 'react-router'
 
-import { GlobalThemeContext, Text } from 'components'
+import { GlobalThemeContext, Text } from '../../components'
 
-import * as AuthModule from 'modules/auth'
+import * as AuthModule from '../../modules/auth'
 
 import ThemeChooser from '../../containers/ThemeChooser'
 
@@ -47,14 +47,8 @@ const mapStateToProps = ({ authOptions }) => ({
   authOptions,
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetAuthOptions: bindActionCreators(AuthModule.resetAuthOptions, dispatch),
 })
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withRouter
-)(Profile)
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(Profile)

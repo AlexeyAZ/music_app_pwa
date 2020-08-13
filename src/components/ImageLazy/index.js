@@ -15,7 +15,7 @@ const ImageLazy = ({ placeholder, src, alt, className }) => {
         </div>
       )}
       loading={() => <div className={className}>1</div>}
-      actual={({ imageProps }) => <img className={className} {...imageProps} />}
+      actual={({ imageProps }) => <img className={className} alt={alt} {...imageProps} />}
     />
   )
 }

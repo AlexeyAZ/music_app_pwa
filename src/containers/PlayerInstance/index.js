@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { initPlayer } from 'helpers'
+import { initPlayer } from '../../helpers'
 
 class PlayerInstance extends Component {
   componentDidMount() {

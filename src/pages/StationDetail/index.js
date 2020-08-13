@@ -7,7 +7,7 @@ import * as StationsModule from '../../modules/stations'
 
 import { Row, Image, Text } from '../../components'
 import { TracksGrid } from '../../containers'
-import { CARD_TYPE_STATION } from '../../constants'
+import { CARD_TYPES } from '../../constants'
 
 const playlistTracksStorageId = 'playlistTracksStorageId'
 
@@ -15,10 +15,10 @@ const StationDetail = () => {
   const { id: stationId } = useParams()
   const dispatch = useDispatch()
   const stationDetail = useSelector(StationsModule.getStationDetailSelector)
-  const getStationDetail = useCallback(id => dispatch(StationsModule.getStationDetail(id)), [
+  const getStationDetail = useCallback((id) => dispatch(StationsModule.getStationDetail(id)), [
     dispatch,
   ])
-  const getStationTracks = useCallback(id => dispatch(StationsModule.getStationTracks(id)), [
+  const getStationTracks = useCallback((id) => dispatch(StationsModule.getStationTracks(id)), [
     dispatch,
   ])
 
@@ -38,7 +38,7 @@ const StationDetail = () => {
           cardSize="fullscreen"
           imageRatio={1}
           napsterImageId={stationId}
-          type={CARD_TYPE_STATION}
+          type={CARD_TYPES.STATION}
           napsterImageSize="s"
         />
       </Row>

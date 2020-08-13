@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash/get'
 
-import * as AlbumsModule from 'modules/albums'
+import * as AlbumsModule from '../../modules/albums'
 
-import { Image, Row } from 'components'
+import { Image, Row } from '../../components'
 
-import TracksGrid from '../../containers/TracksGrid'
+import { TracksGrid } from '../../containers'
 
 class Albums extends Component {
   render() {
@@ -37,11 +36,8 @@ Albums.propTypes = {
   getAlbumTracks: PropTypes.func.isRequired,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getAlbumTracks: bindActionCreators(AlbumsModule.getAlbumTracks, dispatch),
 })
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Albums)
+export default connect(null, mapDispatchToProps)(Albums)

@@ -5,7 +5,7 @@ import isNil from 'lodash/isNil'
 import get from 'lodash/get'
 import cn from 'classnames'
 
-import { playerControls } from 'helpers'
+import { playerControls } from '../../helpers'
 
 import ThemedPlayerButton from '../ThemedPlayerButton'
 

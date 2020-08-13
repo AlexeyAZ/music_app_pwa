@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 
-import { getCurrentApi } from 'helpers'
+import { getCurrentApi } from '../../helpers'
 
 const { authUrl, clientId } = getCurrentApi()
 

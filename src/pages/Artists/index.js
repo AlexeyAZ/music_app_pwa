@@ -4,16 +4,16 @@ import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
 import get from 'lodash/get'
 
-import * as GridModule from 'modules/grid'
-import * as ArtistsModule from 'modules/artists'
+import * as GridModule from '../../modules/grid'
+import * as ArtistsModule from '../../modules/artists'
 
-import { ArtistCard, Text } from 'components'
+import { Text } from '../../components'
 
 import LoadContainer from '../../containers/LoadContainer'
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Artists extends Component {
-  getTopArtists = async params => {
+  getTopArtists = async (params) => {
     const { getTopArtists, addItemsToGrid } = this.props
     const response = await getTopArtists({ params })
     const topArtistsData = get(response, 'data.artists', [])
@@ -28,11 +28,7 @@ class Artists extends Component {
     return (
       <div>
         <Text>Top artists</Text>
-        <LoadContainer isLoading={loading} customAction={this.getTopArtists}>
-          {gridItemsData.map(({ id, name }) => {
-            return <ArtistCard id={id} key={id} name={name} />
-          })}
-        </LoadContainer>
+        <LoadContainer isLoading={loading} customAction={this.getTopArtists}></LoadContainer>
       </div>
     )
   }
@@ -50,14 +46,9 @@ const mapStateToProps = ({ gridItems, topArtists }) => ({
   topArtists,
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   addItemsToGrid: bindActionCreators(GridModule.addItemsToGrid, dispatch),
   getTopArtists: bindActionCreators(ArtistsModule.getTopArtists, dispatch),
 })
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(Artists)
+export default compose(connect(mapStateToProps, mapDispatchToProps))(Artists)

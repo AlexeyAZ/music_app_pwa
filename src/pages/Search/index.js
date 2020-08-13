@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as SearchModule from 'modules/search'
-import * as TempStorageModule from 'modules/tempStorage'
+import * as SearchModule from '../../modules/search'
+import * as TempStorageModule from '../../modules/tempStorage'
 
-import { Text } from 'components'
+import { Text } from '../../components'
 
-import TracksGrid from '../../containers/TracksGrid'
+import { TracksGrid } from '../../containers'
 
 const SEARCH_STORAGE_ID = 'searchStorageId'
 
@@ -56,12 +56,9 @@ Search.propTypes = {
   clearTempStorage: PropTypes.func.isRequired,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   searchContent: bindActionCreators(SearchModule.searchContent, dispatch),
   clearTempStorage: bindActionCreators(TempStorageModule.clearTempStorage, dispatch),
 })
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Search)
+export default connect(null, mapDispatchToProps)(Search)

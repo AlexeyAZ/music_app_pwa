@@ -1,5 +1,9 @@
-export const CARD_TYPE_ARTIST = 'artist'
-export const CARD_TYPE_ALBUM = 'album'
-export const CARD_TYPE_PLAYLIST = 'playlist'
-export const CARD_TYPE_GENRE = 'genre'
-export const CARD_TYPE_STATION = 'station'
+const CARD_TYPES = {
+  ARTIST: 'artist',
+  ALBUM: 'album',
+  PLAYLIST: 'playlist',
+  GENRE: 'genre',
+  STATION: 'station',
+}
+
+export default CARD_TYPES

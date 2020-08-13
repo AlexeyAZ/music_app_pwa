@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import get from 'lodash/get'
 
-import * as PlaylistsModule from 'modules/playlists'
+import * as PlaylistsModule from '../../modules/playlists'
 
-import { Row, Image, Text, CommonCard } from '../../components'
-import TracksGrid from '../../containers/TracksGrid'
-import { CARD_TYPE_PLAYLIST } from '../../constants'
+import { CommonCard } from '../../components'
+import { TracksGrid } from '../../containers'
+import { CARD_TYPES } from '../../constants'
 
 const playlistTracksStorageId = 'playlistTracksStorageId'
 
@@ -15,10 +15,10 @@ const PlaylistDetail = () => {
   const { id: playlistId } = useParams()
   const dispatch = useDispatch()
   const playlistDetail = useSelector(PlaylistsModule.getPlaylistDetailSelector)
-  const getPlaylistDetail = useCallback(id => dispatch(PlaylistsModule.getPlaylistDetail(id)), [
+  const getPlaylistDetail = useCallback((id) => dispatch(PlaylistsModule.getPlaylistDetail(id)), [
     dispatch,
   ])
-  const getPlaylistTracks = useCallback(id => dispatch(PlaylistsModule.getPlaylistTracks(id)), [
+  const getPlaylistTracks = useCallback((id) => dispatch(PlaylistsModule.getPlaylistTracks(id)), [
     dispatch,
   ])
 
@@ -37,8 +37,8 @@ const PlaylistDetail = () => {
           imageSize="s"
           imageRatio={1}
           format="row"
-          imageType={CARD_TYPE_PLAYLIST}
-          id={playlistId}
+          imageType={CARD_TYPES.PLAYLIST}
+          napsterImageId={playlistId}
           title={playlistName}
           titleOverflow={false}
           subtitle={playlistDescription}

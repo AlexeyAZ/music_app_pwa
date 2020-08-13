@@ -1,4 +1,4 @@
-import { createAction, createReducer } from 'helpers'
+import { createAction, createReducer } from '../helpers'
 
 const initialState = {
   data: [],
@@ -14,10 +14,10 @@ const gridModule = {
       initialState,
       customTypes: {
         [addItemsToGrid.start]: (state, { gridName, items }) => {
-          if (state.data.find(item => item.name === gridName)) {
+          if (state.data.find((item) => item.name === gridName)) {
             return {
               ...state,
-              data: state.data.map(item => {
+              data: state.data.map((item) => {
                 if (item.name === gridName) {
                   return { ...item, items: [...item.items, ...items] }
                 }
@@ -32,10 +32,10 @@ const gridModule = {
         },
 
         [clearGrid.start]: (state, gridName) => {
-          if (state.data.find(item => item.name === gridName)) {
+          if (state.data.find((item) => item.name === gridName)) {
             return {
               ...state,
-              data: state.data.filter(item => item.name !== gridName),
+              data: state.data.filter((item) => item.name !== gridName),
             }
           }
           return {
