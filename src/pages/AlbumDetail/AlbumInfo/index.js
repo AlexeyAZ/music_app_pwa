@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 import get from 'lodash/get'
 
 import { CARD_TYPES } from '../../../constants'
-import { Row, Image, Text } from '../../../components'
+import { Cover } from '../../../components'
 import * as AlbumsModule from '../../../modules/albums'
 
 const AlbumInfo = () => {
@@ -13,28 +13,22 @@ const AlbumInfo = () => {
   const albumDetail = useSelector(AlbumsModule.getAlbumDetailSelector)
   const getAlbumDetail = useCallback((id) => dispatch(AlbumsModule.getAlbumDetail(id)), [dispatch])
 
-  console.log(albumDetail)
-
   const albumName = get(albumDetail, 'name')
   const artistName = get(albumDetail, 'artistName')
 
   useEffect(() => {
     getAlbumDetail({ data: albumId })
-  }, [])
+  }, [getAlbumDetail, albumId])
 
   return (
     <div>
-      <Row className="ta-center mb-2">
-        <Image
-          cardSize="fullscreen"
-          imageRatio={1}
-          napsterImageId={albumId}
-          type={CARD_TYPES.ALBUM}
-          napsterImageSize="l"
-        />
-      </Row>
-      <Text>{albumName}</Text>
-      <Text>{artistName}</Text>
+      <Cover
+        napsterImageId={albumId}
+        napsterImageType={CARD_TYPES.ALBUM}
+        napsterImageSize="l"
+        title={albumName}
+        subtitle={artistName}
+      />
     </div>
   )
 }

@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import noop from 'lodash/noop'
 
-import { useSelector, useDispatch } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { useSelector } from 'react-redux'
 
 import * as TempStorageModule from '../../modules/tempStorage'
 
 import { CommonCard, Grid, Container } from '../../components'
 
 import LoadContainer from '../LoadContainerNew'
-
-import styles from './styles.module.scss'
 
 const { getTempStorageItemsByIdSelector } = TempStorageModule
 
@@ -68,7 +65,16 @@ const CardsGrid = ({
         })}
       </Grid>
     )
-  }, [tempStorageItems])
+  }, [
+    tempStorageItems,
+    gridDirection,
+    cardType,
+    cardSubtitleKey,
+    cardBorderRadius,
+    cardImageRatio,
+    cardImageType,
+    onCardClick,
+  ])
 
   const renderContent = useCallback(() => {
     if (containerScrollType === 'horizontal') {
@@ -78,7 +84,7 @@ const CardsGrid = ({
       return renderGrid()
     }
     return null
-  }, [containerScrollType, tempStorageItems])
+  }, [containerScrollType, renderGrid])
 
   return (
     <div>

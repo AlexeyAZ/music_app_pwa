@@ -21,7 +21,7 @@ class TracksGrid extends Component {
   }
 
   async componentDidMount() {
-    const { clearTempStorage, clearPlaybackListId, storageId } = this.props
+    const { clearPlaybackListId } = this.props
     // await clearTempStorage(storageId)
     await clearPlaybackListId()
 

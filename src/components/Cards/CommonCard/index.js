@@ -48,7 +48,6 @@ const CommonCard = ({
   format,
   type,
   napsterImageId,
-  imageSize,
   napsterImageSize,
   imageRatio,
   imageType,
@@ -67,7 +66,6 @@ const CommonCard = ({
 }) => {
   const defaultBorderRadius = get(cardConfig, `${type}.borderRadius`) || borderRadius
   const defaultImageRatio = get(cardConfig, `${type}.imageRatio`) || imageRatio
-  console.log(defaultImageRatio)
   const defaultImageType = get(cardConfig, `${type}.imageType`) || imageType
   const defaultNapsterImageSize = get(cardConfig, `${type}.napsterImageSize`) || napsterImageSize
   const defaultTitleSize = titleSize || (format === 'row' ? 's' : 'xs')
@@ -94,7 +92,6 @@ const CommonCard = ({
         napsterImageSize={defaultNapsterImageSize}
         borderRadius={defaultBorderRadius}
         imageRatio={defaultImageRatio}
-        imageSize={imageSize}
         className={styles.imageWrap}
       />
       <div className={styles.info}>
@@ -120,14 +117,11 @@ const CommonCard = ({
   return <div className={wrapClassName}>{renderContent()}</div>
 }
 
-const sizes = JSON.parse(JSON.stringify(Object.values(NAPSTER_IMAGE_SIZES)))
-console.log(sizes)
 CommonCard.propTypes = {
   format: PropTypes.oneOf(['row', 'column', 'poster']),
   type: PropTypes.oneOf(Object.values(CARD_TYPES)),
   borderRadius: PropTypes.oneOf(['default', 'xs', 's', 'm', 'l', 'round']),
   napsterImageId: PropTypes.string,
-  imageSize: PropTypes.oneOf(['auto', 'xs', 's', 'm', 'l', 'fullscreen']),
   napsterImageSize: PropTypes.oneOf(Object.values(NAPSTER_IMAGE_SIZES)),
   imageRatio: PropTypes.number,
   imageType: PropTypes.oneOf(Object.values(CARD_TYPES)),
@@ -148,7 +142,6 @@ CommonCard.defaultProps = {
   type: null,
   borderRadius: 'default',
   napsterImageId: null,
-  imageSize: 'auto',
   napsterImageSize: 's',
   imageRatio: 1,
   imageType: null,

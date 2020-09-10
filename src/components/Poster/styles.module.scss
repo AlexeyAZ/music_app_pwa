@@ -1,0 +1,20 @@
+.imageWrap {
+  margin-bottom: 20px;
+  position: relative;
+  &:after {
+    content: '';
+    background-color: rgba(0,0,0,0.4);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+}
+.imageTitle {
+  text-shadow: 4px 4px 4px rgba(0,0,0,0.8);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 1;
+}

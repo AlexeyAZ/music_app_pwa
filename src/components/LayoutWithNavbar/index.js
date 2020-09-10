@@ -15,6 +15,10 @@ const LayoutWithNavbar = ({ data, splitLocationValue }) => {
     data.find((item) => item.key === navbarValue),
     'component'
   )
+  const render = get(
+    data.find((item) => item.key === navbarValue),
+    'render'
+  )
   const handleNavbarItemClick = (key) => {
     const { to } = data.find((item) => item.key === key)
     history.push(to)
@@ -26,7 +30,8 @@ const LayoutWithNavbar = ({ data, splitLocationValue }) => {
   return (
     <div className={styles.wrap}>
       <HorizontalNavbar value={navbarValue} data={data} onItemClick={handleNavbarItemClick} />
-      {navbarValue && <NavbarContent />}
+      {render && render()}
+      {NavbarContent && <NavbarContent />}
     </div>
   )
 }

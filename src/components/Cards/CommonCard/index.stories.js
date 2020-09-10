@@ -37,7 +37,6 @@ export const Row = Template.bind({})
 Column.args = {
   type: 'playlist',
   napsterImageId: 'pp.181335817',
-  imageSize: 'xs',
   title: 'Card title',
   subtitle: 'Card subtitle',
 }
@@ -48,7 +47,6 @@ Column.argTypes = {
 Row.args = {
   type: 'playlist',
   napsterImageId: 'pp.181335817',
-  imageSize: 'xs',
   title: 'Card title',
   subtitle: 'Card subtitle',
 }

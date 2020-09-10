@@ -2,7 +2,7 @@ import get from 'lodash/get'
 
 import { createAction, createReducer } from '../helpers'
 
-export const getGenreDetailSelector = (state) => get(state, 'genreDetail.data.genres[0]')
+export const getGenreDetailSelector = (state) => get(state, 'genreDetail.data.items[0]')
 
 export const getAllGenres = createAction('GET_ALL_GENRES_REQUEST', {
   url: '/genres',

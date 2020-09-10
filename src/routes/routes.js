@@ -1,6 +1,3 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
-
 import Main from '../pages/Main'
 import Login from '../pages/Login'
 import Genres from '../pages/Genres'
@@ -16,7 +13,6 @@ import Trending from '../pages/Trending'
 import Profile from '../pages/Profile'
 import Search from '../pages/Search'
 import AlbumDetail from '../pages/AlbumDetail'
-import AlbumTracks from '../pages/AlbumDetail/AlbumTracks'
 import PlaylistDetail from '../pages/PlaylistDetail'
 import StationDetail from '../pages/StationDetail'
 
@@ -48,6 +44,24 @@ const routes = [
     path: '/artists',
     title: 'Artists',
     component: Artists,
+    exact: true,
+  },
+  {
+    path: '/artists/:id/tracks',
+    title: 'Artists',
+    component: ArtistDetail,
+    exact: true,
+  },
+  {
+    path: '/artists/:id/albums',
+    title: 'Artists',
+    component: ArtistDetail,
+    exact: true,
+  },
+  {
+    path: '/artists/:id/info',
+    title: 'Artists',
+    component: ArtistDetail,
     exact: true,
   },
   {

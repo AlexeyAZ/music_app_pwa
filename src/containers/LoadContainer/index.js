@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux'
 import cn from 'classnames'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
-import moment from 'moment'
 
 import * as TempStorageModule from '../../modules/tempStorage'
 

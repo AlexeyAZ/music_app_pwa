@@ -12,6 +12,7 @@ class HeaderContainer extends Component {
 
   getHeaderTitle = () => {
     const { location } = this.props
+    // eslint-disable-next-line react/destructuring-assignment
     const flatRoutes = this.context.reduce((acc, route) => {
       if (route.routes) {
         const { routes: routeRoutes, ...newRoute } = route
@@ -50,7 +51,6 @@ class HeaderContainer extends Component {
   }
 
   render() {
-    const { history } = this.props
     if (this.showHeader())
       return (
         <Header

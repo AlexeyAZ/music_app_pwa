@@ -2,7 +2,7 @@ import get from 'lodash/get'
 
 import { createAction, createReducer } from '../helpers'
 
-export const getArtistDetailSelector = (state) => get(state, 'artistDetail.data.artists[0]')
+export const getArtistDetailSelector = (state) => get(state, 'artistDetail.data.items[0]')
 
 export const getTopArtists = createAction('GET_TOP_ARTIST_REQUEST', {
   url: `/artists/top`,

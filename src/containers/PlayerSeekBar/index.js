@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import isNil from 'lodash/isNil'
 import moment from 'moment'
+// Dont remove momentDurationFormatSetup
+// eslint-disable-next-line no-unused-vars
+import momentDurationFormatSetup from 'moment-duration-format'
 
 import { SeekBar } from '../../components'
 import { playerControls } from '../../helpers'

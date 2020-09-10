@@ -29,7 +29,7 @@ const StationDetail = () => {
 
   useEffect(() => {
     getStationDetail({ data: stationId })
-  }, [])
+  }, [getStationDetail, stationId])
 
   return (
     <div>

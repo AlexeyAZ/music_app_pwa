@@ -3,7 +3,8 @@
 	"rules": {
 		"import/prefer-default-export": "off",
 		"react/prefer-stateless-function": [1, { "ignorePureComponents": true }],
-		"react/state-in-constructor": ["never"],
+		"react/state-in-constructor": [0],
+		"react/static-property-placement": [0],
 		"max-len": ["error", 120, 2],
 		"semi": ["error", "never"],
 		"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],

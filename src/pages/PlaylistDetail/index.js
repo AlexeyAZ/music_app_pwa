@@ -27,14 +27,13 @@ const PlaylistDetail = () => {
 
   useEffect(() => {
     getPlaylistDetail({ data: playlistId })
-  }, [])
+  }, [getPlaylistDetail, playlistId])
 
   return (
     <div>
       <div className="mb-2">
         <CommonCard
           borderRadius="s"
-          imageSize="s"
           imageRatio={1}
           format="row"
           imageType={CARD_TYPES.PLAYLIST}

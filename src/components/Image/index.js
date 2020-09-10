@@ -18,7 +18,6 @@ const Image = ({
   napsterImageId,
   napsterImageSize,
   imageRatio,
-  imageSize,
   borderRadius,
 }) => {
   const renderImage = useCallback(() => {
@@ -41,10 +40,11 @@ const Image = ({
   const imageStyle = getImagePadding(imageRatio)
 
   return (
-    <div className={cn(styles[`imageSize-${imageSize}`], className)}>
-      <div className={cn(styles.wrap, styles[`borderRadius-${borderRadius}`])} style={imageStyle}>
-        {renderImage()}
-      </div>
+    <div
+      className={cn(styles.wrap, styles[`borderRadius-${borderRadius}`], className)}
+      style={imageStyle}
+    >
+      {renderImage()}
     </div>
   )
 }
@@ -57,7 +57,6 @@ Image.propTypes = {
   napsterImageId: PropTypes.string,
   napsterImageSize: PropTypes.string,
   imageRatio: PropTypes.number,
-  imageSize: PropTypes.oneOf(['auto', 'xs', 's', 'm', 'l', 'fullscreen']),
   borderRadius: PropTypes.oneOf(['default', 'xs', 's', 'm', 'l', 'round']),
 }
 Image.defaultProps = {
@@ -68,7 +67,6 @@ Image.defaultProps = {
   napsterImageId: null,
   napsterImageSize: 's',
   imageRatio: 1,
-  imageSize: 'auto',
   borderRadius: 'default',
 }
 

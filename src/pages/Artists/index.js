@@ -22,20 +22,18 @@ class Artists extends Component {
 
   render() {
     const {
-      gridItems: { data: gridItemsData },
       topArtists: { loading },
     } = this.props
     return (
       <div>
         <Text>Top artists</Text>
-        <LoadContainer isLoading={loading} customAction={this.getTopArtists}></LoadContainer>
+        <LoadContainer isLoading={loading} customAction={this.getTopArtists} />
       </div>
     )
   }
 }
 
 Artists.propTypes = {
-  gridItems: PropTypes.object.isRequired,
   topArtists: PropTypes.object.isRequired,
   addItemsToGrid: PropTypes.func.isRequired,
   getTopArtists: PropTypes.func.isRequired,

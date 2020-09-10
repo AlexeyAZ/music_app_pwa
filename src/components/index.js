@@ -17,6 +17,8 @@ import Input from './Input'
 import Image from './Image'
 import ImageLazy from './ImageLazy'
 import LayoutWithNavbar from './LayoutWithNavbar'
+import Poster from './Poster'
+import Cover from './Cover'
 
 import { Text, Title } from './Typography'
 import { CommonCard } from './Cards'
@@ -48,4 +50,6 @@ export {
   Image,
   ImageLazy,
   LayoutWithNavbar,
+  Poster,
+  Cover,
 }

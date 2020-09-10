@@ -8,6 +8,10 @@ const HORIZONTAL_CONTAINER_TYPE = 'horizontal'
 const VERTICAL_CONTAINER_TYPE = 'vertical'
 
 class ScrollActionContainer extends Component {
+  static HORIZONTAL_CONTAINER_TYPE = HORIZONTAL_CONTAINER_TYPE
+
+  static VERTICAL_CONTAINER_TYPE = VERTICAL_CONTAINER_TYPE
+
   horizontalContainer = null
 
   isScrollExist = false
@@ -101,7 +105,7 @@ class ScrollActionContainer extends Component {
     if (type === HORIZONTAL_CONTAINER_TYPE) {
       const { scrollWidth, scrollLeft } = this.horizontalContainer
       const documentWidth = this.getDocumentWidth()
-      return scrollWidth - scrollLeft - documentWidth === 0
+      return scrollWidth - parseInt(scrollLeft, 10) - documentWidth === 0
     }
     return null
   }
@@ -120,10 +124,6 @@ class ScrollActionContainer extends Component {
     }
   }
 
-  static HORIZONTAL_CONTAINER_TYPE = HORIZONTAL_CONTAINER_TYPE
-
-  static VERTICAL_CONTAINER_TYPE = VERTICAL_CONTAINER_TYPE
-
   render() {
     const { isScrollExist } = this.state
     const { children, type, scrollContainerClassName } = this.props
@@ -139,7 +139,7 @@ class ScrollActionContainer extends Component {
       return (
         <ScrollContainer
           containerClassName={scrollContainerClassName}
-          containerRef={el => {
+          containerRef={(el) => {
             this.horizontalContainer = el
           }}
         >

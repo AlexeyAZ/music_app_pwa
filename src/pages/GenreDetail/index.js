@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import * as GenresModule from '../../modules/genres'
 
-import { Row, Text, Title, Image, DangerHtml } from '../../components'
+import { Poster, Row, Text, Title, DangerHtml } from '../../components'
 import { HeaderTitle } from '../../portals'
 
 import TracksGrid from '../../containers/TracksGrid'
@@ -23,7 +23,6 @@ const limit = 30
 
 const GenreDetail = () => {
   const { id: genreId } = useParams()
-  console.log(genreId)
   const history = useHistory()
   const dispatch = useDispatch()
   const genreDetail = useSelector(GenresModule.getGenreDetailSelector)
@@ -45,33 +44,29 @@ const GenreDetail = () => {
   const genreName = get(genreDetail, 'name')
   const genreDescription = get(genreDetail, 'description')
 
-  const handleArtistClick = useCallback((id) => {
-    history.push(`/artists/${id}`)
-  }, [])
+  const handleArtistClick = useCallback(
+    (id) => {
+      history.push(`/artists/${id}`)
+    },
+    [history]
+  )
 
-  const handleAlbumClick = useCallback((id) => {
-    history.push(`/albums/${id}`)
-  }, [])
+  const handleAlbumClick = useCallback(
+    (id) => {
+      history.push(`/albums/${id}`)
+    },
+    [history]
+  )
 
   useEffect(() => {
     getGenreDetail({ data: genreId })
-  }, [])
+  }, [getGenreDetail, genreId])
 
   return (
     <div>
       <HeaderTitle>{genreName}</HeaderTitle>
       <Row>
-        <div className={styles.imageWrap}>
-          <Image
-            cardSize="fullscreen"
-            imageRatio={0.7}
-            napsterImageId={genreId}
-            type={CARD_TYPES.GENRE}
-          />
-          <Title className={styles.imageTitle} color="white" size="xxl">
-            {genreName}
-          </Title>
-        </div>
+        <Poster napsterImageId={genreId} napsterImageType={CARD_TYPES.GENRE} title={genreName} />
       </Row>
       <Text mb="4">
         <DangerHtml html={genreDescription} />
