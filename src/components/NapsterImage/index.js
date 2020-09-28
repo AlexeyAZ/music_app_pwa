@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
+import cn from 'classnames'
 
 import { getNapsterImage } from '../../helpers'
 
 import ImageLazy from '../ImageLazy'
 
+import styles from './styles.module.scss'
+
 const NapsterImage = ({ type, id, size, className }) => {
-  return <ImageLazy className={className} src={getNapsterImage({ type, id, size })} alt="" />
+  const [isTransparent, setTransparent] = useState(false)
+  const handleImageLoadError = useCallback(() => {
+    setTransparent(true)
+  }, [])
+  return (
+    <img
+      className={cn({ [styles.transparent]: isTransparent }, className)}
+      src={getNapsterImage({ type, id, size })}
+      alt=""
+      onError={handleImageLoadError}
+    />
+  )
 }
 
 NapsterImage.propTypes = {
